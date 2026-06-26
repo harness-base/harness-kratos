@@ -1,8 +1,8 @@
 ---
 name: context-loading
 description: 判定一个任务该读多少文档/规则/上下文（渐进加载档位 L0-L6）。每个新任务开始、或拿不准要不要读某些文档/要不要升档时，先用本 skill 定档——避免全量通读浪费上下文，或读太少漏掉关键规则。
-version: 1
-last_reviewed: 2026-05-29
+version: 2
+last_reviewed: 2026-06-26
 ---
 
 # Context Loading（按需加载）
@@ -16,7 +16,7 @@ last_reviewed: 2026-05-29
 ## 步骤
 1. 看「用户要的产物 + 任务证据 + 目标文件」，对照 `docs/context/CONTEXT_LOADING.md` 的档位表定档——**按这三样判，不按关键词**（关键词容易误判任务大小）。
 2. 拿不准先按低档起步，遇到证据（改动比预期大、牵出更多文件）再升档。
-3. 干某目录的活时叠加"就近加载"：从该位置**向上读最近的 `AGENTS.md`**。
+3. 干某目录的活时叠加"就近加载"：从该位置**向上读最近的 `AGENTS.md`**；若该目录有 `README.md`，也**先读一下**——AGENTS.md 经 CLAUDE.md `@import` 自动加载，README 不在加载机制内，靠这条触发（根 `AGENTS.md` 启动顺序第 5 条）。
 4. 升档写理由进 `tasks/todo.md` 的 Review，便于复核。
 
 ## 硬规则

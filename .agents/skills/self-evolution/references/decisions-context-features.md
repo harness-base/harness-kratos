@@ -15,7 +15,7 @@
 ## 怎么检索现状（能直接跑）
 
 ```bash
-cd /Users/zhouhaiyin/project/harness-empty
+cd "$(git rev-parse --show-toplevel)"
 
 # 三区索引与目录
 cat docs/decisions/index.yaml

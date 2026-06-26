@@ -2,7 +2,7 @@
 title: 当前真实状态
 status: active
 owner: harness
-last_updated: 2026-06-26
+last_updated: 2026-06-27
 source_files: []
 related_docs:
   - PROJECT_BRIEF.md
@@ -20,19 +20,19 @@ related_docs:
 | `tasks/`（todo / lessons / archive） | done | |
 | `docs/context/` | done | 简报 / 状态 / 按需加载（含就近 AGENTS.md 加载规则） |
 | `docs/rules/` | done | 11 条规则（rule-0001~0011）**分布化入驻各 AGENTS.md + catalog 自动生成**（`rules-index.sh`）；另 49 条 kratos 就近规则（`kratos/*`） |
-| `docs/decisions/` | done | ADR-0001~0005（骨架 / kratos / prd-elicitation / 规则分布化 / 自进化闭环） |
+| `docs/decisions/` | done | ADR-0001~0006（骨架 / kratos / prd-elicitation / 规则分布化 / 自进化闭环 / 弃 drift 区） |
 | `docs/eval/` | done | 考题 / rubric / 评委 / 产出目录 |
 | `docs/harness/` | done | 验证路由 / CI / hooks（含 Stop hook）说明 |
 | `scripts/` | done | verify / docs-audit / run-eval / verify-eval / install-hooks / hook-policy(+test) / skills-index / **rules-index / dir-index / index-audit / prds-audit** / stop-check / **turn-backstop(+test)** |
 | `.githooks/` + `.github/workflows/` | done | 带测试的 hook policy + CI |
 | `.agents/skills/` | done | 7 个技能：context-loading / feature-delivery / git-workflow / add-rule / prd-elicitation / self-evolution / **bugfix**（self-evolution 含 references 审查手册） |
 | `.claude/` | done | settings（PreToolUse + Stop hook）+ agents/eval + skills 软链 |
-| `.codex/` | done(部分) | eval 子 agent + config（与 Claude Code 行为一致）；其余按需 |
+| `.codex/` | done(部分) | eval + self-optimize 子 agent + config（与 Claude Code 行为一致）；其余按需 |
 | `docs/features/` | done | F-0001~0006（kratos-base 6 个需求包） |
-| `workspace/verification.yaml` | skeleton | 路由占位 |
-| `projects/` | skeleton | 挂载点，空 |
+| `workspace/verification.yaml` | done | kratos-base 路由已填全（verify/unit/e2e/sandbox + 20 AC 弹性矩阵），含示例模板 |
+| `projects/` | done | 挂载点，已挂 kratos-base（详见被管工程表） |
 | `docs-maintainer` skill | planned | 待接入（写文档 / 管文档） |
-| `docs/prds/` | done | 需求产出账本（prd-elicitation skill 产物 + prds-audit）；architecture/drift 暂未建 |
+| `docs/prds/` | done | 需求产出账本（prd-elicitation skill 产物 + prds-audit）；architecture 暂未建（drift 区已弃，见 ADR-0006） |
 | 自进化（① 落文档提醒 + ② self-evolution） | done | `turn-backstop.sh`（每轮落文档提醒）+ `self-evolution` skill/references + `self-optimize` 子 agent |
 | sandbox / E2E 环境 | planned | 接后端再建 |
 

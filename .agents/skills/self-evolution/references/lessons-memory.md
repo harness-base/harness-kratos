@@ -13,7 +13,7 @@
 ## 怎么检索现状（命令可直接跑）
 
 ```bash
-ROOT=/Users/zhouhaiyin/project/harness-empty
+ROOT="$(git rev-parse --show-toplevel)"
 
 # 错题本：看条数、最近日期、是否三段式
 grep -c '^## 20' "$ROOT/tasks/lessons.md"
@@ -26,9 +26,9 @@ grep -niE '空转|共因|超时|竞态|CWD|牵强|假完成|裸 ?grep' "$ROOT/ta
 sed -n '1,12p' "$ROOT/tasks/optimization-log.md"          # 头部约定（中转站语义）
 grep -nE '`兜底`|`judgment`' "$ROOT/tasks/optimization-log.md"   # 现状：仅有表头说明、0 条 ⇒ 闭环尚未跑过
 
-# memory：index 与条目文件
-cat ~/.claude/projects/-Users-zhouhaiyin-project-harness-empty/memory/MEMORY.md
-ls   ~/.claude/projects/-Users-zhouhaiyin-project-harness-empty/memory/
+# memory：index 与条目文件（路径基于主仓工程根，与本 worktree 无关；本仓即下方路径）
+cat ~/.claude/projects/-Users-zhouhaiyin-project-harness-kratos/memory/MEMORY.md
+ls   ~/.claude/projects/-Users-zhouhaiyin-project-harness-kratos/memory/
 
 # 兜底机制本体（WHEN 在脚本、WHAT 给 Haiku）+ 它的自测
 sed -n '46,78p' "$ROOT/scripts/turn-backstop.sh"

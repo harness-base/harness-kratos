@@ -57,7 +57,7 @@ slice="$(tail -c "$TAIL_BYTES" "$TRANSCRIPT" 2>/dev/null || true)"
 [ -z "$slice" ] && exit 0
 
 instr="你是一个 AI 编码 agent 最近对话的【独立兜底复查员】。下面是最近若干轮对话(JSONL transcript 末尾片段)。
-找出本该写入持久文件、但可能没写的东西：(a)做出的决策 (b)用户表达的偏好/工作方式 (c)取舍理由/被否决的方案 (d)踩坑/教训 (e)该进文档/AGENTS.md/规则的知识。
+找出本该写入持久文件、但可能没写的东西：(a)做出的决策 (b)用户表达的偏好/工作方式 (c)取舍理由/被否决的方案 (d)踩坑/教训 (e)该进文档/AGENTS.md/规则的知识 (f)动了某目录或加/删/改了文件，但没看到对应 README/AGENTS.md 同步（典型：scripts/ 加脚本未改 scripts/README.md；docs/ 子目录加 .md 未改 docs/README.md；新增子 agent .codex/.claude 没对等；改了 ADR 未回顾相关 skill）。
 规则：若 transcript 显示这些已写进文件(有 Write/Edit/git 操作)，就别再报。低噪声、只报真遗漏。
 输出：每条一行，格式 [类别] 一句话；若无遗漏，只输出 NONE。
 --- transcript 片段 ---

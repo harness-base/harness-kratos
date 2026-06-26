@@ -33,7 +33,7 @@ bash scripts/skills-index.sh
 make verify
 ```
 
-真实路径锚点：索引脚本 `scripts/skills-index.sh`；`--check` 被 `scripts/verify-control-plane.sh:29` 调用进 `make verify`；当前 7 个 skill：`add-rule / bugfix / context-loading / feature-delivery / git-workflow / prd-elicitation / self-evolution`（注：`self-optimize` 是子 agent，不是 skill）。
+真实路径锚点：索引脚本 `scripts/skills-index.sh`；`--check` 被 `scripts/verify-control-plane.sh` 调用进 `make verify`；**当前 skill 清单以自动生成的 `.agents/skills/README.md` 为准——别在本手册里硬编码枚举（会漂，本仓已踩过）**。注：`self-optimize` 是子 agent（`.claude/agents/`），不是 skill。
 
 ## 怎么判（逐条可判定）
 

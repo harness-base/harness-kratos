@@ -6,12 +6,11 @@
 
 ## 启动顺序
 
-1. 本 `AGENTS.md` 是**常驻规则源**：Claude Code 经同级 `CLAUDE.md` 的 `@import` 自动加载；Codex 原生按目录层级读 `AGENTS.md`。**加载是机制，不靠"自然语言叫你去读"。**
-2. 读 `docs/context/CURRENT_STATUS.md`（当前真实状态）。
-3. 按 `docs/context/CONTEXT_LOADING.md` 判定本次任务读多少。
-4. 需要文档路由时，读 `docs/README.md`。
-5. 在某目录**读或改**代码前，加载该位置**向上最近的 `AGENTS.md`**（连同其同级 `CLAUDE.md`）——**就近规则随之生效**；按目录加载与档位叠加，详见 `docs/context/CONTEXT_LOADING.md`。
-6. **规则总览**（默认不加载，审查 / 自进化时查）：`docs/rules/index.yaml`——编号 + 简述 + 位置，由 `scripts/rules-index.sh` 从各 `AGENTS.md` 的 `<!-- rule: -->` 标记**自动生成**。
+1. 读 `docs/context/CURRENT_STATUS.md`（当前真实状态）。
+2. 按 `docs/context/CONTEXT_LOADING.md` 判定本次任务读多少。
+3. 需要文档路由时，读 `docs/README.md`。
+4. 在某目录**读或改**代码前，加载该位置**向上最近的 `AGENTS.md`**（连同其同级 `CLAUDE.md`）——**就近规则随之生效**；按目录加载与档位叠加，详见 `docs/context/CONTEXT_LOADING.md`。
+5. 进入某目录想读 / 动其下文件前，若该目录有 `README.md`，**先读一下**——不必通读，目的是知道这里有什么、该挑哪个。README 不像 AGENTS.md 那样自动加载，靠这条规则触发。
 
 ## 规则
 
@@ -27,7 +26,7 @@
 - **外部材料不自动采信**：事实源 = 正式文档 + 工程当前代码；外部 / 粘贴材料要先整理验收才算数。 <!-- rule: rule-0008 | sev: blocker -->
 - **验收断言必须锚定唯一、真实、产出方的证据**：断言绑到唯一真实信号（防共因污染 / 防超时竞态掩盖）；声称的保证必须有**守护测试**；测试不许为通过而牵强、注释不许撒谎。 <!-- rule: rule-0009 | sev: blocker | eval: 012 -->
 - **PRD 产出标准**：产出 PRD 时——验收可观测、范围 in+out 闭合、每页四态、原型可点通、假设显式确认、可追溯、登记不漂移（仅在产出 PRD 时适用，不强制 PRD 必须存在）。 <!-- rule: rule-0010 | sev: blocker | eval: 013 -->
-- **决策与知识必须当轮落文档，落文档提醒兜住遗漏**：改了产物或做了关键决策，知识要就近写进 `AGENTS.md`/`lessons`/规则/ADR/memory；Stop hook 机械触发（K 轮 / commit / 变更增量）的 Haiku **落文档提醒**（`scripts/turn-backstop.sh`，=①，非自进化审查）会复查遗漏并写 `tasks/optimization-log.md`，捞到的须落到对应文档、不许烂在 log 里。 <!-- rule: rule-0011 | sev: warn -->
+- **决策与知识必须当轮落文档，落文档提醒兜住遗漏**：改了产物或做了关键决策，知识要就近写进 `AGENTS.md`/`lessons`/规则/ADR/memory；**用户纠正也算**（用户说"不是这样 / 你理解错了 / 撤回 / 你搞混了"时，当轮记一条 `tasks/lessons.md` 三段式：错在哪 / 怎么防 / 怎么更早发现）；Stop hook 机械触发（K 轮 / commit / 变更增量）的 Haiku **落文档提醒**（`scripts/turn-backstop.sh`，=①，非自进化审查）会复查遗漏并写 `tasks/optimization-log.md`，捞到的须落到对应文档、不许烂在 log 里。 <!-- rule: rule-0011 | sev: warn -->
 - **不擅自 git 写操作**：未经许可不 commit / push / reset / 删分支 / 改 remote。
 
 ## 验证

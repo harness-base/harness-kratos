@@ -59,5 +59,15 @@ done < <(find . -name AGENTS.md -not -path './.git/*')
 echo "== PRD 账本自检 =="
 bash scripts/prds-audit.sh || fail=1
 
+echo "== references 路径残留 =="
+hits=$(grep -rln 'harness-empty\|-Users-zhouhaiyin-project-harness-empty' .agents/skills 2>/dev/null)
+if [ -n "$hits" ]; then
+  echo "  ✗ references 内含 harness-empty 路径残留（应改用 \$(git rev-parse --show-toplevel) 或本仓名）："
+  echo "$hits" | sed 's|^|    |'
+  fail=1
+else
+  echo "  ✓ references 路径无 harness-empty 残留"
+fi
+
 echo
 [ "$fail" -eq 0 ] && echo "✓ 控制面自检通过" || { echo "✗ 控制面自检失败"; exit 1; }

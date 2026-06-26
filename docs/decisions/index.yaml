@@ -26,3 +26,8 @@ decisions:
     status: accepted
     date: 2026-06-26
     file: 0005-self-evolution-loop.md
+  - id: ADR-0006
+    title: 不单独建 docs/drift/ 区——漂移处理并入自进化闭环
+    status: accepted
+    date: 2026-06-27
+    file: 0006-drop-drift-area.md

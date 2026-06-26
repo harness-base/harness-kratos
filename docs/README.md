@@ -34,4 +34,4 @@ related_docs:
 | `harness/` | 验证路由、CI、hooks 说明、工程接入指南 |
 | `features/` | 需求 / 工作包（空账本，随被管工程填） |
 
-`architecture/`、`prds/`、`drift/` 等待接入 `projects/` 后再建——见 `decisions/0001-harness-skeleton-design.md`。
+`architecture/` 待接入 `projects/` 后再建；`drift/` 区已弃用、漂移处理并入自进化闭环（见 `decisions/0006-drop-drift-area.md`）。

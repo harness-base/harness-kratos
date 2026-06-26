@@ -14,7 +14,7 @@
 ## 怎么检索现状（索引 / 文件 / 机器检查入口——可直接跑）
 
 ```bash
-cd /Users/zhouhaiyin/project/harness-empty
+cd "$(git rev-parse --show-toplevel)"
 
 # 1. 列全部 index.yaml 与 README 索引（盘点有哪些区、各自的索引文件）
 find . -name index.yaml -not -path './.git/*' | sort

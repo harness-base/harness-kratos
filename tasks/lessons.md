@@ -13,6 +13,11 @@
 
 ---
 
+## 2026-06-27：反复凭印象描述 harness 状态/机制，不核源就下结论
+- Mistake：本会话多次断言后被用户当场推翻——"5K=膨胀"（实际 61 行，不膨胀）、"projects/ 空"（实际挂着 kratos-base）、"钩子失效"（实际只是触发阈值没到）、"drift"打成"draft"、描述漂移链时漏了 self-optimize、skills.md "7 个 skill"已过期没发现。共因：凭记忆/印象说，没先 `ls`/`cat`/`grep`/`git status` 核当前事实。
+- Prevention：描述 harness 任何状态/计数/机制前，先跑命令核源再下结论；尤其"X 是空的/失效了/有 N 个"这类**可枚举断言**必须有当轮命令证据（呼应 rule-0008 事实源=代码现状）。改文档计数/清单时同步想"这里以后会不会漂"，能交给自动索引的别硬编码枚举。
+- Earlier signal：自己正要写"应该是/大概/记得/我印象中"这类词，且紧跟一个能被一条命令证伪的事实断言。
+
 ## 2026-06-26：兜底把超长 transcript 喂给 Haiku，"Prompt is too long" 被当发现记进 log
 - Mistake：turn-backstop 取 transcript 末尾 400 **行**喂 Haiku，但 JSONL 单行含工具输出可能极大→prompt 超限→Haiku 返回 "Prompt is too long"；脚本没识别这是报错，当成发现追加进 optimization-log（污染，还提交了一条）。
 - Prevention：喂 LLM 的上下文按**字节**截（非行数，行大小不可控）；输出只认**预期格式**（findings 必须形如 `[类别] ...`），报错/NONE/空一律不记——别把 LLM 的错误消息当结果落库。

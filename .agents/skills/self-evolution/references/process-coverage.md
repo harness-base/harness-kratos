@@ -14,24 +14,26 @@
 ## 怎么检索现状（索引 / 文件 / 机器检查入口）
 
 ```bash
+ROOT="$(git rev-parse --show-toplevel)"
+
 # 1. 现有流程清单（自动生成的技能索引——别手改）
-cat /Users/zhouhaiyin/project/harness-empty/.agents/skills/README.md
+cat "$ROOT/.agents/skills/README.md"
 
 # 2. 逐 skill 的"何时用/何时不用"边界（看覆盖了哪类任务、显式排除了哪类）
-grep -rn "何时用\|何时不用\|不用：" /Users/zhouhaiyin/project/harness-empty/.agents/skills/*/SKILL.md
+grep -rn "何时用\|何时不用\|不用：" "$ROOT/.agents/skills/"*/SKILL.md
 
 # 3. 任务类型盘点：种子里这几类有没有对应 skill？
 grep -rliE "bugfix|bug 修复|重构|refactor|迁移|migration|loop|评审|review" \
-  /Users/zhouhaiyin/project/harness-empty/.agents/skills/
+  "$ROOT/.agents/skills/"
 #   （命中 0 = 该任务类型在 skills 层无流程，去 AGENTS.md 看有没有明文步骤）
 
 # 4. AGENTS.md 里是否有不成 skill 但成文的流程（如收尾 eval = rule-0005）
 grep -rn "收尾\|流程\|步骤\|MUST STOP" \
-  /Users/zhouhaiyin/project/harness-empty/AGENTS.md \
-  /Users/zhouhaiyin/project/harness-empty/projects/*/AGENTS.md
+  "$ROOT/AGENTS.md" \
+  "$ROOT/projects/"*/AGENTS.md
 
 # 5. 索引漂移自检（加了 skill 没登记 → 红）
-bash /Users/zhouhaiyin/project/harness-empty/scripts/skills-index.sh --check
+bash "$ROOT/scripts/skills-index.sh" --check
 ```
 
 ## 怎么判（符合 / 缺口 / 漏洞 的判据，逐条可判定）
