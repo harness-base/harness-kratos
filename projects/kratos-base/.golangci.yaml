@@ -1,0 +1,29 @@
+# golangci-lint v2 配置（本机 v2.11.4）。
+# T1 用一组稳健的默认 linter；生成代码（*.pb.go、ent gen）一律豁免。
+# 后续任务可按需收紧（如加 revive/gosec）。
+version: "2"
+
+linters:
+  default: standard
+  exclusions:
+    generated: lax
+    rules:
+      # buf/ent 生成物不参与 lint。
+      - path: \.pb\.go$
+        linters:
+          - errcheck
+          - govet
+          - staticcheck
+          - unused
+          - ineffassign
+      - path: (^|/)ent/
+        linters:
+          - errcheck
+          - govet
+          - staticcheck
+          - unused
+          - ineffassign
+
+formatters:
+  enable:
+    - gofmt

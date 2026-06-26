@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+// Package demo.v1 — error reason model for the demo domain.
+//
+// 每个枚举值的名字即 kratos error 的 `reason` 字符串（生成的构造器/判定用
+// `EnumValue.String()`）。故这里的值名保持业务约定的裸命名
+// （DB_UNAVAILABLE / NOT_FOUND / INVALID_ARGUMENT），不加 `ERROR_REASON_` 前缀，
+// 否则 reason 字符串会带上前缀、与契约不符。buf.yaml 顶层 except 掉
+// ENUM_VALUE_PREFIX 正是为此。零值 ERROR_REASON_UNSPECIFIED 已以 _UNSPECIFIED
+// 结尾、本就合规，无需豁免 ENUM_ZERO_VALUE_SUFFIX。
+//
+// protoc-gen-go-errors 为每个有效 code 的枚举值生成 Is*/Error* 助手。
+// 零值 ERROR_REASON_UNSPECIFIED 无 (errors.code) 覆盖，继承 default_code=500，
+// 故也会生成助手（reason "ERROR_REASON_UNSPECIFIED"）；pkg/errs 不导出它。
+package demo.v1;
+
+import "errors/errors.proto";
+
+option go_package = "github.com/z-mate/kratos-base/api/demo/v1;v1";
+
+// ErrorReason enumerates the demo service's well-known error reasons.
+// 默认 HTTP code 500；每个值用 (errors.code) 覆盖为具体状态码。
+enum ErrorReason {
+  option (errors.default_code) = 500;
+
+  // ERROR_REASON_UNSPECIFIED is the proto3 zero value; not a real reason.
+  // It has no (errors.code) override and so inherits default_code 500.
+  ERROR_REASON_UNSPECIFIED = 0;
+
+  // DB_UNAVAILABLE: a backing datastore (e.g. PostgreSQL) is unreachable.
+  // 懒加载依赖未就绪 / 断线时返回；服务不宕、快速失败。
+  DB_UNAVAILABLE = 1 [(errors.code) = 503];
+
+  // NOT_FOUND: the requested resource does not exist.
+  NOT_FOUND = 2 [(errors.code) = 404];
+
+  // INVALID_ARGUMENT: the caller supplied a malformed or out-of-range argument.
+  INVALID_ARGUMENT = 3 [(errors.code) = 400];
+}

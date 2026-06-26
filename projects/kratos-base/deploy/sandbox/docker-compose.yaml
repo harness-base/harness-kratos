@@ -1,0 +1,105 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "demo", "-d", "demo"]
+      interval: 1s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 5s
+      retries: 30
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.0
+    command:
+      - /usr/local/bin/etcd
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://0.0.0.0:2379
+    ports:
+      - "2379:2379"
+    healthcheck:
+      test: ["CMD", "etcdctl", "--endpoints=http://127.0.0.1:2379", "endpoint", "health"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 2s
+      timeout: 10s
+      retries: 30
+
+  nacos:
+    image: nacos/nacos-server:v2.5.0
+    environment:
+      MODE: standalone
+      NACOS_AUTH_ENABLE: "false"
+      # nacos 2.x 即便关鉴权仍需要这三个 env（否则 2.5 启动报 mandatory 警告并可能影响 gRPC 注册）
+      NACOS_AUTH_TOKEN: "SecretKey012345678901234567890123456789012345678901234567890123456789"
+      NACOS_AUTH_IDENTITY_KEY: "serverIdentity"
+      NACOS_AUTH_IDENTITY_VALUE: "security"
+    ports:
+      - "8848:8848"   # HTTP / console / config API
+      - "9848:9848"   # gRPC（nacos 2.x naming 走此端口）
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8848/nacos/v1/console/health/readiness || exit 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+
+  rmqnamesrv:
+    image: apache/rocketmq:5.3.2
+    command: sh mqnamesrv
+    environment:
+      # HEAP_OPTS 直接覆盖 runserver.sh 里的 DEFAULT_HEAP_OPTS（-Xms1g -Xmx1g -Xmn512M）
+      HEAP_OPTS: "-Xms256m -Xmx256m -Xmn128m"
+    ports:
+      - "9876:9876"
+    healthcheck:
+      # 9876 端口可连即算 namesrv 就绪
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/9876' 2>/dev/null && echo ok || exit 1"]
+      interval: 2s
+      timeout: 5s
+      retries: 40
+
+  rmqbroker:
+    image: apache/rocketmq:5.3.2
+    command: sh mqbroker -n rmqnamesrv:9876 --enable-proxy -c /home/rocketmq/rocketmq-5.3.2/conf/broker.conf
+    environment:
+      # HEAP_OPTS 直接覆盖 runbroker.sh 里的 DEFAULT_HEAP_OPTS（-Xms2g -Xmx2g -Xmn1g -XX:MaxDirectMemorySize=1g）
+      HEAP_OPTS: "-Xms512m -Xmx512m -Xmn256m -XX:MaxDirectMemorySize=256m"
+    ports:
+      - "10911:10911"   # broker remoting
+      - "8081:8081"     # proxy gRPC endpoint（Go SDK 连此端口）
+    depends_on:
+      rmqnamesrv:
+        condition: service_healthy
+    volumes:
+      - ./rocketmq/broker.conf:/home/rocketmq/rocketmq-5.3.2/conf/broker.conf:ro
+    healthcheck:
+      # proxy 8081 可连才算 broker+proxy 就绪
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8081' 2>/dev/null && echo ok || exit 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 60

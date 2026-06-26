@@ -1,0 +1,31 @@
+version: v2
+
+# 两个 module：
+#  - api：本工程的服务契约，codegen 的产出目标（见 buf.gen.yaml 的 `buf generate api`）。
+#  - third_party：vendored 的 Kratos/google 注解 proto，仅用于**导入解析**（不 lint、不产出）。
+# 不用 BSR（buf.build）依赖：本环境访问不到 BSR，vendor 后离线可复现。详见 third_party/README.md。
+modules:
+  - path: api
+  - path: third_party
+
+# 顶层 lint：api 走 STANDARD；vendored third_party 整目录 ignore，
+# 使裸跑 `buf lint`（全 workspace、无参数）也对 vendored proto 干净。
+lint:
+  use:
+    - STANDARD
+  except:
+    # error_reason.proto 的枚举值名即 kratos error 的 reason 字符串，必须保持业务约定的
+    # 裸命名（DB_UNAVAILABLE 等），故不强制 ENUM_VALUE_PREFIX。零值 ERROR_REASON_UNSPECIFIED
+    # 已以 _UNSPECIFIED 结尾、本就合规，无需额外豁免 ENUM_ZERO_VALUE_SUFFIX。
+    - ENUM_VALUE_PREFIX
+    # GetGreet 的响应按契约命名为 Greet（领域实体），而非 STANDARD 期望的
+    # GetGreetResponse；这是 T2 任务明确的接口形态，故豁免该命名规则。
+    - RPC_RESPONSE_STANDARD_NAME
+  ignore:
+    - third_party
+
+breaking:
+  use:
+    - FILE
+  ignore:
+    - third_party

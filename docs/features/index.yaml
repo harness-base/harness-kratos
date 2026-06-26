@@ -1,0 +1,39 @@
+# 需求 / 工作包账本。改业务代码前在此登记需求包（rule-0001）。
+version: 1
+features:
+  - id: F-0001
+    title: kratos-base 地基与依赖弹性闭环（S0）
+    project: kratos-base
+    file: 0001-kratos-base-spine.md
+    delivery_status: done
+    implementation_allowed: true
+  - id: F-0002
+    title: kratos-base Redis 接入（S1）
+    project: kratos-base
+    file: 0002-kratos-base-redis.md
+    delivery_status: done
+    implementation_allowed: true
+  - id: F-0003
+    title: kratos-base 消息队列接入（S3：rabbitmq + rocketmq）
+    project: kratos-base
+    file: 0003-kratos-base-mq.md
+    delivery_status: done
+    implementation_allowed: true
+  - id: F-0004
+    title: kratos-base 配置中心 + 服务发现（S4：四后端适配器框架）
+    project: kratos-base
+    file: 0004-kratos-base-conf-registry.md
+    delivery_status: done
+    implementation_allowed: true
+  - id: F-0005
+    title: nacos 后端补全 + 配置/注册中心运行期弹性验证（S5）
+    project: kratos-base
+    file: 0005-kratos-base-nacos-runtime-resilience.md
+    delivery_status: done
+    implementation_allowed: true
+  - id: F-0006
+    title: rocketmq 本机轻量环境 + e2e 销账（S6）
+    project: kratos-base
+    file: 0006-kratos-base-rocketmq-e2e.md
+    delivery_status: done
+    implementation_allowed: true

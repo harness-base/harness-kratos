@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# 提交前：扫暂存内容里的密钥 / 危险命令（rule-0006）。
+set -uo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+if git diff --cached | bash "$ROOT/scripts/hook-policy.sh"; then
+  exit 0
+fi
+echo "✗ pre-commit 拦截：见上方 hook-policy 提示。确认是误报可加 --no-verify。"
+exit 1

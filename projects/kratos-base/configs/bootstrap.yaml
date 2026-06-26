@@ -1,0 +1,45 @@
+infra:
+  mode: local
+  path: configs/runtime.yaml
+  registry:
+    kind: local       # local | etcd | nacos | k8s ; "local" = no registration
+    advertise: ""     # empty → inferred from server.grpc.addr at startup
+
+# ---------------------------------------------------------------------------
+# Etcd 示例配置（mode: etcd 时启用，取消注释并填入真实值）
+# ---------------------------------------------------------------------------
+# infra:
+#   mode: etcd
+#   path: /config/kratos-base/runtime    # etcd key 路径
+#   etcd:
+#     endpoints:
+#       - "etcd-host:2379"
+#     username: ""
+#     password: ""
+#     dial_timeout: 5s
+
+# ---------------------------------------------------------------------------
+# Nacos 示例配置（mode: nacos 时启用）
+# ---------------------------------------------------------------------------
+# infra:
+#   mode: nacos
+#   nacos:
+#     server_addrs:
+#       - "nacos-host:8848"
+#     namespace: ""           # public namespace 留空
+#     group: DEFAULT_GROUP
+#     data_id: runtime.yaml
+#     username: ""
+#     password: ""
+#     timeout_ms: 10000
+
+# ---------------------------------------------------------------------------
+# Kubernetes ConfigMap 示例配置（mode: k8s 时启用）
+# ---------------------------------------------------------------------------
+# infra:
+#   mode: k8s
+#   k8s:
+#     namespace: default
+#     name: kratos-base-runtime    # ConfigMap 名称（必填，按 metadata.name 选中单个 ConfigMap）；
+#                                  # 选中后会加载其 data 下【全部 key】，各 key 按文件扩展名推导格式
+#     kubeconfig_path: ""          # 留空 = in-cluster；集群外填 ~/.kube/config

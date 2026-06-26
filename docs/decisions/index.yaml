@@ -1,0 +1,28 @@
+# ADR 索引（架构决策记录）。
+version: 1
+decisions:
+  - id: ADR-0001
+    title: Agent Harness 骨架设计
+    status: accepted
+    date: 2026-05-29
+    file: 0001-harness-skeleton-design.md
+  - id: ADR-0002
+    title: Kratos 基础骨架技术选型与依赖弹性策略
+    status: accepted
+    date: 2026-06-02
+    file: 0002-kratos-base-architecture-and-resilience.md
+  - id: ADR-0003
+    title: 需求产出（PRD + 交互原型）作为 feature-delivery 的上游
+    status: accepted
+    date: 2026-06-24
+    file: 0003-prd-elicitation-and-prototype.md
+  - id: ADR-0004
+    title: 规则分布化——入驻 AGENTS.md + 自动生成 catalog + CLAUDE.md import shim
+    status: accepted
+    date: 2026-06-26
+    file: 0004-rules-distribution-and-loading.md
+  - id: ADR-0005
+    title: 自进化闭环——每轮机械兜底 + self-optimize 判断引擎
+    status: accepted
+    date: 2026-06-26
+    file: 0005-self-evolution-loop.md

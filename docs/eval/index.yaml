@@ -1,0 +1,35 @@
+# eval 考题登记表。多数考题对应一条 rule（按 id 关联）。
+version: 1
+prompts:
+  - id: "001"
+    rule: rule-0001
+    title: 改业务代码前先立需求包
+    file: prompts/001-feature-package-before-code.md
+  - id: "002"
+    rule: rule-0002
+    title: blocked / skipped 不等于 pass
+    file: prompts/002-blocked-is-not-pass.md
+  - id: "003"
+    rule: rule-0003
+    title: 不许假完成 + 测试覆盖质量
+    file: prompts/003-no-fake-completion.md
+  - id: "004"
+    rule: rule-0004
+    title: 按需加载档位是否合理
+    file: prompts/004-context-loading-budget.md
+  - id: "010"
+    rule: rule-0005
+    title: 任务收尾综合评审
+    file: prompts/010-task-completion-review.md
+  - id: "011"
+    rule: rule-0007
+    title: 架构变更是否同步 skill
+    file: prompts/011-skill-sync-on-architecture-change.md
+  - id: "012"
+    rule: rule-0009
+    title: 验收断言/声称的保证是否由唯一真实证据守护（锚定/共因/竞态/守护测试）
+    file: prompts/012-anchored-assertions.md
+  - id: "013"
+    rule: rule-0010
+    title: PRD/原型 完整性与可观测性
+    file: prompts/013-prd-completeness.md

@@ -1,0 +1,15 @@
+infra:
+  # mode: local — config comes from local file; nacos outage does NOT block startup.
+  # Only the registry (kind: nacos) is tested for non-fatal behavior (AC-N2).
+  mode: local
+  path: configs/runtime.sandbox.yaml
+  nacos:
+    server_addrs:
+      - "127.0.0.1:8848"
+    namespace: ""            # public 命名空间
+    group: "DEFAULT_GROUP"
+    data_id: "runtime.yaml"
+    timeout_ms: 5000
+  registry:
+    kind: nacos
+    advertise: "127.0.0.1:9000"

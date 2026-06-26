@@ -1,0 +1,13 @@
+infra:
+  mode: etcd
+  # path is the etcd key used to store the runtime config.
+  # The key MUST end in .yaml so that contrib/config/etcd detects the format
+  # via filepath.Ext(key) -> "yaml". See: contrib/config/etcd/config.go Load().
+  path: /configs/demo/runtime.yaml
+  etcd:
+    endpoints:
+      - "127.0.0.1:2379"
+    dial_timeout: 2s
+  registry:
+    kind: etcd
+    advertise: "127.0.0.1:9000"

@@ -1,0 +1,61 @@
+# Agent Harness 控制面
+
+本仓是一套通用的 agent 控制面（harness）：用「最小内核 + 可挂载模块」治理 AI agent 在被管工程上的开发。被管工程以后挂进 `projects/`。
+
+默认策略：**少读、按需读、渐进加载**。
+
+## 启动顺序
+
+1. 本 `AGENTS.md` 是**常驻规则源**：Claude Code 经同级 `CLAUDE.md` 的 `@import` 自动加载；Codex 原生按目录层级读 `AGENTS.md`。**加载是机制，不靠"自然语言叫你去读"。**
+2. 读 `docs/context/CURRENT_STATUS.md`（当前真实状态）。
+3. 按 `docs/context/CONTEXT_LOADING.md` 判定本次任务读多少。
+4. 需要文档路由时，读 `docs/README.md`。
+5. 在某目录**读或改**代码前，加载该位置**向上最近的 `AGENTS.md`**（连同其同级 `CLAUDE.md`）——**就近规则随之生效**；按目录加载与档位叠加，详见 `docs/context/CONTEXT_LOADING.md`。
+6. **规则总览**（默认不加载，审查 / 自进化时查）：`docs/rules/index.yaml`——编号 + 简述 + 位置，由 `scripts/rules-index.sh` 从各 `AGENTS.md` 的 `<!-- rule: -->` 标记**自动生成**。
+
+## 规则
+
+下面是 **harness 全局规则**（红线，动手前必看）。**编号 `rule-00NN` 是稳定引用键**，被 eval 考题 / ADR / feature 按号引用；全文就在这里。每条带**隐形标记**供 `rules-index` 扫描。**项目专属规则**沉淀在 `projects/**/AGENTS.md`（就近生效），不堆在这里。
+
+- **改业务代码前先立需求包**：用户可见的需求、行为或验收目标变化，必须先在 `docs/features/` 建需求包并就绪；未就绪 **MUST STOP**（纯控制面 / 文档 / 脚本改动不触发）。 <!-- rule: rule-0001 | sev: blocker | eval: 001 -->
+- **blocked / skipped ≠ pass**：验证没真跑通，不许声称通过。 <!-- rule: rule-0002 | sev: blocker | eval: 002 -->
+- **不许假完成**：没有真实运行证据，不得声称功能完成或验收通过。 <!-- rule: rule-0003 | sev: blocker | eval: 003 -->
+- **按产物/证据/目标文件判加载档，不按关键词**（context-loading，详见该 skill 与 `CONTEXT_LOADING.md`）。 <!-- rule: rule-0004 | sev: warn | eval: 004 -->
+- **收尾前过 eval**：L2 以上任务、关键决策点，收尾前必须跑 task eval review（独立评委按 rubric 打分）。 <!-- rule: rule-0005 | sev: blocker | eval: 010 -->
+- **不碰密钥与危险命令**：不泄露密钥 / token；不执行 `git reset --hard`、`rm -rf /` 等高危命令（hook 会拦）。 <!-- rule: rule-0006 | sev: blocker -->
+- **改架构 / 接口须回顾相关 skill**：大改（写了 ADR 或立了 feature）必须回顾 `.agents/skills/`，更新或写明无需更新。 <!-- rule: rule-0007 | sev: warn | eval: 011 -->
+- **外部材料不自动采信**：事实源 = 正式文档 + 工程当前代码；外部 / 粘贴材料要先整理验收才算数。 <!-- rule: rule-0008 | sev: blocker -->
+- **验收断言必须锚定唯一、真实、产出方的证据**：断言绑到唯一真实信号（防共因污染 / 防超时竞态掩盖）；声称的保证必须有**守护测试**；测试不许为通过而牵强、注释不许撒谎。 <!-- rule: rule-0009 | sev: blocker | eval: 012 -->
+- **PRD 产出标准**：产出 PRD 时——验收可观测、范围 in+out 闭合、每页四态、原型可点通、假设显式确认、可追溯、登记不漂移（仅在产出 PRD 时适用，不强制 PRD 必须存在）。 <!-- rule: rule-0010 | sev: blocker | eval: 013 -->
+- **决策与知识必须当轮落文档，落文档提醒兜住遗漏**：改了产物或做了关键决策，知识要就近写进 `AGENTS.md`/`lessons`/规则/ADR/memory；Stop hook 机械触发（K 轮 / commit / 变更增量）的 Haiku **落文档提醒**（`scripts/turn-backstop.sh`，=①，非自进化审查）会复查遗漏并写 `tasks/optimization-log.md`，捞到的须落到对应文档、不许烂在 log 里。 <!-- rule: rule-0011 | sev: warn -->
+- **不擅自 git 写操作**：未经许可不 commit / push / reset / 删分支 / 改 remote。
+
+## 验证
+
+```bash
+make verify        # 控制面自检（结构 + 文档 + hook policy 测试 + skills/rules 索引 + CLAUDE.md shim）
+make docs-audit    # 文档自检（依赖文件在不在、链接通不通）
+make eval          # 跑 task eval review
+make hooks         # 安装 git hooks
+```
+
+被管工程怎么验证，见 `workspace/verification.yaml` + `docs/harness/VERIFICATION_ROUTING.md`。
+
+## eval
+
+质量不靠 agent 自评：L2+ 任务和关键决策点由 `docs/eval/` 的评委按 rubric 打分，产物写进 `docs/eval/task-reviews/`。eval 题库**独立维护**（`docs/eval/prompts/` + `index.yaml`），按编号引用规则。默认用 **eval 子 agent**（`.claude/agents/eval.md`，免 API key）；CI / headless 可选 `make eval`。触发口径见 `docs/eval/README.md`。
+
+## 工作方式
+
+- 复杂、可并行、或重上下文的任务，**默认拆给子代理（subagent）**做——并行更快，也让主 agent 上下文保持干净。
+- 琐碎改动直接做，别为它 spawn 子代理（纯开销）。
+- 已有子代理：eval（收尾评分）。
+
+## 沟通方式
+
+- 与用户沟通用中文，takeaway 先行，说人话。
+- 明确说明验证结果；没有具体检查，不要声称完成。
+
+---
+
+**用户当前明确指令 > 本文件。** 两者冲突时，以用户指令为准。

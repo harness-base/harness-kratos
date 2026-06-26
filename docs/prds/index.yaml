@@ -1,0 +1,4 @@
+# 需求产出账本。由 prd-elicitation skill 产出的 PRD + 原型在此登记。
+# 与 feature 实现体系松耦合：一份 PRD 可派生 1..N 个 feature 包（docs/features/），不强制。
+version: 1
+prds: []

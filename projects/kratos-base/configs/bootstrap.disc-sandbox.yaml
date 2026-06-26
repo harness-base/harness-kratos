@@ -1,0 +1,13 @@
+infra:
+  # mode: local — config comes from local file, so etcd outage does NOT
+  # prevent the process from starting. Only the registry (kind: etcd) is
+  # tested for non-fatal behavior (AC-D1).
+  mode: local
+  path: configs/runtime.sandbox.yaml
+  etcd:
+    endpoints:
+      - "127.0.0.1:2379"
+    dial_timeout: 2s
+  registry:
+    kind: etcd
+    advertise: "127.0.0.1:9000"

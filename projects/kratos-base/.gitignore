@@ -1,0 +1,53 @@
+# --- 构建产物 ---
+bin/
+dist/
+build/
+# discoveryprobe 二进制（构建产物；脚本 build 到 /tmp/ 或 bin/，此处防御性忽略工程根的）
+discoveryprobe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# --- 测试 / 覆盖率 / 性能 ---
+*.out
+*.test
+coverage.txt
+coverage.html
+*.prof
+*.pprof
+
+# --- buf 拉取的远端依赖缓存（本工程用 vendored third_party，不应出现；防御性忽略）---
+.buf-cache/
+
+# --- IDE / 编辑器 ---
+.idea/
+.vscode/
+*.iml
+*~
+*.bak
+*.swp
+
+# --- OS ---
+.DS_Store
+._*
+
+# --- 日志 / 临时 ---
+*.log
+tmp/
+.tmp/
+*.pid
+# nacos-sdk-go 在测试时写入当前目录的 log/ 和 cache/
+log/
+cache/
+# rocketmq-clients/golang/v5 SDK 默认写 ~/logs/rocketmqlogs；
+# 若 CLIENT_LOG_ROOT 指向工程内目录则防御性忽略。
+logs/
+
+# --- 本地环境 ---
+.env
+.env.*
+!.env.example
+
+# 说明：生成代码（buf 的 *.pb.go、ent 的 gen/）按 Kratos 惯例**入库**，不在此忽略。
+# vendored 的 third_party/*.proto 也入库（codegen 的离线导入依赖）。

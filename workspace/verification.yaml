@@ -1,0 +1,23 @@
+# 被管工程验证路由：每个工程怎么验证写在这。
+# 控制面不放业务测试本体；详见 docs/harness/VERIFICATION_ROUTING.md。
+version: 1
+projects:
+  - name: kratos-base
+    path: projects/kratos-base
+    verify: "make -C projects/kratos-base verify"          # 最小收口检查：build+vet+lint+test
+    unit:   "go -C projects/kratos-base test ./... -race"  # 带 -race 的单元测试
+    e2e:    "bash projects/kratos-base/test/resilience/run_all.sh"  # AC1-AC6 + AC-R1~R3 + AC-C2(etcd conf) + AC-D(etcd disc) + AC-M1~M3(MQ boot/recover/drop) + AC-N1~N2(nacos conf+disc) + AC-CR1~CR2(配置/注册中心运行期宕×{etcd,nacos}) 20项弹性场景
+    # S5-T2: 配置/注册中心运行期宕场景新增：
+    #   AC-CR1(etcd/nacos): 配置中心运行期宕→进程不崩→恢复后热更续上
+    #   AC-CR2(etcd/nacos): 注册中心运行期宕→discovery失败→恢复后自动重注册+discovery续上
+    sandbox: "make -C projects/kratos-base sandbox-up"    # E2E 所需 sandbox 环境
+
+# 示例（接入工程后填）：
+# projects:
+#   - name: backend-service
+#     path: projects/backend-service
+#     verify: "make -C projects/backend-service verify"   # 最小收口检查
+#     unit:   "make -C projects/backend-service test"
+#     api:    "..."
+#     e2e:    "..."
+#     sandbox: "..."                                       # E2E 需要的环境

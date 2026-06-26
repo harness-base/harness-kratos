@@ -1,0 +1,193 @@
+//go:build wireinject
+
+// Package main contains the wire injection graph for the demo service.
+package main
+
+import (
+	"context"
+	"time"
+
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
+	transgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/google/wire"
+
+	"github.com/z-mate/kratos-base/app/demo/internal/biz"
+	"github.com/z-mate/kratos-base/app/demo/internal/conf"
+	"github.com/z-mate/kratos-base/app/demo/internal/data"
+	"github.com/z-mate/kratos-base/app/demo/internal/server"
+	"github.com/z-mate/kratos-base/app/demo/internal/service"
+	"github.com/z-mate/kratos-base/pkg/confcenter"
+	"github.com/z-mate/kratos-base/pkg/mq/rabbitmq"
+	"github.com/z-mate/kratos-base/pkg/mq/rocketmq"
+	"github.com/z-mate/kratos-base/pkg/pgxpool"
+	"github.com/z-mate/kratos-base/pkg/redisx"
+	"github.com/z-mate/kratos-base/pkg/resource"
+)
+
+// provideRuntime extracts the current Runtime value from the config manager.
+func provideRuntime(mgr *confcenter.Manager[conf.Runtime]) conf.Runtime {
+	return mgr.Current().Value
+}
+
+// provideResourceSource exposes the manager's resource.Source for the data layer.
+func provideResourceSource(mgr *confcenter.Manager[conf.Runtime]) resource.Source {
+	return mgr.ResourceSource()
+}
+
+// provideSelectPool returns conf.SelectPool as an untyped function so wire can
+// match it against data.New's second parameter type
+// (func(any)(pgxpool.PoolConfig,error)).
+func provideSelectPool() func(any) (pgxpool.PoolConfig, error) {
+	return conf.SelectPool
+}
+
+// provideSelectRedis returns conf.SelectRedis as an untyped function so wire can
+// match it against data.New's third parameter type
+// (func(any)(redisx.Config,error)).
+func provideSelectRedis() func(any) (redisx.Config, error) {
+	return conf.SelectRedis
+}
+
+// provideSelectMQ returns conf.SelectMQFlat as an untyped function so wire can
+// match it against data.New's fourth parameter type.
+func provideSelectMQ() func(any) (string, rabbitmq.Config, rocketmq.Config, string, error) {
+	return conf.SelectMQFlat
+}
+
+// provideRegistry builds a resource.Registry with the data layer's health checks
+// registered under "postgres" and "redis". The "mq" check is only registered
+// when MQ is enabled so that a disabled MQ never contributes to readiness failures.
+func provideRegistry(d *data.Data) *resource.Registry {
+	r := resource.NewRegistry()
+	r.Register("postgres", d.Healthy)
+	r.Register("redis", d.RedisHealthy)
+	if d.MQEnabled() {
+		r.Register("mq", d.MQHealthy)
+	}
+	return r
+}
+
+// consumerStopper is the subset of *data.ConsumerRunner the teardown needs:
+// it cancels the consumer context and drains the goroutine. Narrowed to an
+// interface so appTeardown is unit-testable with a spy (no broker/DB needed).
+type consumerStopper interface{ Stop() }
+
+// dataCloser is the subset of *data.Data the teardown needs: it releases the
+// PG pool, Redis client, and MQ publisher/consumer connections. Narrowed to an
+// interface for the same reason as consumerStopper.
+type dataCloser interface{ Close() error }
+
+// appTeardown is the graceful-shutdown sequence run from the kratos AfterStop
+// hook. It first stops the background consumer (cancels its context and drains
+// the goroutine), then closes the data layer. The order matters: consumption
+// must cease before the underlying MQ connections are torn down. The returned
+// error is the data-layer close error so the lifecycle surfaces resource
+// teardown failures.
+func appTeardown(cr consumerStopper, d dataCloser) error {
+	cr.Stop()
+	return d.Close()
+}
+
+// registryRunner is the subset of *registryx.Runner the app lifecycle needs:
+// Start spawns the background (non-fatal) registration loop, Stop deregisters
+// and drains it. Narrowed to an interface so newApp's hook wiring is unit-
+// testable with a spy (no Registrar/etcd needed).
+type registryRunner interface {
+	Start(ctx context.Context)
+	Stop(ctx context.Context) error
+}
+
+// registryStopTimeout bounds the BeforeStop deregister wait so a wedged registry
+// backend cannot stall graceful shutdown indefinitely. The runner's own
+// Deregister uses an independent timeout; this is the outer cap on Runner.Stop
+// draining its goroutine.
+const registryStopTimeout = 5 * time.Second
+
+// registryLifecycleOptions returns the two kratos.Options that drive the
+// service-registry Runner from inside the kratos lifecycle:
+//
+//   - AfterStart → runner.Start: kratos runs AfterStart hooks only after every
+//     server's Start has begun (app.Run's wg.Wait), so the instance is
+//     advertised only once the transport ports are actually listening. This
+//     closes the "registered but port not yet open" window (R10F3/F6).
+//   - BeforeStop → runner.Stop: kratos runs BeforeStop hooks before tearing the
+//     servers down, so the instance is withdrawn from the registry while the
+//     port is still accepting connections — closing the symmetric "still
+//     registered but port already closed" window (R10F7).
+//
+// Registration stays non-fatal (AC-D1): the AfterStart hook never returns the
+// registry error — Runner.Start is fire-and-forget with internal retry, so a
+// down registry cannot abort startup. We deliberately do NOT use
+// kratos.Registrar, which would make a registration failure fatal.
+//
+// Extracted from newApp so the phase wiring is testable against a recording
+// transport server without binding real gRPC/HTTP ports.
+func registryLifecycleOptions(runner registryRunner) []kratos.Option {
+	return []kratos.Option{
+		kratos.AfterStart(func(ctx context.Context) error {
+			runner.Start(ctx)
+			return nil
+		}),
+		kratos.BeforeStop(func(ctx context.Context) error {
+			stopCtx, cancel := context.WithTimeout(ctx, registryStopTimeout)
+			defer cancel()
+			return runner.Stop(stopCtx)
+		}),
+	}
+}
+
+// newApp assembles the kratos.App from its transport servers (gRPC + HTTP),
+// hooking both the ConsumerRunner and the service-registry Runner into the app
+// lifecycle.
+//
+// Lifecycle ordering (the whole point of R10F3/F6/F7):
+//   - BeforeStart: consumer starts (may begin consuming before serving — fine).
+//   - AfterStart:  registry Runner starts (see registryLifecycleOptions).
+//   - BeforeStop:  registry Runner stops / deregisters (see registryLifecycleOptions).
+//   - AfterStop:   appTeardown stops the consumer then closes the data layer.
+func newApp(logger log.Logger, gs *transgrpc.Server, hs *transhttp.Server, cr *data.ConsumerRunner, d *data.Data, runner registryRunner) *kratos.App {
+	opts := []kratos.Option{
+		kratos.Name(Name),
+		kratos.Version(Version),
+		kratos.Logger(logger),
+		kratos.Server(gs, hs),
+		kratos.BeforeStart(cr.Start),
+	}
+	opts = append(opts, registryLifecycleOptions(runner)...)
+	opts = append(opts, kratos.AfterStop(func(_ context.Context) error {
+		return appTeardown(cr, d)
+	}))
+	return kratos.New(opts...)
+}
+
+// wireApp is the wire injection entry point.  The build tag ensures wire
+// replaces this file with wire_gen.go at generation time; only wire_gen.go is
+// compiled in production builds.
+//
+// runner is supplied by main (built from bootstrap + bs.Infra.Registry, which
+// live outside the wire graph) and threaded straight into newApp so the
+// registry lifecycle hooks are wired at kratos.New time.
+func wireApp(mgr *confcenter.Manager[conf.Runtime], logger log.Logger, runner registryRunner) (*kratos.App, func(), error) {
+	panic(wire.Build(
+		provideRuntime,
+		provideResourceSource,
+		provideSelectPool,
+		provideSelectRedis,
+		provideSelectMQ,
+		provideRegistry,
+		data.New,
+		data.NewGreetRepo,
+		data.NewHitsRepo,
+		data.NewEventRepo,
+		data.NewConsumerRunner,
+		biz.NewGreetUsecase,
+		biz.NewHitsUsecase,
+		biz.NewEventUsecase,
+		service.NewDemoService,
+		server.NewGRPCServer,
+		server.NewHTTPServer,
+		newApp,
+	))
+}

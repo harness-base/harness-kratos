@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# 推送前：跑控制面自检。
+set -uo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+exec bash "$ROOT/scripts/verify-control-plane.sh"

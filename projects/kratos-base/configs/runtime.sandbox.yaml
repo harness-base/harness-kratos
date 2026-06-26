@@ -1,0 +1,37 @@
+server:
+  grpc:
+    addr: ":9000"
+  http:
+    addr: ":8000"
+log:
+  level: info
+data:
+  database:
+    dsn: "postgres://demo:demo@localhost:5432/demo?sslmode=disable"
+    max_open: 10
+    max_idle: 5
+    conn_max_lifetime: 300s
+    conn_max_idle_time: 60s
+    connect_timeout: 2s
+  redis:
+    addrs:
+      - "localhost:6379"
+  mq:
+    kind: "rabbitmq"
+    topic: "demo.events"
+    rabbitmq:
+      # 默认交换机模型：队列名即 topic（上面的 data.mq.topic），无 exchange/queue 旋钮。
+      url: "amqp://guest:guest@localhost:5672/"
+      dial_timeout: "5s"
+    rocketmq:
+      endpoint: ""
+      access_key: ""
+      secret_key: ""
+      consumer_group: "demo-consumer"
+      await_duration: "5s"
+      request_timeout: "3s"
+trace:
+  # endpoint 为空 = 本地 stdout 模式：span 直接打到 stdout，开箱即见（AC5）。
+  # 本地模式下恒采样，sample_ratio 仅在配置了 OTLP endpoint 时生效。
+  endpoint: ""
+  sample_ratio: 1.0

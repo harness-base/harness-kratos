@@ -1,0 +1,35 @@
+server:
+  grpc:
+    addr: ":9000"
+  http:
+    addr: ":8000"
+log:
+  level: info
+data:
+  database:
+    dsn: ""
+  redis:
+    addrs:
+      - "localhost:6379"
+  mq:
+    # kind: ""          # leave empty = MQ disabled (no readiness check, PublishEvent → 503)
+    # kind: "rabbitmq"  # enable RabbitMQ backend
+    # kind: "rocketmq"  # enable RocketMQ backend
+    kind: ""
+    topic: "demo.events"
+    rabbitmq:
+      # 默认交换机模型：队列名即 topic（上面的 data.mq.topic）。
+      url: ""
+      dial_timeout: "5s"
+    rocketmq:
+      endpoint: ""
+      access_key: ""
+      secret_key: ""
+      consumer_group: "demo-consumer"
+      await_duration: "5s"
+      request_timeout: "3s"
+trace:
+  # endpoint 为空 = 本地 stdout 模式：span 直接打到 stdout，开箱即见（AC5）。
+  # 本地模式下恒采样，sample_ratio 仅在配置了 OTLP endpoint 时生效（生产采样旋钮）。
+  endpoint: ""
+  sample_ratio: 1.0

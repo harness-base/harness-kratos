@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Stop hook：agent 收尾时——若 todo 声明 L2+，必须有对应 eval 评审产出（rule-0005）；并提醒记 lessons。
+# Claude Code 在 Stop 事件调用本脚本；exit 2 = 拦住收尾并把 stderr 反馈给 agent，exit 0 = 放行。
+set -uo pipefail
+# 递归保险：headless 兜底(turn-backstop)自触发的钩子带 HARNESS_TRIAGE=1，直接放行
+[ -n "${HARNESS_TRIAGE:-}" ] && exit 0
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TODO="$ROOT/tasks/todo.md"
+
+# 防循环：已在 stop-hook 续跑里就直接放行
+payload="$(cat 2>/dev/null || true)"
+printf '%s' "$payload" | grep -q '"stop_hook_active"[[:space:]]*:[[:space:]]*true' && exit 0
+transcript="$(printf '%s' "$payload" | sed -nE 's/.*"transcript_path"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' | head -1)"
+
+[ -f "$TODO" ] || exit 0
+
+# 从 todo 读声明的档位与 task
+level="$(grep -oE 'level:[[:space:]]*L[0-9]' "$TODO" | grep -oE 'L[0-9]' | head -1)"
+task="$(grep -oE 'task:[[:space:]]*[A-Za-z0-9._-]+' "$TODO" | sed -E 's/task:[[:space:]]*//' | head -1)"
+
+# 仅在声明 L2+ 时强制 eval（档位声明靠 agent 诚实——见 docs/harness/HOOKS.md 的局限说明）
+if [ -n "$level" ] && [ "${level#L}" -ge 2 ] 2>/dev/null; then
+  found=""
+  [ -n "$task" ] && found="$(ls -d "$ROOT/docs/eval/task-reviews/"*"-$task" 2>/dev/null | head -1)"
+  if [ -z "$found" ]; then
+    echo "⛔ 收尾拦截（rule-0005）：todo 声明 $level，但没找到 task「${task:-未声明}」的 eval 评审产出。" >&2
+    echo "   请先跑 eval 再收尾（交互：用 eval 子 agent，免 key；CI：make eval）；确属轻量就把 todo 的 level 降到 L1。" >&2
+    exit 2
+  fi
+fi
+
+# 自进化兜底：机械触发(K轮/commit/变更数)→ headless Haiku 复查最近对话、捞遗漏的决策/知识。best-effort，从不阻断。
+bash "$ROOT/scripts/turn-backstop.sh" "${transcript:-}" || true
+
+echo "ℹ 收尾提醒：踩到坑就记一条 tasks/lessons.md（错在哪 / 怎么防 / 怎么更早发现）。" >&2
+exit 0

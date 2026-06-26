@@ -1,0 +1,32 @@
+version: v2
+
+# Managed mode 统一管理 go_package 等文件级选项，但**不动 vendored third_party**
+# （它们的 go_package 必须保持各自上游路径，比如
+#  google.golang.org/genproto/googleapis/api/annotations、
+#  github.com/go-kratos/kratos/v2/errors）。
+managed:
+  enabled: true
+  disable:
+    - path: third_party
+
+# 生成 4 类代码：消息(go) / gRPC(go-grpc) / HTTP(go-http,kratos) / 错误(go-errors,kratos)。
+# openapi 对 S0 可选且本机未装 protoc-gen-openapi，故先不配；需要时装
+# `go install github.com/google/gnostic/cmd/protoc-gen-openapi@v0.7.1` 再加一段 plugin。
+#
+# out: api + paths=source_relative ⇒ .pb.go 落在 .proto 旁边（api/demo/v1/*.pb.go），
+# 符合 Kratos 惯例（生成物入库）。codegen 仅作用于 api module（Makefile: `buf generate api`）。
+plugins:
+  - local: protoc-gen-go
+    out: api
+    opt: paths=source_relative
+  - local: protoc-gen-go-grpc
+    out: api
+    opt:
+      - paths=source_relative
+      - require_unimplemented_servers=false
+  - local: protoc-gen-go-http
+    out: api
+    opt: paths=source_relative
+  - local: protoc-gen-go-errors
+    out: api
+    opt: paths=source_relative

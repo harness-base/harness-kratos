@@ -1,0 +1,3 @@
+infra:
+  mode: local
+  path: configs/runtime.sandbox.yaml

@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+// Package demo.v1 holds the demo service contract.
+//
+// T2 落地真正的 DemoService：保留 T1 的 Ping（最小可生成 + liveness echo），
+// 新增 GetGreet（经数据层读 greet，用于后续 PG 弹性闭环验证）。
+// 错误模型（reason 枚举 + kratos errors 注解）在 error_reason.proto。
+package demo.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/z-mate/kratos-base/api/demo/v1;v1";
+
+// DemoService is the demo service contract for the kratos-base spine.
+service DemoService {
+  // Ping is a trivial liveness echo; pure in-memory, no external dependency.
+  rpc Ping(PingRequest) returns (PingResponse) {
+    option (google.api.http) = {get: "/v1/ping"};
+  }
+  // GetGreet returns a greeting by id; backed by the data layer (PostgreSQL/ent).
+  // On dependency outage it returns a DB_UNAVAILABLE error (see error_reason.proto)
+  // without crashing the service.
+  rpc GetGreet(GetGreetRequest) returns (Greet) {
+    option (google.api.http) = {get: "/v1/greet/{id}"};
+  }
+  // Hits increments and returns a Redis-backed hit counter.
+  // On Redis outage it returns a DB_UNAVAILABLE error (HTTP 503) without
+  // crashing the service.
+  rpc Hits(HitsRequest) returns (HitsReply) {
+    option (google.api.http) = {get: "/v1/hits"};
+  }
+  // PublishEvent publishes an arbitrary payload to the configured MQ topic.
+  // Returns DB_UNAVAILABLE (HTTP 503) when the broker is unreachable or MQ is
+  // not enabled. Returns INVALID_ARGUMENT (HTTP 400) when payload is empty.
+  rpc PublishEvent(PublishEventRequest) returns (PublishEventReply) {
+    option (google.api.http) = {
+      post: "/v1/events"
+      body: "*"
+    };
+  }
+}
+
+// HitsRequest is the request for Hits.
+message HitsRequest {
+  // key is an optional counter key. When empty the server uses the default
+  // counter "demo:hits". A non-empty key increments that named counter instead
+  // (e.g. ?key=foo bumps "foo"). The key must be at most 128 bytes and contain
+  // no control or whitespace characters; otherwise INVALID_ARGUMENT (HTTP 400).
+  string key = 1;
+}
+
+// HitsReply is the response for Hits.
+message HitsReply {
+  // count is the current value of the hit counter after incrementing.
+  int64 count = 1;
+}
+
+// PingRequest is the request for Ping.
+message PingRequest {
+  // name is an optional caller label echoed back.
+  string name = 1;
+}
+
+// PingResponse is the response for Ping.
+message PingResponse {
+  // message echoes a greeting back to the caller.
+  string message = 1;
+}
+
+// GetGreetRequest is the request for GetGreet.
+message GetGreetRequest {
+  // id identifies the greet to fetch.
+  int64 id = 1;
+}
+
+// Greet is a single greeting record.
+message Greet {
+  // id is the greet identifier.
+  int64 id = 1;
+  // content is the greeting text.
+  string content = 2;
+}
+
+// PublishEventRequest carries the event payload to publish.
+message PublishEventRequest {
+  // payload is the raw event body. Must not be empty.
+  string payload = 1;
+}
+
+// PublishEventReply carries the generated event id.
+message PublishEventReply {
+  // id is the unique identifier assigned to the published event.
+  string id = 1;
+}

@@ -1,0 +1,21 @@
+# eval summary
+
+- level: L4
+- task: kratos-base-s3-rereview（MQ red 后复评：路由键/断言假阳性/死句柄/队列驻留修复）
+- prompts: ["010", "003", "002"]
+- generated_at: 20260612T050146Z
+- prior_review: 20260612T041709Z-kratos-base-s3（red）
+- verdicts:
+  - "003": pass (warn notes)
+  - "002": pass
+  - "010": pass (warn)
+- overall: yellow
+- headline: 上轮 red 的两 blocker + 追加两缺陷全部真修真验——评委亲跑 recover/drop EXIT=0，消费回执 key==publish 返回 id（三路独立确认），rabbitmqctl 队列侧 durable=true、消费后 0 积压；run_all 日志经时间戳鉴定为修复后单次真跑（14/14 PASS）。余 warn：AC-M3"退避重试（日志可见）"子项不成立（监督循环运行时零日志）、新增胶水行为缺单测、adaptDeliveries 停机滞留维持上轮 warn。处理 AC-M3 子项（补一条日志或修订 AC 文本）即可置 done。
+- evaluator_evidence:
+  - "make -C projects/kratos-base verify → '>> verify OK'"
+  - "go test ./pkg/mq/... ./pkg/resource/... -race -count=1 → 4 包全 ok（含新增 TestProvider_HealthFail_ClosesAndRebuilds；1 个如实 skip）"
+  - "scen_mq_recover.sh EXIT=0：回执 key=7f144417d3db14429a5764c040f78c81==publish id（评委轮询期间第一手捕获）"
+  - "scen_mq_drop.sh EXIT=0：baseline 1c11219c…/恢复 4cc28e8d… key==id、fast-fail 0.006890s、同 pid 17490"
+  - "独立探针：publish id 39dd8b0e… → 消费回执 key 同值 body_len=24；rabbitmqctl demo.events durable=true、0 msgs 0 unacked 1 consumer"
+  - "/tmp/run_all_final.log 鉴定：birth 12:45:08、内嵌时间戳 12:45:17→12:47:51、晚于 rabbitmq.go mtime 12:43:48 → 修复后真跑，14 AC PASS"
+  - "反向核实：访问日志行无 consumer:received 标记亦无事件 id，双锚定断言结构上无法假阳性"

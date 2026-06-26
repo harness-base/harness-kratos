@@ -1,0 +1,9 @@
+.DS_Store
+.idea/
+*.local
+.env
+.env.local
+workspace/*.local.*
+tasks/.turn-count
+tasks/.last-backstop
+**/.DS_Store

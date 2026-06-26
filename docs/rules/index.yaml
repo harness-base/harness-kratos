@@ -1,0 +1,304 @@
+# 规则总览（catalog）。由 scripts/rules-index.sh 从各 AGENTS.md 的标记自动生成。禁手改。
+# 规则全文在对应 AGENTS.md；编号 rule-00NN 是 eval/ADR/feature 的稳定引用键。
+version: 1
+rules:
+  - id: kratos/confcenter-eager-load-fail-fast
+    brief: "启动期急加载 + fail-fast"
+    location: projects/kratos-base/pkg/confcenter/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/confcenter-nonblocking-publish
+    brief: "Publish 对慢订阅者非阻塞 skip"
+    location: projects/kratos-base/pkg/confcenter/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/confcenter-retain-log-is-evidence
+    brief: "reload/Publish 失败必须日志 `retaining previous config` 并返回"
+    location: projects/kratos-base/pkg/confcenter/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/confcenter-validate-atomic-rollback
+    brief: "Publish 前必须 validate，坏配置原子保留上一版"
+    location: projects/kratos-base/pkg/confcenter/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/confcenter-version-monotonic
+    brief: "Snapshot.Version 从 1 起严格 +1，禁手改/重置"
+    location: projects/kratos-base/pkg/confcenter/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/obs-empty-endpoint-always-sample
+    brief: "空 Endpoint 强制 AlwaysSample（反直觉陷阱）"
+    location: projects/kratos-base/pkg/obs/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/obs-propagate-tracecontext
+    brief: "跨服务 ParentBased 时必须传播 W3C TraceContext 头"
+    location: projects/kratos-base/pkg/obs/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/obs-setup-tracer-once
+    brief: "SetupTracer 全局只在启动调一次并 defer shutdown"
+    location: projects/kratos-base/pkg/obs/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/obs-simple-vs-batch-processor
+    brief: "本地用 Simple、远程用 Batch span processor，别混"
+    location: projects/kratos-base/pkg/obs/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/obs-trace-config-dual-tag
+    brief: "TraceConfig 字段必须 json+yaml 双 tag"
+    location: projects/kratos-base/pkg/obs/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/pgxpool-no-config-tags-on-poolconfig
+    brief: "PoolConfig 本身不加 config 反序列化 tag"
+    location: projects/kratos-base/pkg/pgxpool/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/pgxpool-open-honors-ctx
+    brief: "Open(ctx, cfg) 必须吃调用方 ctx"
+    location: projects/kratos-base/pkg/pgxpool/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/pgxpool-ping-before-return
+    brief: "Open 返回前必须 PingContext，失败则 Close+返错"
+    location: projects/kratos-base/pkg/pgxpool/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rabbitmq-declare-before-publish
+    brief: "Publish 前必须 declareTopicQueue"
+    location: projects/kratos-base/pkg/mq/rabbitmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rabbitmq-dlq-declared-first
+    brief: "DLQ 必须先于主队列声明"
+    location: projects/kratos-base/pkg/mq/rabbitmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rabbitmq-nack-requeue-true
+    brief: "Nack 一律 requeue=true"
+    location: projects/kratos-base/pkg/mq/rabbitmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rabbitmq-qos-before-consume
+    brief: "Qos(prefetch) 必须在 Consume 之前"
+    location: projects/kratos-base/pkg/mq/rabbitmq/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/rabbitmq-quorum-dlq
+    brief: "主队列必须 quorum 型 + x-delivery-limit"
+    location: projects/kratos-base/pkg/mq/rabbitmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rabbitmq-routing-key-equals-topic
+    brief: "默认交换机 routing key 必须 == Topic（队列名）"
+    location: projects/kratos-base/pkg/mq/rabbitmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/redisx-close-on-ping-failure
+    brief: "Open ping 失败必须 Close 再返错"
+    location: projects/kratos-base/pkg/redisx/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/redisx-fingerprint-covers-fields
+    brief: "Fingerprint 必须摘要所有影响连接池的字段"
+    location: projects/kratos-base/pkg/redisx/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/redisx-mode-by-addrs
+    brief: "模式由 Addrs 数量自动选"
+    location: projects/kratos-base/pkg/redisx/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/redisx-open-honors-ctx
+    brief: "Open(ctx, cfg) 必须吃调用方 ctx"
+    location: projects/kratos-base/pkg/redisx/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/registryx-backoff-clamp-before-shift
+    brief: "backoff 移位前必须先 clamp 指数"
+    location: projects/kratos-base/pkg/registryx/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/registryx-deregister-background-ctx
+    brief: "Deregister 必须用 context.Background()"
+    location: projects/kratos-base/pkg/registryx/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/registryx-parks-after-success
+    brief: "注册成功后 Runner 即 park，不自动重注册"
+    location: projects/kratos-base/pkg/registryx/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/registryx-register-per-attempt-timeout
+    brief: "每次 Register 用独立超时（5s）"
+    location: projects/kratos-base/pkg/registryx/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/registryx-runner-not-kratos-registrar
+    brief: "注册用 registryx.Runner（非致命后台重试），不用 kratos.Registrar"
+    location: projects/kratos-base/pkg/registryx/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/resource-builder-respects-ctx
+    brief: "Adapter.Build 必须吃调用方 ctx"
+    location: projects/kratos-base/pkg/resource/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/resource-close-idempotent
+    brief: "Adapter.Close 必须幂等"
+    location: projects/kratos-base/pkg/resource/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/resource-fingerprint-covers-config
+    brief: "Fingerprint 必须含所有运行时可变的连接字段"
+    location: projects/kratos-base/pkg/resource/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/resource-healthy-failure-marks-not-ready
+    brief: "Healthy 失败必须置 ready=false"
+    location: projects/kratos-base/pkg/resource/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/resource-healthy-toctou-guard
+    brief: "Healthy 置 ready=false 前必须比对句柄身份"
+    location: projects/kratos-base/pkg/resource/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rocketmq-dial-reachable-precheck
+    brief: "Start 前必须 dialReachable 预检"
+    location: projects/kratos-base/pkg/mq/rocketmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rocketmq-empty-topic-before-breaker
+    brief: "空 Topic 守卫必须在 breaker.Allow() 之前"
+    location: projects/kratos-base/pkg/mq/rocketmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rocketmq-enablessl-set-once
+    brief: "golang.EnableSsl 进程级只写一次"
+    location: projects/kratos-base/pkg/mq/rocketmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rocketmq-fingerprint-covers-timeouts
+    brief: "Fingerprint 必须含 AwaitDuration 与 RequestTimeout"
+    location: projects/kratos-base/pkg/mq/rocketmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rocketmq-publish-bounded-ctx
+    brief: "Publish 的 Send 必须 goroutine+select 限时"
+    location: projects/kratos-base/pkg/mq/rocketmq/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/rocketmq-pump-seam
+    brief: "保留 pump(receiver) 可注入缝"
+    location: projects/kratos-base/pkg/mq/rocketmq/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/server-http-includes-ratelimit
+    brief: "HTTP 链必须含 ratelimit.Server()"
+    location: projects/kratos-base/app/demo/internal/server/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/server-metrics-above-ratelimit-validate
+    brief: "metrics.Server 必须在 ratelimit / validate 之上（外层）"
+    location: projects/kratos-base/app/demo/internal/server/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/server-metrics-tests-bind-real-chain
+    brief: "metrics 测试必须绑真实中间件链 + 真实拒绝场景"
+    location: projects/kratos-base/app/demo/internal/server/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/server-middleware-via-helper
+    brief: "中间件链必须经 grpcMiddlewares()/httpMiddlewares() helper 构造，不内联"
+    location: projects/kratos-base/app/demo/internal/server/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/server-readyz-dedicated-ctx
+    brief: "/readyz 用独立 context.WithTimeout(Background, 15s)，不继承 Kratos 请求 ctx"
+    location: projects/kratos-base/app/demo/internal/server/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/test-avoid-common-cause
+    brief: "避免共因污染：一个脚本别同时推坏配置和停依赖容器"
+    location: projects/kratos-base/test/resilience/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/test-before-after-count
+    brief: "日志断言用 BEFORE/AFTER 计数对比（grep -cF），禁裸 grep 一次"
+    location: projects/kratos-base/test/resilience/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/test-cwd-invariant
+    brief: ""
+    location: projects/kratos-base/test/resilience/AGENTS.md
+    severity: warn
+    eval: []
+  - id: kratos/test-producer-evidence
+    brief: "断言锚定产出方结构化字段，禁裸 payload 全文 grep"
+    location: projects/kratos-base/test/resilience/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: kratos/test-warn-not-pass
+    brief: "快速失败设硬数值边界，WARN ≠ PASS"
+    location: projects/kratos-base/test/resilience/AGENTS.md
+    severity: blocker
+    eval: []
+  - id: rule-0001
+    brief: "改业务代码前先立需求包"
+    location: AGENTS.md
+    severity: blocker
+    eval: ["001"]
+  - id: rule-0002
+    brief: "blocked / skipped ≠ pass"
+    location: AGENTS.md
+    severity: blocker
+    eval: ["002"]
+  - id: rule-0003
+    brief: "不许假完成"
+    location: AGENTS.md
+    severity: blocker
+    eval: ["003"]
+  - id: rule-0004
+    brief: "按产物/证据/目标文件判加载档，不按关键词"
+    location: AGENTS.md
+    severity: warn
+    eval: ["004"]
+  - id: rule-0005
+    brief: "收尾前过 eval"
+    location: AGENTS.md
+    severity: blocker
+    eval: ["010"]
+  - id: rule-0006
+    brief: "不碰密钥与危险命令"
+    location: AGENTS.md
+    severity: blocker
+    eval: []
+  - id: rule-0007
+    brief: "改架构 / 接口须回顾相关 skill"
+    location: AGENTS.md
+    severity: warn
+    eval: ["011"]
+  - id: rule-0008
+    brief: "外部材料不自动采信"
+    location: AGENTS.md
+    severity: blocker
+    eval: []
+  - id: rule-0009
+    brief: "验收断言必须锚定唯一、真实、产出方的证据"
+    location: AGENTS.md
+    severity: blocker
+    eval: ["012"]
+  - id: rule-0010
+    brief: "PRD 产出标准"
+    location: AGENTS.md
+    severity: blocker
+    eval: ["013"]
+  - id: rule-0011
+    brief: "决策与知识必须当轮落文档，落文档提醒兜住遗漏"
+    location: AGENTS.md
+    severity: warn
+    eval: []

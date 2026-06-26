@@ -1,0 +1,23 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# 全局指令：不复制 AGENTS.md，只指过去（事实源是 AGENTS.md + docs/）。
+developer_instructions = """
+本仓是通用 agent 控制面（harness）。先读根 AGENTS.md（常驻规则源），按 docs/context/CONTEXT_LOADING.md 判定读多少；在某目录读/改代码前先读最近的 AGENTS.md。
+与用户用中文沟通、takeaway 先行；无具体验证不声称完成。
+完成收口、eval 触发、hooks、规则一律以 AGENTS.md 和 docs/ 为准。
+"""
+
+[features]
+hooks = true
+
+[agents]
+max_threads = 4
+max_depth = 1
+
+[agents.eval]
+description = "任务收尾/关键决策点的独立评委：读 evaluator+rubric+考题+候选，按 rubric 打分并写 task-review。免 API key（用会话模型）。"
+config_file = "agents/eval.toml"
+
+[agents.self-optimize]
+description = "self-evolution 规范检查层的深审执行器：按维度 reference 深审、链路诊断定位断环、写 optimization-log。免 API key（用会话模型）。"
+config_file = "agents/self-optimize.toml"

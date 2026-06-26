@@ -1,0 +1,14 @@
+# nacos 模式 bootstrap（可选 E2E 用，配 test/resilience/scen_conf_nacos.sh）。
+# ⚠️ 本机（macOS arm64）无官方 nacos 镜像，此配置未在本机实测——见 test/resilience/README.md。
+# 运行期配置整体存于 nacos：dataId=runtime.yaml / group=DEFAULT_GROUP（内容=runtime.sandbox.yaml 等价）。
+infra:
+  mode: nacos
+  nacos:
+    server_addrs:
+      - "127.0.0.1:8848"
+    namespace: ""            # public 命名空间
+    group: "DEFAULT_GROUP"
+    data_id: "runtime.yaml"  # 以 .yaml 结尾便于格式识别（与 etcd key 约定一致的习惯）
+    timeout_ms: 5000
+  registry:
+    kind: local              # 本场景只测配置中心，注册走 local（零注册）
