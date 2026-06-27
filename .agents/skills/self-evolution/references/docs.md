@@ -61,7 +61,7 @@ grep -nE 'README\.md|coverage-audit' "$ROOT/scripts/verify-control-plane.sh"
 
 - **文档现状漂移**：commit `ee72ca4`（R11）专门"文档现状化"——文档描述与代码已脱节，靠对抗评审才照出。**活例（写本手册时实测）**：`docs/context/CURRENT_STATUS.md` 仍写 "8 条规则（rule-0001 ~ 0008）" 与 `.agents/skills` "4 个技能"，但实际已增至 7 个（含 `prd-elicitation`/`self-evolution`/`bugfix`）—— 典型 context 没跟代码同步（本批已修 CURRENT_STATUS）。
 - **声称"全保留/不变"却偷改**（`tasks/lessons.md` 2026-06-26 规则分布化）：ADR 凭记忆写"severity/eval 映射全保留"，实际改了 rule-0007 severity、给规则编了不存在的 eval 指针 → eval 子 agent 逐条 `git show HEAD` 对比判 yellow。教训：凡"X 保留/不变"，必须对事实源机械核对，能机器查的固化成 `--check`。
-- **知识堆在根、没就近**：本仓 kratos 早期工程规则曾缺就近 `AGENTS.md`（规则分布化前都堆控制面）；现已下沉到 `projects/kratos-base/**/AGENTS.md`（13 处），根 `AGENTS.md` 明确"项目专属规则沉淀在 `projects/**/AGENTS.md`，不堆这里"。审查时查"该就近的有没有就近"。
+- **知识堆在根、没就近**：本仓 kratos 早期工程规则曾缺就近 `AGENTS.md`（规则分布化前都堆控制面）；现已下沉到 `projects/kratos-base/**/AGENTS.md`（`pkg/*` · `app/demo/internal/*` · `test/resilience` 各层就近），根 `AGENTS.md` 明确"项目专属规则沉淀在 `projects/**/AGENTS.md`，不堆这里"。审查时查"该就近的有没有就近"。
 - **shim 漏配**：新建 `AGENTS.md` 忘了同级 `CLAUDE.md` → Claude Code 加载不到该层规则（`verify-control-plane.sh` shim 段会拦，但漏跑就漏）。
 - **related_docs 悬空**：frontmatter 引用的文件改名/移动后没同步 → `docs-audit` 红。
 - **手写 README 自承"靠人记得"无机器兜底**：`scripts/README.md`（2026-06-26 新加这份 README 时埋下）末尾自标"手写，不要忘了同步"——scripts/ 新增 `.sh` 不更新 README，`make verify` 仍全绿。同型还有根 `README.md` 顶层结构表、`docs/README.md` 子目录职责表。
@@ -71,6 +71,8 @@ grep -nE 'README\.md|coverage-audit' "$ROOT/scripts/verify-control-plane.sh"
 
 - **机器闭环**：`scripts/docs-audit.sh`（悬空）、`scripts/verify-control-plane.sh` 的 shim 段（shim 缺配）、`make verify` / `make docs-audit` 统一入口。
 - **改文档内容**（路由/context 现状化/就近下沉）：直接编对应 `.md` / `AGENTS.md`，改完跑 `make verify` 复核。
+- **改了代码/配置/接口后主动同步文档**：用 `doc-sync` skill（对照 checklist 查 README / AGENTS / CURRENT_STATUS 等要不要跟改），是 `turn-backstop` 落文档提醒的主动版。
+- **状态/索引文档别硬编码可自动生成的枚举**：能交给 `*-index`（如 `.agents/skills/README.md` by `skills-index`）的清单/计数，写"以该自动生成索引为准"，别在 `CURRENT_STATUS` 等处复刻——硬编码枚举是反复漂移源（`tasks/lessons.md` 2026-06-27）。
 - **沉淀一条规则到就近 `AGENTS.md` 并挂执行**：`add-rule` skill。
 - **决策类大改要留 ADR**：`templates/adr.md` 起草（rule-0007，别手搓省栏）。
 - **新建 `AGENTS.md` 后**：必补同级 `CLAUDE.md`（`@AGENTS.md` 一行），靠 `verify-control-plane.sh` shim 段自证。

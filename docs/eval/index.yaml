@@ -33,3 +33,7 @@ prompts:
     rule: rule-0010
     title: PRD/原型 完整性与可观测性
     file: prompts/013-prd-completeness.md
+  - id: "014"
+    rule: rule-0012
+    title: 状态/索引文档不硬编码可自动生成的枚举
+    file: prompts/014-no-hardcoded-enumeration.md

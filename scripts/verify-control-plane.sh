@@ -22,11 +22,33 @@ bash scripts/hook-policy.test.sh || fail=1
 echo "== 自进化兜底自测 =="
 bash scripts/turn-backstop.test.sh || fail=1
 
+echo "== 纠错提醒钩子自测 =="
+bash scripts/correction-nudge.test.sh || fail=1
+
+echo "== lessons 整理计数自测 =="
+bash scripts/lessons-promote-check.test.sh || fail=1
+
 echo "== eval 资产 =="
 bash scripts/verify-eval-materials.sh || fail=1
 
 echo "== skills 目录无漂移 =="
 bash scripts/skills-index.sh --check || fail=1
+
+echo "== 状态文档不硬编码可自生成枚举（rule-0012）=="
+# CURRENT_STATUS 的 `.agents/skills/` 行应指向自动生成的 .agents/skills/README.md（skills-index），
+# 不复刻 skill 清单；该行列举 >=4 个真实 skill 名 = 在硬编码枚举（举 1-2 例豁免）→ 失败。
+status_doc="docs/context/CURRENT_STATUS.md"
+skills_row="$(grep -E '^\| `\.agents/skills/`' "$status_doc" || true)"
+enum_n=0
+for s in $(find .agents/skills -maxdepth 2 -name SKILL.md -exec dirname {} \; | xargs -n1 basename | sort -u); do
+  printf '%s' "$skills_row" | grep -q -- "$s" && enum_n=$((enum_n+1))
+done
+if [ "$enum_n" -ge 4 ]; then
+  echo "  ✗ $status_doc 的 .agents/skills/ 行枚举了 $enum_n 个 skill 名（rule-0012）——改为指向自动生成的 .agents/skills/README.md，别硬编码清单"
+  fail=1
+else
+  echo "  ✓ 状态文档未硬编码 skill 枚举（rule-0012：指向自动生成索引）"
+fi
 
 echo "== rules 索引无漂移 =="
 bash scripts/rules-index.sh --check || fail=1

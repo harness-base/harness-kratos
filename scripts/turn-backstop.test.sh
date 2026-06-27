@@ -26,6 +26,12 @@ rm -f "$BACKSTOP_CNT" "$BACKSTOP_BASE"
 bash scripts/turn-backstop.sh /nonexistent/path >/dev/null 2>&1
 [ "$?" -eq 0 ] && ok || no "transcript 缺失时未 exit 0（会阻断收尾）"
 
+# 4) 单一来源接通：turn-backstop 引用 doc-sync 的漂移对照表，且能取到「🔴手」行（≥5）
+#    断了（文件改名 / 标记换 / 行被删空）= Haiku 判据变空、静默退化，必须红。
+cm="$(grep -E '^\|.*🔴' "$ROOT/.agents/skills/doc-sync/SKILL.md" 2>/dev/null | wc -l | tr -d ' ')"
+{ grep -q 'doc-sync/SKILL.md' "$ROOT/scripts/turn-backstop.sh" && [ "${cm:-0}" -ge 5 ]; } \
+  && ok || no "doc-sync 漂移对照表未接通（turn-backstop 没引用 或 🔴行<5：取到 ${cm:-0} 行）"
+
 rm -rf "$tmp"
 echo "turn-backstop.test: pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]

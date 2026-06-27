@@ -32,6 +32,6 @@ related_docs:
 | `decisions/` | ADR 架构决策记录 |
 | `eval/` | 评分体系：考题、rubric、评委、评审产出 |
 | `harness/` | 验证路由、CI、hooks 说明、工程接入指南 |
-| `features/` | 需求 / 工作包（空账本，随被管工程填） |
+| `features/` | 需求 / 工作包（随被管工程填；已挂 kratos-base 的需求包） |
 
 `architecture/` 待接入 `projects/` 后再建；`drift/` 区已弃用、漂移处理并入自进化闭环（见 `decisions/0006-drop-drift-area.md`）。

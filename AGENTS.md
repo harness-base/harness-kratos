@@ -27,6 +27,8 @@
 - **验收断言必须锚定唯一、真实、产出方的证据**：断言绑到唯一真实信号（防共因污染 / 防超时竞态掩盖）；声称的保证必须有**守护测试**；测试不许为通过而牵强、注释不许撒谎。 <!-- rule: rule-0009 | sev: blocker | eval: 012 -->
 - **PRD 产出标准**：产出 PRD 时——验收可观测、范围 in+out 闭合、每页四态、原型可点通、假设显式确认、可追溯、登记不漂移（仅在产出 PRD 时适用，不强制 PRD 必须存在）。 <!-- rule: rule-0010 | sev: blocker | eval: 013 -->
 - **决策与知识必须当轮落文档，落文档提醒兜住遗漏**：改了产物或做了关键决策，知识要就近写进 `AGENTS.md`/`lessons`/规则/ADR/memory；**用户纠正也算**（用户说"不是这样 / 你理解错了 / 撤回 / 你搞混了"时，当轮记一条 `tasks/lessons.md` 三段式：错在哪 / 怎么防 / 怎么更早发现）；Stop hook 机械触发（K 轮 / commit / 变更增量）的 Haiku **落文档提醒**（`scripts/turn-backstop.sh`，=①，非自进化审查）会复查遗漏并写 `tasks/optimization-log.md`，捞到的须落到对应文档、不许烂在 log 里。 <!-- rule: rule-0011 | sev: warn -->
+- **状态/索引文档不硬编码可自动生成的枚举**：凡已有 `*-index` 自动生成权威清单的（skill→`.agents/skills/README.md`、规则→`docs/rules/index.yaml` 等），`CURRENT_STATUS` 等状态文档只写"以该自动生成索引为准"的指针，**不复刻计数/清单**——硬编码枚举无 `--check` 守、每次新增就漂（本仓 CURRENT_STATUS 的 skill 清单已三次漂移）。举 1–2 例可以，整列枚举不行。 <!-- rule: rule-0012 | sev: warn | eval: 014 -->
+- **非琐碎任务维护 `tasks/todo.md`（标 `level` + 收尾 Review）**：多步 / 动业务码 / L2+ 的任务，动手即在 `tasks/todo.md` 立当前任务并标 `level: L? ｜ task: <名>`（收尾闸据此判要不要 eval，见 rule-0005、档位见 rule-0004）；范围变即更新、收尾前补 Review 段；保持轻——旧块滚进 `tasks/archive/`，不长成流水账。 <!-- rule: rule-0013 | sev: warn -->
 - **不擅自 git 写操作**：未经许可不 commit / push / reset / 删分支 / 改 remote。
 
 ## 验证

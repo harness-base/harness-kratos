@@ -27,14 +27,14 @@
 | `docs/decisions/` | ADR 架构决策记录 |
 | `docs/eval/` | 评分体系：考题、rubric、评委、评审产出 |
 | `docs/harness/` | 验证路由、CI、hooks、**工程接入指南** |
-| `docs/features/` | 需求 / 工作包（空账本，随被管工程填） |
+| `docs/features/` | 需求 / 工作包（随被管工程填；已挂 kratos-base 的需求包） |
 | `.agents/skills/` | 自包含技能（流程即技能） |
 | `.claude/` + `.codex/` | agent 配置：eval 子 agent（双运行时）+ hooks 接线 |
 | `templates/` | feature / plan / ADR / doc / skill / eval-rubric 模板 |
 | `scripts/` | 验证 / 文档自检 / eval / 装 hook 脚本（bash） |
 | `.githooks/` + `.github/` | git hooks（提交 / 推送拦截）+ CI |
 | `workspace/verification.yaml` | 各被管工程怎么验证 |
-| `projects/` | 被管工程挂载点（以后把工程放这） |
+| `projects/` | 被管工程挂载点（已挂 kratos-base） |
 
 ## 起步
 

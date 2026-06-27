@@ -56,10 +56,16 @@ if [ -n "$head_sha" ] && [ -n "$last_sha" ] && [ "$head_sha" != "$last_sha" ]; t
 slice="$(tail -c "$TAIL_BYTES" "$TRANSCRIPT" 2>/dev/null || true)"
 [ -z "$slice" ] && exit 0
 
+# 单一来源：从 doc-sync 的 checklist 取「🔴手」行（无机器兜底、只能人改的同步点）当判据，
+# 不在本脚本里自抄一份子集（否则会和 doc-sync 各自漂）。取不到就退化为通用判据，仍 best-effort。
+checkmap="$(grep -E '^\|.*🔴' "$ROOT/.agents/skills/doc-sync/SKILL.md" 2>/dev/null || true)"
+
 instr="你是一个 AI 编码 agent 最近对话的【独立兜底复查员】。下面是最近若干轮对话(JSONL transcript 末尾片段)。
-找出本该写入持久文件、但可能没写的东西：(a)做出的决策 (b)用户表达的偏好/工作方式 (c)取舍理由/被否决的方案 (d)踩坑/教训 (e)该进文档/AGENTS.md/规则的知识 (f)动了某目录或加/删/改了文件，但没看到对应 README/AGENTS.md 同步（典型：scripts/ 加脚本未改 scripts/README.md；docs/ 子目录加 .md 未改 docs/README.md；新增子 agent .codex/.claude 没对等；改了 ADR 未回顾相关 skill）。
+找出本该写入持久文件、但可能没写的东西：(a)做出的决策 (b)用户表达的偏好/工作方式 (c)取舍理由/被否决的方案 (d)踩坑/教训 (e)该进文档/AGENTS.md/规则的知识 (f)动了文件但没同步对应文档——**逐行对照下面的【漂移对照表】判断**：每行是「改了左边→须查右边是否跟改」，且都是无机器兜底、只能人手同步的点（机器能兜的[skills-index/rules-index/dir-index/prds/shim]已被 make verify 拦，不在表里、不用你管）。
 规则：若 transcript 显示这些已写进文件(有 Write/Edit/git 操作)，就别再报。低噪声、只报真遗漏。
 输出：每条一行，格式 [类别] 一句话；若无遗漏，只输出 NONE。
+--- 漂移对照表（改左边→查右边；来源 .agents/skills/doc-sync/SKILL.md）---
+$checkmap
 --- transcript 片段 ---
 $slice"
 

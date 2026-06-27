@@ -302,3 +302,13 @@ rules:
     location: AGENTS.md
     severity: warn
     eval: []
+  - id: rule-0012
+    brief: "状态/索引文档不硬编码可自动生成的枚举"
+    location: AGENTS.md
+    severity: warn
+    eval: ["014"]
+  - id: rule-0013
+    brief: "非琐碎任务维护 `tasks/todo.md`（标 `level` + 收尾 Review）"
+    location: AGENTS.md
+    severity: warn
+    eval: []

@@ -25,7 +25,7 @@ related_docs:
 | `docs/harness/` | done | 验证路由 / CI / hooks（含 Stop hook）说明 |
 | `scripts/` | done | verify / docs-audit / run-eval / verify-eval / install-hooks / hook-policy(+test) / skills-index / **rules-index / dir-index / index-audit / prds-audit** / stop-check / **turn-backstop(+test)** |
 | `.githooks/` + `.github/workflows/` | done | 带测试的 hook policy + CI |
-| `.agents/skills/` | done | 7 个技能：context-loading / feature-delivery / git-workflow / add-rule / prd-elicitation / self-evolution / **bugfix**（self-evolution 含 references 审查手册） |
+| `.agents/skills/` | done | 技能集**以 `.agents/skills/README.md` 为准**（`skills-index` 从各 `SKILL.md` 自动生成、`--check` 进 `make verify` 防漂移，故此处不再硬编码枚举）；含 self-evolution（带 references 审查手册）、doc-sync 等 |
 | `.claude/` | done | settings（PreToolUse + Stop hook）+ agents/eval + skills 软链 |
 | `.codex/` | done(部分) | eval + self-optimize 子 agent + config（与 Claude Code 行为一致）；其余按需 |
 | `docs/features/` | done | F-0001~0006（kratos-base 6 个需求包） |
@@ -34,7 +34,7 @@ related_docs:
 | `docs-maintainer` skill | planned | 待接入（写文档 / 管文档） |
 | `docs/prds/` | done | 需求产出账本（prd-elicitation skill 产物 + prds-audit）；architecture 暂未建（drift 区已弃，见 ADR-0006） |
 | 自进化（① 落文档提醒 + ② self-evolution） | done | `turn-backstop.sh`（每轮落文档提醒）+ `self-evolution` skill/references + `self-optimize` 子 agent |
-| sandbox / E2E 环境 | planned | 接后端再建 |
+| sandbox / E2E 环境 | done | kratos-base 已建实（`projects/kratos-base/deploy/sandbox` + `verification.yaml` 路由，20 AC 弹性 e2e 跑通）；新工程随接随建 |
 
 ## eval 怎么跑（免 key）
 

@@ -32,5 +32,6 @@ fi
 # 自进化兜底：机械触发(K轮/commit/变更数)→ headless Haiku 复查最近对话、捞遗漏的决策/知识。best-effort，从不阻断。
 bash "$ROOT/scripts/turn-backstop.sh" "${transcript:-}" || true
 
-echo "ℹ 收尾提醒：踩到坑就记一条 tasks/lessons.md（错在哪 / 怎么防 / 怎么更早发现）。" >&2
+# 「纠错 → 记 lesson」提醒已移到 UserPromptSubmit 钩子（scripts/correction-nudge.sh）：它注入 agent 当轮上下文、
+# 真到得了；这里原本那行 exit-0 stderr 不注入、等于没提醒，已删（见 docs/harness/HOOKS.md）。
 exit 0

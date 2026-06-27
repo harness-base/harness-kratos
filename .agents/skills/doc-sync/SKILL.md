@@ -1,8 +1,8 @@
 ---
 name: doc-sync
 description: 改了配置 / 脚本 / 接口 / 目录结构 / 规则 / ADR 之后用，对照 checklist 检查相关文档（README / AGENTS.md / CURRENT_STATUS.md / 等）是否要同步——挡在"改了代码忘改文档"前面。被 turn-backstop（钩子）兜底，但这里是主动提醒。
-version: 1
-last_reviewed: 2026-06-26
+version: 2
+last_reviewed: 2026-06-27
 ---
 
 # 文档同步自检（doc-sync）
@@ -22,22 +22,24 @@ last_reviewed: 2026-06-26
 
 ## checklist
 
-| 你改了什么 | 回查什么 |
-|---|---|
-| `scripts/*.sh` 加 / 删 / 重命名 | `scripts/README.md` 对应章节是否要更新 |
-| 顶层目录加 / 删 | 根 `README.md` 的目录结构表 |
-| `docs/` 加 / 删子目录 | `docs/README.md` 路由表 |
-| `docs/decisions/*.md` 新建或大改（ADR）| 相关 skill 是否要更新（rule-0007，必填"受影响 skill"栏）+ `docs/decisions/index.yaml` 登记 |
-| `AGENTS.md` 加 / 改 `<!-- rule: -->` 标记 | `docs/eval/prompts/` 是否要新增 / 更新考题；跑 `bash scripts/rules-index.sh` 重生成 catalog |
-| `.claude/agents/*.md` 新建 / 改子 agent | `.codex/agents/*.toml` 对等是否要同步 |
-| `docs/features/*` 状态变更 / 加新 feature | `docs/context/CURRENT_STATUS.md` 被管工程表；`docs/features/index.yaml` 登记 |
-| harness 模块状态变更（done / planned / skeleton）| `docs/context/CURRENT_STATUS.md` 控制面表 |
-| `scripts/turn-backstop.sh` 或其它 hook 触发逻辑变 | `docs/harness/HOOKS.md`；对应 `*.test.sh` 必须红得起来 |
-| 新建 `AGENTS.md` | 同级必补 `CLAUDE.md`（一行 `@AGENTS.md`）—— `verify-control-plane.sh` shim 段会拦 |
-| 新建 skill 目录 | 跑 `bash scripts/skills-index.sh` 重生成 `.agents/skills/README.md` |
-| 新建 / 改模板 `templates/*.md` | `templates/README.md`（由 `dir-index.sh` 自动生成，跑 `bash scripts/dir-index.sh templates` 重生成） |
-| 改了 PRD 内容 / 新增 PRD | `docs/prds/index.yaml`；`prds-audit.sh` 守章节齐全 |
-| 改了 `workspace/verification.yaml` 路由 | `docs/harness/VERIFICATION_ROUTING.md` |
+**`谁兜底` 列**：`✅机检` = `make verify` 已自动兜底（索引/shim/audit 漂了就红），你不用专门记；`🔴手` = 无机器兜底、只能人手同步，**这几行才是真漂移面**。本表是"改完查什么"的**唯一来源**——`scripts/turn-backstop.sh`（钩子兜底）直接读本表的 `🔴手` 行当判据，不再自抄一份子集（改本表标记/行时，turn-backstop 自动跟着变）。
+
+| 你改了什么 | 回查什么 | 谁兜底 |
+|---|---|---|
+| `scripts/*.sh` 加 / 删 / 重命名 | `scripts/README.md` 对应章节是否要更新 | 🔴手 |
+| 顶层目录加 / 删 | 根 `README.md` 的目录结构表 | 🔴手 |
+| `docs/` 加 / 删子目录 | `docs/README.md` 路由表 | 🔴手 |
+| `docs/decisions/*.md` 新建或大改（ADR）| 相关 skill 是否要更新（rule-0007，必填"受影响 skill"栏）+ `docs/decisions/index.yaml` 登记 | 🔴手（skill 回顾要判断；index 那半机检） |
+| `AGENTS.md` 加 / 改 `<!-- rule: -->` 标记 | `docs/eval/prompts/` 是否要新增 / 更新考题；跑 `bash scripts/rules-index.sh` 重生成 catalog | 🔴手（考题要判断；catalog 机检） |
+| `.claude/agents/*.md` 新建 / 改子 agent | `.codex/agents/*.toml` 对等是否要同步 | 🔴手 |
+| `docs/features/*` 状态变更 / 加新 feature | `docs/context/CURRENT_STATUS.md` 被管工程表；`docs/features/index.yaml` 登记 | 🔴手（CURRENT_STATUS 那半；index 机检） |
+| harness 模块状态变更（done / planned / skeleton）| `docs/context/CURRENT_STATUS.md` 控制面表 | 🔴手 |
+| `scripts/turn-backstop.sh` 或其它 hook 触发逻辑变 | `docs/harness/HOOKS.md`；对应 `*.test.sh` 必须红得起来 | 🔴手 |
+| 改了 `workspace/verification.yaml` 路由 | `docs/harness/VERIFICATION_ROUTING.md` | 🔴手 |
+| 新建 `AGENTS.md` | 同级必补 `CLAUDE.md`（一行 `@AGENTS.md`）—— `verify-control-plane.sh` shim 段会拦 | ✅机检 |
+| 新建 skill 目录 | 跑 `bash scripts/skills-index.sh` 重生成 `.agents/skills/README.md` | ✅机检 |
+| 新建 / 改模板 `templates/*.md` | `templates/README.md`（由 `dir-index.sh` 自动生成，跑 `bash scripts/dir-index.sh templates` 重生成） | ✅机检 |
+| 改了 PRD 内容 / 新增 PRD | `docs/prds/index.yaml`；`prds-audit.sh` 守章节齐全 | ✅机检 |
 
 **没匹配上但改动看着不轻** → 跑一下 `make verify` 看是不是有索引漂移没看到（很多文档同步靠 `*-index.sh --check` 兜，verify 红了就是提示）。
 

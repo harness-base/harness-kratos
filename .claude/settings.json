@@ -17,6 +17,13 @@
           { "type": "command", "command": "bash scripts/stop-check.sh" }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash scripts/correction-nudge.sh" }
+        ]
+      }
     ]
   }
 }
