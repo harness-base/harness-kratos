@@ -23,7 +23,7 @@ related_docs:
 
 2. **三层优先级**：**用户明确指令**（最高，覆盖一切默认，含必选；体现 `AGENTS.md`"用户指令 > 本文件"）> **必选**（默认 always）> **可选·权重**（按权重 + 触发判据）。覆盖必选时先**提示后果** → 用户坚持照办 → **留痕**（审稿/eval 不当缺陷扣）；跳过可选步留一句理由。
 
-3. **7 个 worker**：需求采集员（必选·人在环）、外部调研员（可选·权重低，**复用 `deep-research`**，过 rule-0008 验收）、用户故事+AC 员（必选）、PRD 本体员（必选）、功能点清单员（必选）、原型员（可选·权重中）、PRD 审稿员（必选）。前 6 个建成 **subagent 双栈**（`.claude/agents/*.md` + `.codex/agents/*.toml` + `config.toml` 注册）；外部调研**走 `deep-research` skill**（可用的 research skill，由通用 subagent 调 Skill 工具跑，**不另建 worker subagent**）。
+3. **7 个 worker**：需求采集员（必选·人在环）、外部调研员（可选·权重低，**走 `deep-research` skill**，过 rule-0008 验收）、用户故事+AC 员（必选）、PRD 本体员（必选）、功能点清单员（必选）、原型员（可选·权重中）、PRD 审稿员（必选）。前 6 个建成 **subagent 双栈**（`.claude/agents/*.md` + `.codex/agents/*.toml` + `config.toml` 注册）；外部调研**走 `deep-research` skill**（可用的 research skill，由通用 subagent 调 Skill 工具跑，**不另建 worker subagent**）。
 
 4. **时序**：需求采集 →（可选）外部调研 → 用户故事+AC →（**轻审 loop** 1-2 轮：AC 可观测/故事完整/内部一致/对齐采集）→ **确认门（用户 approved）** → 并行产出 [PRD 本体 ∥ 功能点 ∥（可选）原型] → **PRD 审稿员重审 loop（框住并行产出）** → 收尾确认。review loop 的"修"=**回原 worker 角色重跑**（每轮只重跑被审出问题的 worker），独立性靠审稿员每轮复审；"方向整个错"才回更上游。
 
