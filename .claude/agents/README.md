@@ -4,4 +4,5 @@
 
 - `code-reviewer.md` — code-reviewer
 - `eval.md` — eval
+- `prd-reviewer.md` — prd-reviewer
 - `self-optimize.md` — self-optimize
