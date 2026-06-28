@@ -4,5 +4,10 @@
 
 - `code-reviewer.md` — code-reviewer
 - `eval.md` — eval
+- `feature-point-writer.md` — feature-point-writer
 - `prd-reviewer.md` — prd-reviewer
+- `prd-writer.md` — prd-writer
+- `prototype-builder.md` — prototype-builder
+- `requirements-gatherer.md` — requirements-gatherer
 - `self-optimize.md` — self-optimize
+- `user-story-writer.md` — user-story-writer
