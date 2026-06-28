@@ -1,7 +1,19 @@
 # 当前任务
 
 > 只记手头这一件事；干完清空、旧的 roll 进 `archive/`。保持轻。
-> 元：level: L4 ｜ task: dev-skill
+> 元：level: L4 ｜ task: prd-orchestration
+
+## 当前：prd-elicitation 编排式重构（按 plan 执行）
+设计稿 `docs/superpowers/specs/2026-06-29-prd-orchestration-design.md`、计划 `docs/superpowers/plans/2026-06-29-prd-orchestration.md`（均 approved）。产品总监(主 agent)调度 7 worker（6 建双栈 subagent + 外部调研复用 deep-research），必选/可选·权重 + 确认门 + 并行 + review loop（框并行、回原 worker、只重跑有问题的）。
+- [ ] T1 ADR-0010 + 重写 SKILL 总谱
+- [ ] T2 prd-reviewer 子 agent（双栈）
+- [ ] T3 5 个产出 worker 子 agent（双栈）
+- [ ] T4 Workflow 编排模板
+- [ ] T5 doc-sync + verify
+- [ ] T6 对抗挑刺(dogfood)+ 收尾 eval + 补 Review
+
+## 已闭：dev-skill（L4，已提交 7b6576d，eval green）
+写代码统一入口替代 feature-delivery/bugfix；两轮挑刺修 8 处。下次清理滚 archive。
 
 ## 当前：dev skill——写代码统一入口（按"深度级"自走，进行中）
 

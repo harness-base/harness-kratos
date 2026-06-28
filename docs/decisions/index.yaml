@@ -46,3 +46,8 @@ decisions:
     status: accepted
     date: 2026-06-28
     file: 0009-dev-skill.md
+  - id: ADR-0010
+    title: prd-elicitation 编排式重构——产品总监调度专职 worker（必选/可选·权重 + 确认门 + 并行 + review loop）
+    status: accepted
+    date: 2026-06-29
+    file: 0010-prd-orchestration.md
