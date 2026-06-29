@@ -55,3 +55,11 @@ make hooks         # 安装 git hooks（需先 git init）
 - 文档地图：`docs/README.md`
 - 当前真实状态：`docs/context/CURRENT_STATUS.md`
 - 设计依据：`docs/decisions/0001-harness-skeleton-design.md`
+
+## 参与贡献
+
+欢迎 issue 与 PR。外部贡献走 **fork → 改 → 开 PR → review 合入**（直接 push 分支仅限协作者）；动控制面 / 业务前先看 `AGENTS.md` 的硬规则红线，提交前过 `make verify`。
+
+## 协议
+
+[MIT](LICENSE) © 2026 harness-base
