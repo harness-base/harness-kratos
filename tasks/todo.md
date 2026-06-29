@@ -1,27 +1,25 @@
 # 当前任务
 
 > 只记手头这一件事；干完清空、旧的 roll 进 `archive/`。保持轻。
-> 元：level: L1 ｜ task: kratos-base-coordination
->
-> **已完成（L2）harness-rules-distribution**：规则分布化——规则入驻各 `AGENTS.md`（编号保留）、catalog 自动生成（`scripts/rules-index.sh`，含 eval 指针校验 + 变异自证）、`CLAUDE.md` `@import` shim、eval 题库独立；ADR-0004；eval yellow→评后即修 findings 清零（`docs/eval/task-reviews/20260626T014408Z-harness-rules-distribution/`）。本会话另完成 prd-elicitation skill + 门禁（rule-0010/考题013，ADR-0003）。下面 kratos-base 段为暂挂的标准上下文。
-> （切片间歇期。已完成切片：S0=L5 green、S1=L3 green、S4=L4 done、S3=L4 red→复修→复评 yellow 置 done、**S5=L4 yellow→复修→第一手复验 done**（nacos v2.5.0 真后端补全 + 配置/注册运行期弹性 AC-CR1/CR2）、**S6=L4 green**（rocketmq 本机 2 容器 e2e 销账 + 有界失败修复，全量 24 AC PASS，评审 `20260623T0600Z-kratos-base-s6`）。下一片立项时升档本行。）
-> 下一步候选：k8s configmap/secret 配置源 + k8s 服务发现（需集群，kind/k3d 本机可起）；S2 obs 打磨 / 熔断限流打磨 / MQ backlog 按需开。
+> 元：level: L4 ｜ task: prd-orchestration
 
-## kratos-base 基建（进行中）
-
-### 已完成
-- [x] S0 地基 + PG 弹性闭环（F-0001 done，eval green，`docs/eval/task-reviews/20260602T105017Z-kratos-base-s0/`）
-- [x] S1 Redis（F-0002 done，eval green，`.../20260602T122049Z-kratos-base-s1/`）
-- [x] S4 配置中心+服务发现四后端（F-0004 done，eval yellow→warn 修平，`.../20260611T100401Z-kratos-base-s4/`）
-- [x] S3 MQ（F-0003 done：rabbitmq 闭环 e2e + rocketmq 适配器；**eval red 揭穿假阳性→复修 5 项→复评 yellow blocker 全核销**，`.../20260612T041709Z-kratos-base-s3/` + `.../20260612T050146Z-kratos-base-s3-rereview/`）
-
-- [x] S5 nacos 后端补全 + 配置/注册运行期弹性（F-0005 done，eval yellow→复修→第一手复验，`.../20260623T032657Z-kratos-base-s5/`）
-- [x] S6 rocketmq 本机轻量环境 + e2e 销账（F-0006 done，eval green，`.../20260623T0600Z-kratos-base-s6/`；含有界失败/消费者重建/ctx 修复）
-
-### 余下切片（待用户定）
-- [ ] k8s configmap/secret 配置源 + k8s 服务发现（需集群，kind/k3d 本机可起）；S2 obs 打磨 / 熔断限流打磨 / MQ backlog（胶水单测）按需开
+## 当前：prd-elicitation 编排式重构（按 plan 执行；收尾）
+设计稿/计划 `docs/superpowers/{specs,plans}/2026-06-29-prd-orchestration*`（approved）。产品总监(主 agent)调度 7 worker（6 双栈 subagent + 外部调研走 deep-research skill），必选/可选·权重 + 确认门 + 并行 + review loop（框并行、回原 worker、只重跑有问题的）。
+- [x] T1 ADR-0010 + 重写 SKILL 总谱（5e22c2d）
+- [x] T2 prd-reviewer 子 agent 双栈（a33c349）
+- [x] T3 5 个产出 worker 子 agent 双栈（fe442c7）
+- [x] T4 Workflow 编排模板（7564fa7）
+- [x] T5 doc-sync + verify（7bbef49）
+- [x] T6 对抗挑刺(dogfood 11 agent) 修平 4 类（7630519）→ 收尾 eval green → 修 1 warn → 补 Review
 
 ## Review
-- 升档理由补记（当时漏写，process miss 记入 lessons）：S0 按 **L5**（架构级新建工程：技术选型 + 弹性架构 + 全套地基）、S1 按 **L3**（标准功能切片，沿既有脊柱）。触发依据：用户要的产物（整套微服务基建）+ 目标文件（新建工程全量）。
-- S0/S1 收尾 eval 均 green（rule-0005 已满足）；S0 遗留（atlas 正规化、AC5 trace_id 硬断言、metrics service_name）记录在 feature/ADR，未粉饰。
-- git 仍未提交（用户选择"先不提交"）；工作区含 S0+S1+S3 备料共 ~10 项改动。
+- **任务**：把 `prd-elicitation` 从线性交互 skill 重构成**编排式**（L4，ADR-0010）：产品总监（编排逻辑·主 agent 当）调度 7 worker 角色，三层优先级（用户指令>必选>可选·权重）+ 确认门 + 并行产出 + 两段 review loop（轻审地基/重审下游、框并行、回原 worker、只重跑有问题的）。
+- **产物**：ADR-0010 + 登记；SKILL 重写成编排总谱（version 3）；6 worker 子 agent 双栈（prd-reviewer + 5 产出员，各 `.claude/.md`+`.codex/.toml`+config 注册）；外部调研走可用的 `deep-research` skill（不另建 subagent）；`references/orchestration-workflow.js` 编排模板；doc-sync（CURRENT_STATUS 指针化 + docs/README）。6 个 commit `5e22c2d..`。
+- **质量**：一轮对抗挑刺 dogfood code-reviewer（11 agent / 3 视角 / 每条独立证伪），确认 4 类真问题并修平——① deep-research「复用」措辞如实化（可用 plugin skill、非 repo 资产/非第7 subagent，走 Skill 工具调；六处对齐）② workflow 重审在用户跳过原型时不再误重跑 prototype-builder（`ran` 集合过滤 + 条件审稿提示）③ 重审 loop 加 `MAX_ROUNDS=4` 防不收敛 ④ 加注澄清 export+顶层 return 是 Workflow 约定（node 裸模块校验报错=误报）。1 条被驳。
+- **验证**：`make verify` 全绿（索引无漂、rule-0012 不硬编码、双栈对齐）、`make docs-audit` 30 篇绿、workflow 模板包 async 函数后 `node --check` 过。**收尾 eval green**（独立评委：考题 011/013/014 全 pass、010 综合 green）：`docs/eval/task-reviews/20260628T175152Z-prd-orchestration/`；eval 提的 1 warn（ADR/spec 加粗措辞）已修。
+- **未决（押后）**：常驻自主"产品总监 agent"、通用 loop-engineering 引擎、harness 自身 observability、外部 MCP（飞书/figma）。下一步：finishing-a-development-branch（是否推 + 后续）。
+
+## 已闭（已提交，下次清理滚 archive）
+- dev-skill（L4，7b6576d，eval green）：写代码统一入口替代 feature-delivery/bugfix；两轮挑刺修 8 处。
+- test-case-skill（L3，c0c94f6，eval green）：产用例 + AC/FP 覆盖硬闸；4 轮挑刺修 25 处。
+- prd-workflow-redesign（L3，cbfbc7b）：产出需求流程重做（ADR-0007）。

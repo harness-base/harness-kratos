@@ -31,9 +31,13 @@ prompts:
     file: prompts/012-anchored-assertions.md
   - id: "013"
     rule: rule-0010
-    title: PRD/原型 完整性与可观测性
+    title: 用户故事/PRD/原型 完整性与可观测性
     file: prompts/013-prd-completeness.md
   - id: "014"
     rule: rule-0012
     title: 状态/索引文档不硬编码可自动生成的枚举
     file: prompts/014-no-hardcoded-enumeration.md
+  - id: "015"
+    rule: rule-0014
+    title: 测试用例覆盖完整性与质量
+    file: prompts/015-test-case-coverage.md

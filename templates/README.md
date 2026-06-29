@@ -8,3 +8,5 @@
 - `feature-package.md` — Feature 需求包：&lt;feature-id&gt; &lt;标题&gt;
 - `plan.md` — 实施计划：&lt;标题&gt;
 - `prd.md` — PRD：<prd-id> <标题>
+- `test-case.md` — 测试用例：<主题>
+- `user-story.md` — 用户故事：<prd-id> <标题>

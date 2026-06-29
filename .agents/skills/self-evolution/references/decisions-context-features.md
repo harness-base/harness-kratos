@@ -64,7 +64,7 @@ bash scripts/docs-audit.sh
 ## 修复用哪个操作 skill / 脚本
 
 - **补 / 改 ADR**：照 `templates/adr.md` 起草（别手搓省「受影响 skill」栏），写 `docs/decisions/NNNN-*.md`，登记进 `docs/decisions/index.yaml`。大改连带回顾 `.agents/skills/` 并在该栏逐条写（已改写已改 / 不需改写「无需更新+理由」）——rule-0007。
-- **补登需求包**：`/feature-delivery` skill（`.agents/skills/feature-delivery/`），照 `templates/feature-package.md` 建包、登记 `docs/features/index.yaml`、推进 delivery_status。改业务代码前必须就绪（rule-0001）。
+- **补登需求包**：`/dev` skill 深度级（`.agents/skills/dev/`），照 `templates/feature-package.md` 建包、登记 `docs/features/index.yaml`、推进 delivery_status。改业务代码前必须就绪（rule-0001）。
 - **修 context 漂移**：直接改 `docs/context/CURRENT_STATUS.md`（含 `last_updated` + 正文事实），然后 `bash scripts/dir-index.sh docs/context` 重生成 README、`bash scripts/docs-audit.sh` 复核引用。
 - **固化 / 加红线**：要把「index⇄目录一致」「context 不漂移」变成机器门禁，用 `/add-rule` skill；可仿 `scripts/prds-audit.sh` 给 decisions/features 写双向一致校验并挂进 `make verify`。
 - **自检收尾**：`make verify`（结构 + docs-audit + 索引漂移）、`make docs-audit`（frontmatter 引用通不通）；判断与归档走 `self-evolution` skill（复杂时 spawn `self-optimize` 子 agent）。

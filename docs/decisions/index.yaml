@@ -31,3 +31,23 @@ decisions:
     status: accepted
     date: 2026-06-27
     file: 0006-drop-drift-area.md
+  - id: ADR-0007
+    title: 产出需求流程重做——分阶段确认门 + 真相/需求源优先级 + 功能点覆盖
+    status: accepted
+    date: 2026-06-27
+    file: 0007-prd-workflow-redesign.md
+  - id: ADR-0008
+    title: 测试用例 skill——独立产出测试用例 + 软硬分层管覆盖（AC+FP）
+    status: accepted
+    date: 2026-06-28
+    file: 0008-test-case-skill.md
+  - id: ADR-0009
+    title: dev skill——写代码统一入口（两级 + 挑刺 + 共享 code-reviewer 双栈），替代 feature-delivery / bugfix
+    status: accepted
+    date: 2026-06-28
+    file: 0009-dev-skill.md
+  - id: ADR-0010
+    title: prd-elicitation 编排式重构——产品总监调度专职 worker（必选/可选·权重 + 确认门 + 并行 + review loop）
+    status: accepted
+    date: 2026-06-29
+    file: 0010-prd-orchestration.md

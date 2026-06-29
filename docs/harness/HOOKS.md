@@ -41,10 +41,10 @@ make hooks   # git config core.hooksPath .githooks
 
 `.claude/settings.json` 的 Stop hook 在 agent 收尾时调 `scripts/stop-check.sh`：
 
-- 若 `tasks/todo.md` 声明 `level: L2`+，检查 `docs/eval/task-reviews/` 是否有本 task 的评审产出；没有 → 拦住收尾，提示先 `make eval`（rule-0005）。
+- 若 `tasks/todo.md` 声明 `level: L2`+ **且已补 `## Review` 段（= 在收尾，rule-0013）**，检查 `docs/eval/task-reviews/` 是否有本 task 的评审产出；没有 → 拦住收尾，提示先 `make eval`（rule-0005）。**只在收尾时拦、任务进行中（还没补 Review）不拦**——否则多轮 L2+ 任务每个 turn-end 都被误拦（lessons 2026-06-27）。由 `scripts/stop-check.test.sh` 自测。
 - （原"踩坑记 lessons"的 exit-0 stderr 死提醒已删——它不注入上下文、没人看见；纠错提醒改由下方 UserPromptSubmit 钩子承担。）
 
-**局限（诚实说）**：档位由 agent 在 `todo.md` 里自己声明，所以是"半强制"——声明了 L2+ 漏 eval 会被抓，但故意低报档位仍能绕过。比纯靠自觉强很多，不是 100% 自动。
+**局限（诚实说）**：档位与 Review 都由 agent 在 `todo.md` 里自己声明，所以是"半强制"——声明了 L2+ 且补了 Review 却漏 eval 会被抓，但故意低报档位、或不补 `## Review` 段，仍能绕过。比纯靠自觉强很多，不是 100% 自动。
 
 ## 自进化兜底（Stop hook 第二段，ADR-0005）
 

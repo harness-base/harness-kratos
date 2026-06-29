@@ -312,3 +312,8 @@ rules:
     location: AGENTS.md
     severity: warn
     eval: []
+  - id: rule-0014
+    brief: "测试用例产出标准"
+    location: AGENTS.md
+    severity: blocker
+    eval: ["015"]

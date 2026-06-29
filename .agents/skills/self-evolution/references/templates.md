@@ -7,7 +7,7 @@
 - 每类**反复出现的标准产出**都有模板，全在 `templates/`：`adr.md`、`feature-package.md`、`prd.md`、`plan.md`、`doc.md`、`eval-rubric.md`、`skill/SKILL.md`。
 - 模板字段**反映当前规范**：规则一改（尤其新增强制披露栏），相关模板同步。例：`templates/adr.md` 必须有 `## 受影响的 skill（rule-0007）` 栏。
 - 起草用模板、不手搓：ADR/feature/PRD/plan/skill 起草时从对应模板拷字段，省栏 = 漏强制项。
-- 模板被操作 skill 显式引用（投送）：`feature-delivery` → `templates/feature-package.md`；`prd-elicitation` → `templates/prd.md`；指针不悬空。
+- 模板被操作 skill 显式引用（投送）：`dev`（深度级）→ `templates/feature-package.md`；`prd-elicitation` → `templates/prd.md`；指针不悬空。
 - `templates/README.md` 是**自动生成的索引**（`scripts/dir-index.sh templates`），禁手改、进 `make verify`。
 
 ## 怎么检索现状（命令可直接跑）

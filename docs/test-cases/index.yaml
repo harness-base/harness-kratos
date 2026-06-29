@@ -1,0 +1,11 @@
+# 测试用例账本。由 test-case skill 产出的测试用例集在此登记。
+# 与实现 / 执行体系松耦合：本账本只管"用例对需求（AC+FP）的覆盖"，不碰"过没过"（执行结果另起）。
+# 每条：id（=目录名）/ dir（目录名，test-cases-audit.sh 按此键校验 目录↔账本 一致）/ title / status（draft|reviewed）/ source（需求来源，可空，衔接后填）
+version: 1
+test-cases: []
+# 样例（产出第一份用例集时照此登记，去掉注释）：
+# - id: orders-refund
+#   dir: orders-refund
+#   title: 订单退款
+#   status: draft
+#   source: ""

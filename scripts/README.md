@@ -23,6 +23,8 @@
 | `stop-check.sh` | Claude Code Stop 事件 | 若 todo 声明 L2+，必须有 eval 评审产出（rule-0005）；并提醒记 lessons。`exit 2` 拦住收尾。 |
 | `turn-backstop.sh` | 每 K 轮 / commit 边界 / 变更文件数增量 | 触发 headless Haiku 复查最近对话，把"做了决策 / 学了偏好 / 有知识却没写进文档"捞进 `tasks/optimization-log.md`。**全程 best-effort，任何失败一律 exit 0**，不阻断收尾。 |
 | `hook-policy.sh` | PreToolUse（在 `.claude/settings.json` 里挂上） | 扫描传入内容里的疑似密钥（Bearer / api_key / secret 等）与高危命令（`git reset --hard` / `rm -rf`），命中非零退出。 |
+| `correction-nudge.sh` | UserPromptSubmit 事件 | 检出用户纠正信号（"不是这样 / 你搞混了"等），提醒当轮记一条 `tasks/lessons.md` 三段式（rule-0011）；step 4 调用 `lessons-promote-check.sh`。 |
+| `lessons-promote-check.sh` | UserPromptSubmit（由 `correction-nudge.sh` 调用） | 数 `tasks/lessons.md` 未整理条数，攒够阈值就提醒整理 / 晋升成规则。 |
 
 ## 3. 索引 / 账本生成器（写产物 + 防漂移）
 
@@ -35,6 +37,7 @@
 | `skills-index.sh` | `.agents/skills/README.md` | 各 SKILL.md frontmatter（name / description）。 |
 | `index-audit.sh <dir>` | （只校验）| `<dir>/index.yaml` 登记的 `file:` 都存在，且 `<dir>` 下每个 `NNNN-*.md` 都被登记。 |
 | `prds-audit.sh` | （只校验）| `docs/prds/index.yaml` 与 `docs/prds/*/prd.md` 一致 + `prd.md` 含必备章节。质量（验收可观测 / 原型可点通等）由 eval 考题 013 / rule-0010 判，不在这里。 |
+| `test-cases-audit.sh` | （只校验）| `docs/test-cases/<id>/test-cases.md` 的覆盖闭合（每条 AC/FP 都被 ≥1 用例 `covers:` 覆盖 + 无悬空 + 目录↔`index.yaml` 一致）。质量（用例真覆盖语义 / 边界异常齐）由 eval 考题 015 / rule-0014 判，不在这里。 |
 
 ## 4. 脚本自测
 
@@ -44,8 +47,12 @@
 |---|---|
 | `hook-policy.test.sh` | `hook-policy.sh` |
 | `turn-backstop.test.sh` | `turn-backstop.sh` |
+| `correction-nudge.test.sh` | `correction-nudge.sh` |
+| `lessons-promote-check.test.sh` | `lessons-promote-check.sh` |
+| `stop-check.test.sh` | `stop-check.sh` |
+| `test-cases-audit.test.sh` | `test-cases-audit.sh` |
 
-两个自测都被 `make verify` 调用。
+这些自测都被 `make verify` 调用。
 
 ---
 

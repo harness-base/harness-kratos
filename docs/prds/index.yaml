@@ -1,4 +1,11 @@
-# 需求产出账本。由 prd-elicitation skill 产出的 PRD + 原型在此登记。
+# 需求产出账本。由 prd-elicitation skill 分阶段产出的 用户故事 + PRD（+ 可选原型）在此登记。
 # 与 feature 实现体系松耦合：一份 PRD 可派生 1..N 个 feature 包（docs/features/），不强制。
+# 每条：id（=目录名）/ dir（目录名，prds-audit.sh 按此键校验 目录↔账本 一致）/ title / prd_status / feature（F-xxxx，可空）
 version: 1
 prds: []
+# 样例（产出第一份 PRD 时照此登记，去掉注释）：
+# - id: orders-refund
+#   dir: orders-refund
+#   title: 订单退款
+#   prd_status: approved
+#   feature: ""

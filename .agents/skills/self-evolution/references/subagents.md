@@ -16,7 +16,7 @@
 
 ```bash
 # 现有子 agent 定义（Claude 侧）
-ls .claude/agents/ ; cat .claude/agents/eval.md .claude/agents/self-optimize.md
+ls .claude/agents/ ; cat .claude/agents/eval.md .claude/agents/self-optimize.md .claude/agents/code-reviewer.md
 
 # Codex 侧对等定义 + 注册
 ls .codex/agents/ ; sed -n '/\[agents/,$p' .codex/config.toml
@@ -32,7 +32,7 @@ bash scripts/dir-index.sh .claude/agents --check
 grep -n "claude -p\|MODEL\|HARNESS_TRIAGE" scripts/turn-backstop.sh
 ```
 
-事实锚点（核对过）：现有两个 `.claude/agents/`：`eval.md`（rule-0005 收尾评委）、`self-optimize.md`（self-evolution 的 ② 深审执行器）；二者 `tools: Read, Glob, Grep, Write, Bash`、免 key。每轮兜底 `scripts/turn-backstop.sh` 跑的是 **headless Haiku**（`claude -p --model`），**不是** spawn 子 agent——重判断子 agent 由主 agent / `self-evolution` skill 按需 spawn。
+事实锚点（核对过）：现有三个 `.claude/agents/`：`eval.md`（rule-0005 收尾评委）、`self-optimize.md`（self-evolution 的 ② 深审执行器）、`code-reviewer.md`（`dev` skill 的挑刺引擎，对抗式 review；ADR-0009）；前二者 `tools: Read, Glob, Grep, Write, Bash`，`code-reviewer` 是 `tools: Read, Glob, Grep, Bash`（**无 Write，只评不改**）；均免 key。每轮兜底 `scripts/turn-backstop.sh` 跑的是 **headless Haiku**（`claude -p --model`），**不是** spawn 子 agent——重判断子 agent 由主 agent / `self-evolution` / `dev` skill 按需 spawn（`dev` 在 workflow 里 `agentType:'code-reviewer'`）。
 
 ## 怎么判（逐条可判定）
 
@@ -41,7 +41,7 @@ grep -n "claude -p\|MODEL\|HARNESS_TRIAGE" scripts/turn-backstop.sh
 - **与 skill 重叠空转**：skill 正文把子 agent 的判断逻辑又抄一遍（两份会漂），或 skill 与子 agent 边界含糊到不知道该读哪份 → 漏洞，收敛成「skill=入口/流程，subagent=引擎」单一事实源。
 - **软硬错配**：把「漏了就失效」的兜底做成靠主 agent 记得 spawn 的子 agent（应走 hook headless）；或反过来把需要会话模型/隔离上下文的重判断硬塞进 headless → 缺口。
 - **索引漂移 / 悬空**：`dir-index.sh .claude/agents --check` 报漂移；AGENTS.md「已有子代理：…」清单与 `.claude/agents/` 实际不符 → 缺口。
-- **Codex 不对等**：`.claude/agents/` 每个子 agent 要在 `.codex/agents/*.toml` 有等价定义并在 `config.toml` 注册，否则 Codex 侧裸奔。当前 `eval`、`self-optimize` 均已对等（`.codex/agents/{eval,self-optimize}.toml`）；新增子 agent 须同步补 `.codex/`。
+- **Codex 不对等**：`.claude/agents/` 每个子 agent 要在 `.codex/agents/*.toml` 有等价定义并在 `config.toml` 注册，否则 Codex 侧裸奔。当前 `eval`、`self-optimize`、`code-reviewer` 均已对等（`.codex/agents/{eval,self-optimize,code-reviewer}.toml` 且在 `.codex/config.toml` 注册 `[agents.<name>]`）；新增子 agent 须同步补 `.codex/` 的 toml **并注册**（漏注册 = Codex 侧调不到）。
 
 ## 常见漏洞模式（本仓真实案例）
 

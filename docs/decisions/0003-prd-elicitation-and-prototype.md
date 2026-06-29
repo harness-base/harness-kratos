@@ -8,7 +8,6 @@ related_docs:
   - ../../.agents/skills/prd-elicitation/SKILL.md
   - ../../templates/prd.md
   - ../prds/README.md
-  - ../../.agents/skills/feature-delivery/SKILL.md
 ---
 
 # ADR-0003：需求产出（PRD + 交互原型）作为 feature-delivery 的上游

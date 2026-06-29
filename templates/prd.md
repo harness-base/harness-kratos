@@ -1,7 +1,7 @@
 # PRD：<prd-id> <标题>
 
-> 由 `prd-elicitation` skill 引导式对话产出。落 `docs/prds/<id>/`，登记 `docs/prds/index.yaml`。
-> 下游可派生 feature 包（`feature-delivery`）——松耦合，不强制。
+> 由 `prd-elicitation` skill 引导式对话产出。落 `docs/prds/<id>/`，登记 `docs/prds/index.yaml`（条目含 `dir: <id>` = 目录名，`prds-audit` 按此校验目录↔账本一致）。
+> 下游可派生 feature 包（由 `dev` skill 实现）——松耦合，不强制。
 
 ## 问题 / 目标
 （为什么做、达成什么用户可见结果）
@@ -13,9 +13,18 @@
 - 包含：
 - 不包含：
 
-## 用户故事 + 验收目标
-- As a ..., I want ..., so that ...
-- 验收：可观察、可验证的结果（不是"做完了"）
+## 需求来源（已确认用户故事）
+- 事实视角：`user-stories.md`（已 approved）——本 PRD 须与之对齐，不在此重写故事。
+
+## 功能点清单 + 覆盖映射
+- 功能点：逐条 `FP-NN` + 一句话描述。
+- 覆盖（三级双向可追溯，目标 100%，软；详见 `prd-elicitation/references/prd-writing.md`）：
+
+| 功能点 FP | 来自故事 US | 正文小节 |
+|---|---|---|
+| FP-01 |  |  |
+
+- 自查：每个 US 有 FP 覆盖、每个 FP 追到 US 且正文有描述、PRD 无孤儿内容。
 
 ## 页面与流程
 - 页面清单：每页须有 空/加载/错误/成功 四态 + 关键边界
@@ -32,7 +41,11 @@
 - 显式列出未确认的假设 + 待办问题
 
 ## 可追溯
-- 验收目标 ↔ 页面 ↔（未来）测试 的映射
+- 验收追溯（锚定 `user-stories.md` 的 `US-NN` 验收点；目标 100%，软）：
+
+| 验收点（来自 US-NN） | 页面 | （未来）测试 |
+|---|---|---|
+| US-01 / <验收点> |  |  |
 
 ## 原型
 - 位置：`prototype/index.html`（浏览器直开，mock 数据，无后端）

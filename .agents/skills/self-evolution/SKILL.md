@@ -2,14 +2,14 @@
 name: self-evolution
 description: harness 规范检查层。当要改 harness 本身、或发现 harness 漏洞（如"某规则工作时没被加载"）时用——引导按 harness 结构逐维度审查"哪一环出问题 / 该怎么改"，不靠记忆漏项。区别于操作层 skill（add-rule/prd-elicitation 等是被检查对象 + 修复工具）。
 version: 2
-last_reviewed: 2026-06-26
+last_reviewed: 2026-06-28
 ---
 
 # 自进化 / harness 规范检查（self-evolution）
 
 harness 不只治理被管工程，也要**管自己**。本 skill 是**规范检查层**：检查 harness 本身符不符合规范、有没有缺口/漏洞、该怎么改。
 
-- **检查层 ≠ 操作层**：`add-rule` / `prd-elicitation` / `feature-delivery` / `git-workflow` 等是**操作层**——它们做事，是**被检查对象** + 发现缺口后的**修复工具**，不作为审查逻辑被复用。
+- **检查层 ≠ 操作层**：`add-rule` / `prd-elicitation` / `dev` / `git-workflow` 等是**操作层**——它们做事，是**被检查对象** + 发现缺口后的**修复工具**，不作为审查逻辑被复用。
 - 落文档提醒（每轮 capture）是另一套机制，不属本 skill。
 
 ## 何时用（两个触发）
@@ -44,14 +44,14 @@ harness 每个能力是一条**链路**；漏洞 = 某环断了。
 - `references/lessons-memory.md` — 错题本 / 记忆 / 晋升
 - `references/project-onboarding.md` — 被管工程接入
 - `references/index-system.md` — 索引体系（横切）
-- `references/process-coverage.md` — 流程覆盖（任务类型→流程；缺口如 bugfix / loop）
+- `references/process-coverage.md` — 流程覆盖（任务类型→流程；缺口如 loop-engineering）
 
 巡检/审查时先把**总览索引**当地图（默认不加载、自检时查）：`docs/rules/index.yaml`、`.agents/skills/README.md`、各区 `README.md`/`index.yaml`、`docs/decisions/index.yaml`、`docs/features/index.yaml`、`docs/eval/index.yaml`。
 
 ## 4 条 meta（强制）
 1. **全覆盖**：维度逐项过，不许凭记忆只查一部分。
 2. **每项给方法**：用对应 reference 的 检索 / 方向 / 规范边界，不空谈。
-3. **列表外**：这些维度之外，是否要**补新 harness 流程**（如 bugfix playbook、loop-engineering）。
+3. **列表外**：这些维度之外，是否要**补新 harness 流程**（如 loop-engineering playbook）。
 4. **自身（别漏）**：harness 进化后，**本 skill 与 references 自己要不要改**——维度有没有漏、references 过没过期、这套审查本身该不该调。
 
 ## 深审执行器

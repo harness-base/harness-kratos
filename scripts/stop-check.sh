@@ -5,7 +5,8 @@ set -uo pipefail
 # 递归保险：headless 兜底(turn-backstop)自触发的钩子带 HARNESS_TRIAGE=1，直接放行
 [ -n "${HARNESS_TRIAGE:-}" ] && exit 0
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TODO="$ROOT/tasks/todo.md"
+TODO="${STOP_TODO:-$ROOT/tasks/todo.md}"
+REVIEWS_DIR="${STOP_REVIEWS_DIR:-$ROOT/docs/eval/task-reviews}"
 
 # 防循环：已在 stop-hook 续跑里就直接放行
 payload="$(cat 2>/dev/null || true)"
@@ -18,12 +19,19 @@ transcript="$(printf '%s' "$payload" | sed -nE 's/.*"transcript_path"[[:space:]]
 level="$(grep -oE 'level:[[:space:]]*L[0-9]' "$TODO" | grep -oE 'L[0-9]' | head -1)"
 task="$(grep -oE 'task:[[:space:]]*[A-Za-z0-9._-]+' "$TODO" | sed -E 's/task:[[:space:]]*//' | head -1)"
 
-# 仅在声明 L2+ 时强制 eval（档位声明靠 agent 诚实——见 docs/harness/HOOKS.md 的局限说明）
-if [ -n "$level" ] && [ "${level#L}" -ge 2 ] 2>/dev/null; then
+# 仅在声明 L2+ 且【当前任务节】要收尾时才强制 eval。
+# 关键：只在当前任务节（到第一个 ## 暂挂/归档 标题之前）找收尾段——否则暂挂/归档块里的旧 Review
+#       会让闸 mid-task 误拦（lessons 2026-06-27 两条）。收尾段标题认 Review/评审/复盘（大小写不限）。
+# 档位 / 收尾段声明靠 agent 诚实——见 docs/harness/HOOKS.md 的局限说明。
+finishing_now() {
+  awk '/^##[[:space:]]*(暂挂|归档|[Aa]rchive)/{exit} {print}' "$TODO" \
+    | grep -qiE '^##[[:space:]].*(review|评审|复盘)'
+}
+if [ -n "$level" ] && [ "${level#L}" -ge 2 ] 2>/dev/null && finishing_now; then
   found=""
-  [ -n "$task" ] && found="$(ls -d "$ROOT/docs/eval/task-reviews/"*"-$task" 2>/dev/null | head -1)"
+  [ -n "$task" ] && found="$(ls -d "$REVIEWS_DIR/"*"-$task" 2>/dev/null | head -1)"
   if [ -z "$found" ]; then
-    echo "⛔ 收尾拦截（rule-0005）：todo 声明 $level，但没找到 task「${task:-未声明}」的 eval 评审产出。" >&2
+    echo "⛔ 收尾拦截（rule-0005）：todo 声明 $level 且已补 Review（=收尾），但没找到 task「${task:-未声明}」的 eval 评审产出。" >&2
     echo "   请先跑 eval 再收尾（交互：用 eval 子 agent，免 key；CI：make eval）；确属轻量就把 todo 的 level 降到 L1。" >&2
     exit 2
   fi

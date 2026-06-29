@@ -28,6 +28,12 @@ bash scripts/correction-nudge.test.sh || fail=1
 echo "== lessons 整理计数自测 =="
 bash scripts/lessons-promote-check.test.sh || fail=1
 
+echo "== 收尾闸自测 =="
+bash scripts/stop-check.test.sh || fail=1
+
+echo "== 测试用例自检自测 =="
+bash scripts/test-cases-audit.test.sh || fail=1
+
 echo "== eval 资产 =="
 bash scripts/verify-eval-materials.sh || fail=1
 
@@ -80,6 +86,9 @@ done < <(find . -name AGENTS.md -not -path './.git/*')
 
 echo "== PRD 账本自检 =="
 bash scripts/prds-audit.sh || fail=1
+
+echo "== 测试用例覆盖自检 =="
+bash scripts/test-cases-audit.sh || fail=1
 
 echo "== references 路径残留 =="
 hits=$(grep -rln 'harness-empty\|-Users-zhouhaiyin-project-harness-empty' .agents/skills 2>/dev/null)

@@ -34,7 +34,7 @@ related_docs:
 用户可见的需求 / 行为 / 验收变化，动业务代码前先立项（rule-0001）：
 - `templates/feature-package.md` 建包 → 登记 `docs/features/index.yaml`
 - 补验收目标 + 测试设计，推进到 `tests_ready` 再写业务代码。
-（走 `feature-delivery` skill 的全流程。）
+（走 `dev` skill 深度级——含需求包门禁。）
 
 ## 5. 加工程级规则（用 `add-rule` skill）
 日常踩的坑、定的规范，按 `add-rule` 三步落地：定范围 → 写下来 + 登记 → 挂执行。

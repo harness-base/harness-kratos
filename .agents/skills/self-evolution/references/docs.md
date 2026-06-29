@@ -59,7 +59,7 @@ grep -nE 'README\.md|coverage-audit' "$ROOT/scripts/verify-control-plane.sh"
 
 ## 常见漏洞模式（本仓真实案例）
 
-- **文档现状漂移**：commit `ee72ca4`（R11）专门"文档现状化"——文档描述与代码已脱节，靠对抗评审才照出。**活例（写本手册时实测）**：`docs/context/CURRENT_STATUS.md` 仍写 "8 条规则（rule-0001 ~ 0008）" 与 `.agents/skills` "4 个技能"，但实际已增至 7 个（含 `prd-elicitation`/`self-evolution`/`bugfix`）—— 典型 context 没跟代码同步（本批已修 CURRENT_STATUS）。
+- **文档现状漂移**：commit `ee72ca4`（R11）专门"文档现状化"——文档描述与代码已脱节，靠对抗评审才照出。**活例（写本手册时实测）**：`docs/context/CURRENT_STATUS.md` 仍写 "8 条规则（rule-0001 ~ 0008）" 与 `.agents/skills` "4 个技能"，但当时实际已增至 7 个（含 `prd-elicitation`/`self-evolution` 等）—— 典型 context 没跟代码同步（该批已修 CURRENT_STATUS）。
 - **声称"全保留/不变"却偷改**（`tasks/lessons.md` 2026-06-26 规则分布化）：ADR 凭记忆写"severity/eval 映射全保留"，实际改了 rule-0007 severity、给规则编了不存在的 eval 指针 → eval 子 agent 逐条 `git show HEAD` 对比判 yellow。教训：凡"X 保留/不变"，必须对事实源机械核对，能机器查的固化成 `--check`。
 - **知识堆在根、没就近**：本仓 kratos 早期工程规则曾缺就近 `AGENTS.md`（规则分布化前都堆控制面）；现已下沉到 `projects/kratos-base/**/AGENTS.md`（`pkg/*` · `app/demo/internal/*` · `test/resilience` 各层就近），根 `AGENTS.md` 明确"项目专属规则沉淀在 `projects/**/AGENTS.md`，不堆这里"。审查时查"该就近的有没有就近"。
 - **shim 漏配**：新建 `AGENTS.md` 忘了同级 `CLAUDE.md` → Claude Code 加载不到该层规则（`verify-control-plane.sh` shim 段会拦，但漏跑就漏）。
