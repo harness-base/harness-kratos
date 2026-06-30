@@ -61,3 +61,7 @@ config_file = "agents/hc-e2e-qa.toml"
 [agents.hc-e2e-reviewer]
 description = "e2e 用例审稿员（hc-test worker，挑刺）：对抗式审 e2e 用例——主观覆盖率 / 引用源符合+理解偏差 / 质量，rubric = eval 015 / rule-0014 / rule-0009，只评不改。免 API key。"
 config_file = "agents/hc-e2e-reviewer.toml"
+
+[agents.hc-design-reviewer]
+description = "研发方案/技术设计审稿员（hc-design 评审步，挑刺）：七块审 design.md + api-contract.md——基于现状不悬空 / 决策有据 / 接口契约逐字段可执行(错误码按约定·未约定切) / 异常+安全闭合 / 零 TBD / 完整性 / 忠于需求源，rubric = rule-0008 + rule-0009，只评不改。免 API key。"
+config_file = "agents/hc-design-reviewer.toml"

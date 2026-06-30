@@ -71,3 +71,8 @@ decisions:
     status: accepted
     date: 2026-06-30
     file: 0014-hc-test-orchestration.md
+  - id: ADR-0015
+    title: hc-design 研发方案/技术设计阶段——交互式设计 skill，填 hc-prd 与 hc-dev 之间的设计空档
+    status: accepted
+    date: 2026-06-30
+    file: 0015-hc-design.md

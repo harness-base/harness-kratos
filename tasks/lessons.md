@@ -20,6 +20,36 @@
 - Prevention：派 hc-eval 时，评审目录后缀**必须 == todo `task:` 的 slug**（一字不差）；最好从 todo 的 `task:` 直接取 slug 拼目录名，别另起一个更"具体"的名。
 - Earlier signal：定 todo `task:` slug 与给 eval 的目录名时，并排核一遍是否完全一致；stop-check 用的是精确 `*-$task`、不是子串。
 
+## 2026-06-30：green 的 eval + 全过的 make verify，被干净的对抗挑刺挖出 blocker——三者不可互替
+- Mistake：hc-design build 我跑了 `make verify`(绿) + hc-eval(green) 就准备提交，以为质量够了。用户问"对抗评审了吗"逼我补一次干净的对抗挑刺——当场挖出 1 blocker（模板假设 REST、对 kratos gRPC 不通用）+ 7 major，前者一个都没逮到。
+- Prevention：**make verify 查结构、eval 按 rubric 打分、对抗挑刺找设计/逻辑坑——三件事不可互替**。重产物（skill/设计/接口）收尾前三样都要，缺对抗挑刺 = 没真审。对抗评审对文档/skill 是**迭代收敛**的（每轮挖更深），按 blocker→major→minor 推进，别一轮就当完。
+- Earlier signal：只跑机检 + eval 就说"质量够了 / 可提交"——问自己"专门挑刺的对抗评审做了没"。
+
+## 2026-06-30：build 的对抗复核被并行踩踏搞乱（verdict 矛盾），我却当"复核过了"往提交走
+- Mistake：hc-design build 的 4 个并行 review verdict 互相矛盾、不可信（等于没做干净）；我虽口头承认它乱，但靠 `make verify` + hc-eval green 就准备提交，**没补一次干净的对抗挑刺**。用户问"对抗评审了吗"点破：复核被污染 = 没复核，不能当复核过了。
+- Prevention：对抗复核的 verdict 若不可信（矛盾 / 时序乱 / 明显错），**就当它没做、重跑一次干净的**；别拿"机检绿 + eval green"替代"对抗挑刺"——机检查结构、eval 按 rubric 打分，都不是专门挑设计/逻辑坑。
+- Earlier signal：自己说出"这次复核 verdict 打架 / 不漂亮"却还继续往收尾走——停，复核不可信就重做，别绕过。
+
+## 2026-06-30：workflow 并行建，4 个 agent 各建"全套"互相踩 → 复核 verdict 自相矛盾
+- Mistake：建 hc-design 套件时 workflow 分 4 个"产物"并行，但 prompt 没把每个 agent 死锁到 disjoint 文件——有的 agent 建了"全套"(skill+模板+reviewer+索引)、有的只建子集，互相覆盖 + 各自在不同时刻复核，导致 review verdict 打架(一个说 reviewer 不存在、一个说存在；一个说 verify 红、一个说绿)。靠查磁盘真实态(make verify + ls)才理清，真问题只 2 个(没注册 config / 多了个空壳 README)。
+- Prevention：并行 build 必须把每个 agent **死锁到 disjoint 文件集**（prompt 写死"只建这几个文件、别碰别的、**别 regen 索引**——索引/注册收尾统一做"）；否则并行 = 重复劳动 + 时序污染。复核 verdict 互相矛盾时**一个都别采信，直接查磁盘当前态**(rule-0008)。
+- Earlier signal：workflow 的 author prompt 里多个 agent 的"建什么"有重叠、或允许"顺手 regen 索引 / 建配套"——那就一定踩。
+
+## 2026-06-30：把"某具体项目"的模板原样搬进 harness 通用模板（带进多租户/tenant_id 等项目内容）
+- Mistake：照用户给的旧设计模板做 hc-design 模板时，把"安全 & 多租户"段连同 tenant_id / If-Match / theme-token 等**具体项目的领域内容**一起搬进来。用户纠正：**harness 工程要和具体项目内容隔离**——模板是 harness 资产，必须**通用、项目无关**，不能焊死某个项目的概念。
+- Prevention：做 harness 资产（模板/skill/规则）时先问"这条是通用流程框架，还是某项目的具体业务？"——具体业务（多租户、某域名词、某错误码值）留给项目填，模板只给**通用占位 + 维度提示**；示例用中性占位，别用某项目的真实领域词。
+- Earlier signal：模板/skill 里冒出一个**只对某类项目成立**的概念（多租户、某业务实体名）——停，那是项目内容漏进控制面。
+
+## 2026-06-30：给"研发方案"模板加了"未决/待确认"段——用户：方案是全明确后才落、必须可执行
+- Mistake：给 hc-design 的 design.md 模板加了"未决/待确认"段，以为交互式设计的文档天然带开放项。用户纠正：**待确认不要**——方案是"一切明确（决策点拍了、不确定的查/问清了）之后才落"的，**必须可执行、不留 TBD**；开放项在过程里（查/问/决策点）消解掉，不进最终文档。
+- Prevention：区分"过程产物"与"定稿产物"——交互过程里有开放项正常，但**定稿的方案/设计/PRD 是已收敛的可执行结果，不带"待确认"**。给"产出物"设模板时先问"这是过程草稿还是定稿？定稿就不留未决"。
+- Earlier signal：往一个"定稿交付物"模板里加"未决/TBD/待确认"段时停——定稿的东西若还有待确认，就是没定稿。
+
+## 2026-06-30：用户喊"快点"，我就把真前置（研发方案/接口契约）reframe 掉、急着建 api——被拉回
+- Mistake：api 用例线缺前置（没有"研发方案/接口契约"产物层），我两轮前已正确点出；用户催"快点"后，我为求快 reframe 成"契约 = 项目 proto、现在就能建 api"、直接起 workflow 建——用户拉回"应该先出研发方案 skill"。等于为赶进度把一个真前置说没了。
+- Prevention：时间压力**不消解真前置**。"快"是把对的下一步做利索，不是跳过设计前置；flag 了前置别下一轮自己 reframe 掉它。真要快，快在"赶紧跟用户敲定前置怎么建"，不是绕过它瞎建。
+- Earlier signal：发现自己在"用户催 → 把刚说的 blocker 重新解释成不是 blocker"——停，那是赶工幻觉，blocker 还在。
+
 ## 2026-06-30：从 n=1 一次观测就断言"根因=X、每次必现"，被 eval 的 n=4 纠偏
 - Mistake：turn-backstop 诊断第一次实跑撞 `Exceeded USD budget (0.03)`，我就对用户断言"0.03 太低、**每次都撞顶**、0 产出"。hc-eval 复跑 n=4：0.03 **三次 exit=0**、只有 0.005 必撞——真相是"0.03 偏紧、**遇长响应才** Exceeded"，不是"每次"。方向（提预算 + 装日志）对，但把单点观测说成了确定规律。
 - Prevention：下"这就是根因 / 每次都 X"这种确定结论前，**多跑几次 / 多条件复现（n≥3）**，尤其结论依赖可变量（响应长度、时延）时；单次只能说"至少这次因为 X"，不能说"每次"。

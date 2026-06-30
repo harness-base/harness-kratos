@@ -1,0 +1,10 @@
+# 研发方案 / 技术设计产出账本。由 hc-design skill 产出的 design.md + api-contract.md 在此登记。
+# 与实现/测试体系松耦合：接口契约被 api 用例线消费，不强制存在。
+# 每条：id（=目录名）/ dir（目录名）/ title / status（draft|reviewed）
+version: 1
+designs: []
+# 样例（产出第一份设计时照此登记，去掉注释）：
+# - id: orders-refund
+#   dir: orders-refund
+#   title: 订单退款技术设计
+#   status: reviewed

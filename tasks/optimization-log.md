@@ -115,3 +115,7 @@
 - **[impact] Codex 对等齐套已确认路径**：新增 reviewer 须 `.codex/agents/hc-doc-sync-reviewer.toml`（name/description/`model_reasoning_effort` 低档/developer_instructions）+ `.codex/config.toml` 加 `[agents.doc-sync-reviewer]`（description + config_file）——plan T2 已覆盖（实跑确认现有 9 个 agent 均「toml + config.toml 注册」齐套，模式一致）。注意 codex 侧用 `model_reasoning_effort`（plan 说低档，对——现有全 high，首个低档亦属新约定但与 reasoning_effort 语义自洽，可接受）。无 gap。
 - **[impact] dir-index 收口无风险**：`scripts/dir-index.sh` 取 frontmatter 首个 `name:`/`title:` 生成 `.claude/agents/README.md`，`--check` 进 make verify（实跑 exit=0 当前无漂）。新增 reviewer regen 后自动入索引；`model: haiku` 在 `name:` 之后不影响抽取。plan T2 已含 regen。无 gap。
 - **[impact｜软硬定性✓] 触发口径=hook 机械派，非主 agent spawn（避开 ADR-0005 决策4 坑）**：lessons.md:44 实证用户已锁定「钩子机械派、不再叠收尾主动 spawn」——即 turn-backstop（hook，硬触发）派 reviewer，不靠主 agent 记得。这符合 subagents.md「必须机械可靠的兜底走 hook，别做成靠记得 spawn 的子 agent」。设计方向正确，无软硬错配 gap（前述 :11/:42/:49 是 reference **措辞**需补，非设计错）。
+
+## 2026-06-30T08:44:34Z `落文档`（触发：K=8轮到点）
+- [ ] [ADR索引遗漏] `docs/decisions/*.md` 修改了对抗评审教训（三者不可互替、并行复核污染），但 `docs/decisions/index.yaml` 未见登记。
+- [ ] [skill同步遗漏] 新增的"make verify + eval 不可替代对抗挑刺"和"并行复核污染"教训应同步到 `superpowers:verification-before-completion` 等相关 skill，但未见修改。

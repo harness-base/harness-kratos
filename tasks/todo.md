@@ -1,9 +1,19 @@
 # 当前任务
 
 > 只记手头这一件事；干完清空、旧的 roll 进 `archive/`。保持轻。
-> 元：level: L2 ｜ task: turn-backstop-observability
+> 元：level: L3 ｜ task: hc-design
 
-## 当前：给 turn-backstop 装诊断日志 + 修「① capture 0 产出」静默失效
+## 当前：hc-design 研发方案/设计阶段 skill（hc-prd → hc-design → api 用例 的关键一环）
+- [x] 设计敲定：交互式设计 skill（≈hc-dev 做→挑刺，非 hc-prd 编排）；硬原则=参考项目代码/资产·不确定查+问·决策点用户拍·**全明确才落可执行方案(零 TBD)**·用户审核门·对抗评审·**模板通用不掺项目内容**
+- [x] 模板定稿：design.md(9 段)+ api-contract.md(单独，端点索引+每端点 请求/响应/Mock/错误码/关联)；异常 & 安全&风险 拆两段；删项目专属"多租户"
+- [x] 建：`templates/design.md` + `templates/api-contract.md` + `hc-design` skill + `hc-design-reviewer` 双栈（workflow 并行建+复核；并行踩踏致复核矛盾→查磁盘理清，真问题只 2：补 config 注册 + 删空壳 README + 2 minor）
+- [x] 接流程 + 留档：testing-flow api 线指向 hc-design 为契约源、`docs/designs/` 账本、ADR-0015 登记、索引已 regen 无漂移
+- [x] 收尾：`make verify`✓ + `docs-audit`✓(46) + **hc-eval green**（考题 010/011 pass；`docs/eval/task-reviews/20260630T072602Z-hc-design/`）
+- [x] **对抗评审 3 轮**（用户逼出的硬环节，eval/verify 都漏的）：R1 揪 blocker(模板偷设 REST、对 kratos gRPC 不通用)+7 major 并修 → R2 口径自洽(reviewer 判据回灌 skill/模板/文档登记 audit) → R3 收敛、修 R2 自相矛盾(逐行→并集、机检词表 4→7 统一、config 不列500→约定/未约定)；建 `scripts/designs-audit.sh` 机检(两层防线)
+- [ ] 提交（待授权）
+- **follow-up（记 ADR-0015，本批不做）**：reviewer 无对外接口 N/A 回 source 核、补分页/限流硬动作、api-contract 写端点幂等槽位、③多表写法
+
+## 已闭·待提交滚动：给 turn-backstop 装诊断日志 + 修「① capture 0 产出」静默失效（PR #8）
 - [x] 装诊断日志 `tasks/.turn-backstop.log`（gitignore）：记 触发/跳过原因、headless `exit`+输出前 160 字（claude stderr 接进来）、写没写 optimization-log；超 800 行自裁
 - [x] 实跑揪根因：headless claude `--max-budget-usd 0.03` 偏紧 → 遇较长响应即 `Exceeded USD budget` 报错退出、0 产出，被 `2>/dev/null` 吞了（eval 复跑 n=4 纠偏：非每次必撞、视响应长度；0.005 必撞、0.03 多次 exit=0）
 - [x] 修：默认预算 0.03→0.20（实跑验证 exit=0、产出正常）

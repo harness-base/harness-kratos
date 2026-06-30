@@ -23,7 +23,7 @@ related_docs:
 | `docs/decisions/` | done | ADR 架构决策记录；**清单以 `docs/decisions/index.yaml` 为准**（index-audit 守，不硬编码枚举，rule-0012） |
 | `docs/eval/` | done | 考题 / rubric / 评委 / 产出目录 |
 | `docs/harness/` | done | 验证路由 / CI / hooks（含 Stop hook）说明 |
-| `scripts/` | done | verify / docs-audit / run-eval / verify-eval / install-hooks / hook-policy(+test) / skills-index / **rules-index / dir-index / index-audit / prds-audit / test-cases-audit(+test)** / stop-check / **turn-backstop(+test)** |
+| `scripts/` | done | verify / docs-audit / run-eval / verify-eval / install-hooks / hook-policy(+test) / skills-index / **rules-index / dir-index / index-audit / prds-audit / designs-audit / test-cases-audit(+test)** / stop-check / **turn-backstop(+test)** |
 | `.githooks/` + `.github/workflows/` | done | 带测试的 hook policy + CI |
 | `.agents/skills/` | done | 技能集**以 `.agents/skills/README.md` 为准**（`skills-index` 从各 `SKILL.md` 自动生成、`--check` 进 `make verify` 防漂移，故此处不再硬编码枚举）；含 hc-prd（编排式，ADR-0010：产品总监 + 6 worker 双栈 subagent + 外部调研走 deep-research skill）、hc-self-evolution（带 references 审查手册）等 |
 | `.claude/` | done | settings（PreToolUse + Stop hook）+ 子 agent（**以 `.claude/agents/README.md` 为准**，自动索引；如 hc-eval / hc-code-reviewer）+ skills 软链 |
@@ -33,6 +33,7 @@ related_docs:
 | `projects/` | done | 挂载点，已挂 kratos-base（详见被管工程表） |
 | `docs-maintainer` skill | planned | 待接入（写文档 / 管文档） |
 | `docs/prds/` | done | 需求产出账本（hc-prd skill 产物 + prds-audit）；architecture 暂未建（drift 区已弃，见 ADR-0006） |
+| `docs/designs/` | done | 研发方案产出账本（hc-design skill 产物（ADR-0015）：design.md + 可选 api-contract + `designs-audit` 硬闸校登记一致 / design.md 在 / 零 TBD，进 make verify；判断层归 hc-design-reviewer）；空账本待实战 |
 | `docs/test-cases/` | done | 测试用例账本（hc-test skill 产物（ADR-0014） + `test-cases-audit` 硬闸校 AC/FP 覆盖闭合，ADR-0008）；空账本待实战 |
 | 自进化（① 落文档提醒 + ② hc-self-evolution） | done | `turn-backstop.sh`（机械触发落文档提醒，写 `- [ ]` 状态）+ `correction-nudge` 下一轮反馈待处理 + 文档漂移判据 `docs/harness/doc-sync-checklist.md` + `hc-doc-sync-reviewer` 子 agent（ADR-0012）+ `hc-self-evolution` skill/references + `hc-self-optimize` 子 agent |
 | sandbox / E2E 环境 | done | kratos-base 已建实（`projects/kratos-base/deploy/sandbox` + `verification.yaml` 路由，20 AC 弹性 e2e 跑通）；新工程随接随建 |

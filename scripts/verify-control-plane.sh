@@ -34,6 +34,9 @@ bash scripts/stop-check.test.sh || fail=1
 echo "== 测试用例自检自测 =="
 bash scripts/test-cases-audit.test.sh || fail=1
 
+echo "== 研发方案账本自检自测 =="
+bash scripts/designs-audit.test.sh || fail=1
+
 echo "== eval 资产 =="
 bash scripts/verify-eval-materials.sh || fail=1
 
@@ -86,6 +89,9 @@ done < <(find . -name AGENTS.md -not -path './.git/*')
 
 echo "== PRD 账本自检 =="
 bash scripts/prds-audit.sh || fail=1
+
+echo "== 研发方案账本自检 =="
+bash scripts/designs-audit.sh || fail=1
 
 echo "== 测试用例覆盖自检 =="
 bash scripts/test-cases-audit.sh || fail=1

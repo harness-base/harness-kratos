@@ -3,6 +3,7 @@
 > 由 `scripts/dir-index.sh` 自动生成、禁手改。默认不加载；自检 / 自进化时当地图查。
 
 - `hc-code-reviewer.md` — hc-code-reviewer
+- `hc-design-reviewer.md` — hc-design-reviewer
 - `hc-doc-sync-reviewer.md` — hc-doc-sync-reviewer
 - `hc-e2e-qa.md` — hc-e2e-qa
 - `hc-e2e-reviewer.md` — hc-e2e-reviewer
