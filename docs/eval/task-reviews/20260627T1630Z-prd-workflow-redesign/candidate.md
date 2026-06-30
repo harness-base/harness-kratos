@@ -6,14 +6,14 @@
 - docs/decisions/0007-prd-workflow-redesign.md（5 步/两套优先级/三级覆盖/受影响 skill 栏）
 
 ## skill（重写）
-- .agents/skills/prd-elicitation/SKILL.md（version: 2 / last_reviewed: 2026-06-28；贯穿约束 + 5 步工作流）
+- .agents/skills/hc-prd/SKILL.md（version: 2 / last_reviewed: 2026-06-28；贯穿约束 + 5 步工作流）
 
 ## 模板
 - templates/user-story.md（新；US-NN / us_status: draft|in-review|approved）
 - templates/prd.md（改；"## 功能点清单 + 覆盖映射" + US↔FP↔正文表）
 
 ## 写作指南（新）
-- .agents/skills/prd-elicitation/references/prd-writing.md
+- .agents/skills/hc-prd/references/prd-writing.md
 
 ## 护栏
 - scripts/prds-audit.sh（必备章节加"## 功能点清单" + user-stories.md 存在校验）

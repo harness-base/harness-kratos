@@ -12,8 +12,8 @@
 ## 核心机制（凭什么靠谱）
 
 - **规矩能机检**：密钥 / 危险命令由带测试的 `hook-policy` + git hooks 自动拦；删旧建新的引用漂移由各 `*-index --check` 进 `make verify` 防住——不靠自觉。
-- **质量有评委**：L2+ 任务收尾由 **eval 子 agent** 按 rubric 打分挑刺（用会话模型，**免 API key**），不靠 agent 自评。
-- **挑刺有对手**：写代码 / 产需求走对抗式 review（`code-reviewer` / `prd-reviewer` 子 agent：多视角找问题 + 独立证伪 + 修复循环）。
+- **质量有评委**：L2+ 任务收尾由 **hc-eval 子 agent** 按 rubric 打分挑刺（用会话模型，**免 API key**），不靠 agent 自评。
+- **挑刺有对手**：写代码 / 产需求走对抗式 review（`hc-code-reviewer` / `hc-prd-reviewer` 子 agent：多视角找问题 + 独立证伪 + 修复循环）。
 - **文档能自检**：每篇文档头声明依赖，`docs-audit` 查"引用的文件 / 链接还在不在"。
 - **agent 有错题本**：`tasks/lessons.md` 三段式记坑，反复出现升级成规则 / 技能。
 - **按需加载**：按任务档位（L0–L6）+ 就近 `AGENTS.md` 决定读多少，不全量通读。
@@ -22,8 +22,8 @@
 ## 已落地
 
 - **被管工程 `kratos-base`**：Go / Kratos 微服务地基（脚手架 + 配置中心 + 服务发现 + PG / Redis / MQ + 可观测 + 运行期弹性），验收点经多轮对抗评审硬化、全 PASS——详见 [`docs/context/CURRENT_STATUS.md`](docs/context/CURRENT_STATUS.md)。
-- **技能集**：`dev`（写代码统一入口）、`test-case`（测试用例 + 覆盖硬闸）、`prd-elicitation`（编排式产需求）、`self-evolution` 等——清单以 [`.agents/skills/README.md`](.agents/skills/README.md) 自动索引为准。
-- **子 agent**：`eval`（评委）、`code-reviewer` / `prd-reviewer`（挑刺）、prd 编排 worker 等，双运行时——以 [`.claude/agents/README.md`](.claude/agents/README.md) 自动索引为准。
+- **技能集**：`hc-dev`（写代码统一入口）、`hc-test`（编排式产测试）、`hc-prd`（编排式产需求）、`hc-self-evolution` 等——清单以 [`.agents/skills/README.md`](.agents/skills/README.md) 自动索引为准。
+- **子 agent**：`hc-eval`（评委）、`hc-code-reviewer` / `hc-prd-reviewer`（挑刺）、prd 编排 worker 等，双运行时——以 [`.claude/agents/README.md`](.claude/agents/README.md) 自动索引为准。
 - **决策记录**：ADR 见 [`docs/decisions/`](docs/decisions/)（清单以 `index.yaml` 为准）。
 
 ## 结构
@@ -55,7 +55,7 @@ make hooks         # 安装 git hooks（core.hooksPath → .githooks）
 make eval          # 跑 task eval review（可选；CI / headless 用，需 EVAL_API_*）
 ```
 
-- **eval 免 key**：默认用 eval 子 agent（`.claude/agents/eval.md` / `.codex/agents/eval.toml`），用会话模型打分、无需 API key；`make eval` 是可选的 CI / headless 路径。
+- **eval 免 key**：默认用 hc-eval 子 agent（`.claude/agents/hc-eval.md` / `.codex/agents/hc-eval.toml`），用会话模型打分、无需 API key；`make eval` 是可选的 CI / headless 路径。
 - **读多少**：看 [`docs/context/CONTEXT_LOADING.md`](docs/context/CONTEXT_LOADING.md)（L0–L6 档位 + 就近 `AGENTS.md`），默认少读、按需升档。
 
 ## 接入一个工程

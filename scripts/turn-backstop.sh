@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 每轮落文档提醒（capture，①；≠ 自进化审查②=self-evolution skill）：机械触发（K 轮 /
+# 每轮落文档提醒（capture，①；≠ 自进化审查②=hc-self-evolution skill）：机械触发（K 轮 /
 # commit 边界 / 变更文件数增量）→ headless Haiku 复查最近对话，把"做了决策 / 学了偏好 /
 # 有知识却没写进文档"捞进 tasks/optimization-log.md，提醒落文档。
 #

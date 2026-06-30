@@ -10,7 +10,7 @@
 - `M  .agents/skills/README.md`（skills-index regen，已无 context-loading 行）
 - `M  AGENTS.md`（启动顺序第 2 条强化 + rule-0004 去"该 skill"、改纯指 CONTEXT_LOADING.md）
 - `M  README.md`（技能例删 context-loading）
-- `M  .agents/skills/self-evolution/references/process-coverage.md`（两处候选行改为"已降级 ADR-0011 + L0-L6 粒度仍开放"）
+- `M  .agents/skills/hc-self-evolution/references/process-coverage.md`（两处候选行改为"已降级 ADR-0011 + L0-L6 粒度仍开放"）
 - `M  docs/context/CONTEXT_LOADING.md`（修 L4 档引不存在的 docs/architecture/）
 - `M  tasks/todo.md` / `M  tasks/lessons.md`（任务管理）
 

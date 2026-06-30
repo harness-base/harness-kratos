@@ -21,7 +21,7 @@ THRESHOLD="${LESSONS_PROMOTE_THRESHOLD:-10}"
 pending="$(bash "$ROOT/scripts/lessons-promote-check.sh" 2>/dev/null || echo 0)"
 case "$pending" in ''|*[!0-9]*) pending=0 ;; esac
 if [ "$pending" -gt "$THRESHOLD" ]; then
-  printf '\n[整理·rule-0011] tasks/lessons.md 攒了 %s 条还没整理的 lesson（超 %s）。\n转达用户：可走 self-evolution 挑哪些该升成规则（走 add-rule）、不值得的标 skip。\n转达后把这批未标记的标题行尾加 <!-- opt: seen -->（提醒过·待决定），免得下轮重复打扰。\n' "$pending" "$THRESHOLD"
+  printf '\n[整理·rule-0011] tasks/lessons.md 攒了 %s 条还没整理的 lesson（超 %s）。\n转达用户：可走 hc-self-evolution 挑哪些该升成规则（走 hc-add-rule）、不值得的标 skip。\n转达后把这批未标记的标题行尾加 <!-- opt: seen -->（提醒过·待决定），免得下轮重复打扰。\n' "$pending" "$THRESHOLD"
 fi
 
 # 提醒 3：optimization-log 里有「待处理」(未打勾)的 backstop 发现 → 反馈给 agent 去处理。

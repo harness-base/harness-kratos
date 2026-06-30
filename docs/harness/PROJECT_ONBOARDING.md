@@ -34,10 +34,10 @@ related_docs:
 用户可见的需求 / 行为 / 验收变化，动业务代码前先立项（rule-0001）：
 - `templates/feature-package.md` 建包 → 登记 `docs/features/index.yaml`
 - 补验收目标 + 测试设计，推进到 `tests_ready` 再写业务代码。
-（走 `dev` skill 深度级——含需求包门禁。）
+（走 `hc-dev` skill 深度级——含需求包门禁。）
 
-## 5. 加工程级规则（用 `add-rule` skill）
-日常踩的坑、定的规范，按 `add-rule` 三步落地：定范围 → 写下来 + 登记 → 挂执行。
+## 5. 加工程级规则（用 `hc-add-rule` skill）
+日常踩的坑、定的规范，按 `hc-add-rule` 三步落地：定范围 → 写下来 + 登记 → 挂执行。
 - 跨工程 → `docs/rules/`；工程通用 → 工程根 `AGENTS.md`；只管某层 → 就近 `AGENTS.md`。
 - 能机器判 → `scripts/hook-policy.sh`；要人判 → `docs/eval/prompts/` 加考题。
 - 例："数据层用 ent、非必要不 raw SQL" → 放 `internal/data/AGENTS.md` + hook 拦 raw SQL。
@@ -56,12 +56,12 @@ related_docs:
 `.github/workflows/verify.yml` 现在只跑控制面自检；接工程后加 affected verify（按 `workspace/verification.yaml` 路由，只跑跟改动相关的工程测试）。
 
 ## 10. 收尾
-L2+ 任务收尾跑 eval（eval 子 agent，免 key）；Stop hook 兜底检查。
+L2+ 任务收尾跑 eval（hc-eval 子 agent，免 key）；Stop hook 兜底检查。
 
 ## 接入校验清单
 - [ ] 代码在 `projects/<name>/`
 - [ ] 工程 `AGENTS.md`（精简 + 就近下沉）
 - [ ] `workspace/verification.yaml` 填了路由
 - [ ] 第一个 feature 包就绪
-- [ ] 工程级规则按 `add-rule` 落地（放对 + 登记 + 挂执行）
+- [ ] 工程级规则按 `hc-add-rule` 落地（放对 + 登记 + 挂执行）
 - [ ] `make verify` 绿

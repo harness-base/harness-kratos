@@ -13,7 +13,7 @@ severity: blocker
 reason: ADR-0007「受影响的 skill」栏完整填写——prd-elicitation 标"是"且 SKILL.md 已随实现重写、version 2 / last_reviewed 2026-06-28 已 bump；feature-delivery 标"否"并给理由（下游松耦合、衔接口未改）；其余 skill 写"否"。skills 索引已重生成含新 description。
 evidence: |
   docs/decisions/0007-prd-workflow-redesign.md:37-40（受影响 skill 三条逐一填写）；
-  .agents/skills/prd-elicitation/SKILL.md:4-5（version: 2 / last_reviewed: 2026-06-28）；
+  .agents/skills/hc-prd/SKILL.md:4-5（version: 2 / last_reviewed: 2026-06-28）；
   .agents/skills/README.md:13（索引含新版 description "分阶段产出用户故事 → PRD"）；
   make verify → "✓ skills 目录无漂移"。
 ```
@@ -49,7 +49,7 @@ reason: |
   补充评 013 题本身的改动：与 ADR-0007/skill/模板对齐——加了"用户故事先行且 approved（US-NN / us_status）""功能点覆盖+US↔FP↔正文映射表（软，目标 100%）"等检查项，术语锚点与实现侧一致、无漂移。题本身改得对。
 evidence: |
   docs/prds/index.yaml 为空账本（prds-audit 平凡通过）；
-  docs/eval/prompts/013-prd-completeness.md:9-10（用户故事先行+approved、功能点覆盖映射）↔ .agents/skills/prd-elicitation/SKILL.md:25-26 / templates/user-story.md:23-24 / templates/prd.md:19-27 一致。
+  docs/eval/prompts/013-prd-completeness.md:9-10（用户故事先行+approved、功能点覆盖映射）↔ .agents/skills/hc-prd/SKILL.md:25-26 / templates/user-story.md:23-24 / templates/prd.md:19-27 一致。
 ```
 
 ## 实跑证据（命令 / 结果 / 分类）

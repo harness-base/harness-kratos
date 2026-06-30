@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # eval 的【可选】CI/headless 路径：拼 evaluator+rubric+考题+候选 → 调外部 LLM API（OpenAI 兼容）→ 写 task-review。
-# 交互时默认用 eval 子 agent（.claude/agents/eval.md），免 key；本脚本用于无人值守自动跑分。
+# 交互时默认用 hc-eval 子 agent（.claude/agents/hc-eval.md），免 key；本脚本用于无人值守自动跑分。
 # 用法：bash scripts/run-eval.sh --context-level L3 --candidate-file <file> [--prompts 010,011]
 # 需要：curl、jq；环境变量 EVAL_API_BASE / EVAL_API_KEY，可选 EVAL_MODEL。
 set -uo pipefail
@@ -19,8 +19,8 @@ done
 [ -f "$candidate" ] || { echo "缺 --candidate-file <存在的文件>"; exit 2; }
 command -v jq >/dev/null   || { echo "需要 jq"; exit 2; }
 command -v curl >/dev/null || { echo "需要 curl"; exit 2; }
-: "${EVAL_API_BASE:?run-eval 是可选的 CI/headless 路径，需 EVAL_API_BASE；交互时改用 eval 子 agent（.claude/agents/eval.md），免 key}"
-: "${EVAL_API_KEY:?run-eval 需 EVAL_API_KEY；交互时改用 eval 子 agent，免 key}"
+: "${EVAL_API_BASE:?run-eval 是可选的 CI/headless 路径，需 EVAL_API_BASE；交互时改用 hc-eval 子 agent（.claude/agents/hc-eval.md），免 key}"
+: "${EVAL_API_KEY:?run-eval 需 EVAL_API_KEY；交互时改用 hc-eval 子 agent，免 key}"
 model="${EVAL_MODEL:-claude-sonnet-4-6}"
 
 sys="$(cat "$EVAL/evaluator.md" "$EVAL/rubric.md")"

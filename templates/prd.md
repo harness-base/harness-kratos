@@ -1,7 +1,7 @@
 # PRD：<prd-id> <标题>
 
-> 由 `prd-elicitation` skill 引导式对话产出。落 `docs/prds/<id>/`，登记 `docs/prds/index.yaml`（条目含 `dir: <id>` = 目录名，`prds-audit` 按此校验目录↔账本一致）。
-> 下游可派生 feature 包（由 `dev` skill 实现）——松耦合，不强制。
+> 由 `hc-prd` skill 引导式对话产出。落 `docs/prds/<id>/`，登记 `docs/prds/index.yaml`（条目含 `dir: <id>` = 目录名，`prds-audit` 按此校验目录↔账本一致）。
+> 下游可派生 feature 包（由 `hc-dev` skill 实现）——松耦合，不强制。
 
 ## 问题 / 目标
 （为什么做、达成什么用户可见结果）
@@ -18,7 +18,7 @@
 
 ## 功能点清单 + 覆盖映射
 - 功能点：逐条 `FP-NN` + 一句话描述。
-- 覆盖（三级双向可追溯，目标 100%，软；详见 `prd-elicitation/references/prd-writing.md`）：
+- 覆盖（三级双向可追溯，目标 100%，软；详见 `hc-prd/references/prd-writing.md`）：
 
 | 功能点 FP | 来自故事 US | 正文小节 |
 |---|---|---|

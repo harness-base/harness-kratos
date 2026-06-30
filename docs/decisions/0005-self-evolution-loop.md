@@ -7,7 +7,7 @@ source_files: []
 related_docs:
   - ../../AGENTS.md
   - ../harness/HOOKS.md
-  - ../../.claude/agents/self-optimize.md
+  - ../../.claude/agents/hc-self-optimize.md
 ---
 
 # ADR-0005：自进化闭环——每轮机械兜底 + self-optimize 判断引擎
@@ -16,7 +16,7 @@ related_docs:
 
 本 ADR 当时把两件事并称"自进化闭环"，后续拆清为两套独立机制：
 - **① 落文档提醒（capture）**：每轮机械触发 + Haiku（`scripts/turn-backstop.sh`），catch"决策/知识没落文档"，由 rule-0011 钉。**本 ADR 的"每轮兜底"即此。**
-- **② 自进化（规范检查）**：`self-evolution` skill + references（`.agents/skills/self-evolution/`），刻意触发、按维度审 harness 本身；`self-optimize` 子 agent 是它的深审执行器。
+- **② 自进化（规范检查）**：`self-evolution` skill + references（`.agents/skills/hc-self-evolution/`），刻意触发、按维度审 harness 本身；`self-optimize` 子 agent 是它的深审执行器。
 
 二者触发频率 / 产出 / 记录分开，不再混称。
 
@@ -32,7 +32,7 @@ related_docs:
    - **机械触发**（全在脚本常量+逻辑）：`K` 轮到点（默认 8）/ commit 边界（HEAD 变）/ 变更文件数**增量** ≥ 阈值（默认 10，是"涨多少"非绝对值）。状态存 `tasks/.turn-count`、`tasks/.last-backstop`（gitignore）。
    - 触发后 **headless `claude -p --model haiku`** 复查最近 transcript，捞"做了决策/学了偏好/有知识却没写进文件"的遗漏，追加 `tasks/optimization-log.md`。
    - **触发独立于 agent 判断**——漏记的 agent 拦不住兜底（这是信任锚）。
-2. **重判断引擎**（`.claude/agents/self-optimize.md` 子 agent，会话模型）：一段工作落地后多维判断是否要优化（起步维度：知识捕获 / 产出质量 / skill 新鲜度 / 自身），写 `optimization-log.md`，有 blocker 提示先处理。与现有 eval（rule-0005 收尾评分）互补，不替代。
+2. **重判断引擎**（`.claude/agents/hc-self-optimize.md` 子 agent，会话模型）：一段工作落地后多维判断是否要优化（起步维度：知识捕获 / 产出质量 / skill 新鲜度 / 自身），写 `optimization-log.md`，有 blocker 提示先处理。与现有 eval（rule-0005 收尾评分）互补，不替代。
 
 **安全**：递归 guard（headless 调用带 `HARNESS_TRIAGE=1` + 从中性目录 `/tmp` 跑、不加载项目钩子）；无 `timeout`/`gtimeout` 用 perl `alarm` 包超时；budget 封顶；全程 best-effort——**任何失败一律 exit 0，绝不阻断收尾**。
 
@@ -50,5 +50,5 @@ related_docs:
 
 ## 影响
 
-- 新增 `scripts/turn-backstop.sh`、`.claude/agents/self-optimize.md`、`tasks/optimization-log.md`；`scripts/stop-check.sh` 扩两段（递归 guard + 取 transcript + 调兜底）；`.gitignore` 加状态文件；rule-0011 入 `AGENTS.md`。
+- 新增 `scripts/turn-backstop.sh`、`.claude/agents/hc-self-optimize.md`、`tasks/optimization-log.md`；`scripts/stop-check.sh` 扩两段（递归 guard + 取 transcript + 调兜底）；`.gitignore` 加状态文件；rule-0011 入 `AGENTS.md`。
 - 不改现有 eval/rule-0005 收尾闸门语义。

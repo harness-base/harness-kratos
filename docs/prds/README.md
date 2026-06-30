@@ -5,7 +5,7 @@ owner: harness
 last_updated: 2026-06-28
 source_files: []
 related_docs:
-  - ../../.agents/skills/prd-elicitation/SKILL.md
+  - ../../.agents/skills/hc-prd/SKILL.md
   - ../../templates/user-story.md
   - ../../templates/prd.md
   - ../decisions/0003-prd-elicitation-and-prototype.md
@@ -15,7 +15,7 @@ related_docs:
 
 # 需求产出（PRDs）
 
-由 `prd-elicitation` skill 分阶段产出的 **用户故事 → PRD →（可选）交互原型**，是 `dev`（实现需求）的**上游**。与实现体系**松耦合**：实现不强依赖此处，有 PRD 时可派生 feature 包衔接。流程见 `../decisions/0007-prd-workflow-redesign.md`。
+由 `hc-prd` skill 分阶段产出的 **用户故事 → PRD →（可选）交互原型**，是 `hc-dev`（实现需求）的**上游**。与实现体系**松耦合**：实现不强依赖此处，有 PRD 时可派生 feature 包衔接。流程见 `../decisions/0007-prd-workflow-redesign.md`。
 
 - 模板：`templates/user-story.md`、`templates/prd.md`
 - 账本：`index.yaml`（每个 PRD 一条：`id` / `dir`（目录名，`prds-audit` 按此键校验）/ `title` / `prd_status` / 派生 feature）

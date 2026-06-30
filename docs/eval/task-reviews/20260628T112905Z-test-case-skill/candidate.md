@@ -4,7 +4,7 @@
 
 ## 候选产出（已逐一 Read 核验）
 - `docs/decisions/0008-test-case-skill.md`（ADR，含「受影响 skill (rule-0007)」栏逐 skill 填 yes/no + 理由）
-- `.agents/skills/test-case/SKILL.md`（skill 正文，已被 skills-index 自动收录）
+- `.agents/skills/hc-test/SKILL.md`（skill 正文，已被 skills-index 自动收录）
 - `templates/test-case.md`（模板 + 格式契约）
 - `scripts/test-cases-audit.sh`（硬闸：覆盖闭合 + 账本一致，严格 + fail-closed 解析）
 - `scripts/test-cases-audit.test.sh`（守护测试 25 条）

@@ -58,7 +58,7 @@ reason: 核心载体（rule-0011 / turn-backstop.sh / 两个子 agent / ADR-0005
 
 - **rule-0011**（`AGENTS.md:30`）已①专属："落文档提醒（`scripts/turn-backstop.sh`，=①，非自进化审查）"。
 - **`scripts/turn-backstop.sh:1-4`** header 正名"每轮落文档提醒（capture，①；≠ 自进化审查②=self-evolution skill）"，不再自称"自进化"。
-- **`.claude/agents/self-optimize.md:23`** 与 **`.codex/agents/self-optimize.toml`** 都明确"知识捕获（决策/血泪有没有落文档）不归你——那是 ① 落文档提醒的活"，两端对齐为②深审执行器。
+- **`.claude/agents/hc-self-optimize.md:23`** 与 **`.codex/agents/hc-self-optimize.toml`** 都明确"知识捕获（决策/血泪有没有落文档）不归你——那是 ① 落文档提醒的活"，两端对齐为②深审执行器。
 - **ADR-0005** 加了订正段（15-21 行）清楚拆①②。
 
 残留概念漂移：references 与 SKILL.md 仍把"`self-optimize` skill"当存在（详见第 5 项）。不破坏①②的功能边界，但术语没收口。
@@ -96,8 +96,8 @@ reason: 删老 self-optimize skill 后，新写的 references 多处仍把它当
 
 老 `self-optimize` skill 目录确已删，自动生成的索引（`.agents/skills/README.md`、`.claude/agents/README.md`）都正确。**但手写的 references 没跟上**，悬空/自相矛盾点（均 `文件:行` + 证据）：
 
-- **`.agents/skills/self-evolution/references/skills.md:36`** —「当前 6 个 skill：`add-rule / context-loading / feature-delivery / git-workflow / prd-elicitation / self-optimize`」。**错**：实际 7 个（`add-rule / bugfix / context-loading / feature-delivery / git-workflow / prd-elicitation / self-evolution`）。列了**已删的 self-optimize**、漏了本批新增的 **bugfix** 与 **self-evolution**——连被审的 self-evolution skill 自己都不在自己维度 reference 的清单里。这行还自称"真实路径锚点"。
-- **`.agents/skills/self-evolution/references/subagents.md:44`** —「Codex 不对等…当前 `self-optimize` **只有 Claude 侧、无 `.codex/agents/self-optimize.toml`**，是已知对等缺口」，且整段标"事实锚点（核对过）"。**已被本批证伪**：`.codex/agents/self-optimize.toml` 本批已创建并在 `config.toml` 注册（第 4 项已核）。"核对过"的事实锚点是假的。
+- **`.agents/skills/hc-self-evolution/references/skills.md:36`** —「当前 6 个 skill：`add-rule / context-loading / feature-delivery / git-workflow / prd-elicitation / self-optimize`」。**错**：实际 7 个（`add-rule / bugfix / context-loading / feature-delivery / git-workflow / prd-elicitation / self-evolution`）。列了**已删的 self-optimize**、漏了本批新增的 **bugfix** 与 **self-evolution**——连被审的 self-evolution skill 自己都不在自己维度 reference 的清单里。这行还自称"真实路径锚点"。
+- **`.agents/skills/hc-self-evolution/references/subagents.md:44`** —「Codex 不对等…当前 `self-optimize` **只有 Claude 侧、无 `.codex/agents/hc-self-optimize.toml`**，是已知对等缺口」，且整段标"事实锚点（核对过）"。**已被本批证伪**：`.codex/agents/hc-self-optimize.toml` 本批已创建并在 `config.toml` 注册（第 4 项已核）。"核对过"的事实锚点是假的。
 - **`references/subagents.md:10`** —「`self-optimize` skill（深审入口、列总览索引、晋升归档）调 `self-optimize` 子 agent」：描述了一对已不存在的 skill+subagent。
 - **`references/subagents.md:35`** —「重判断子 agent 由主 agent / `self-optimize` skill 按需 spawn」：`self-optimize` skill 已删；实际由 `self-evolution` skill spawn。
 - **`references/eval.md:58`** / **`references/index-system.md:83`** —「→ `self-optimize` skill 把发现晋升归档」：指向已删 skill。

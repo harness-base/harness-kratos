@@ -15,7 +15,7 @@ severity: warn
 reason: 属大改（写了 ADR-0009 + 新建 dev + 删 2 skill + 改一片 skill）；ADR-0009「受影响的 skill」栏如实填齐——含删除的 2 个、改的 3 个 skill + 自身引入的 code-reviewer 对 subagents 维度的影响，删除干净、需求包门禁保留可验证。
 evidence: |
   - ADR-0009 line 38-45「受影响的 skill（rule-0007）」逐条：dev/新建、feature-delivery/删除、bugfix/删除、prd-elicitation/是、test-case/是、self-evolution/是（且明写"补 code-reviewer 进 subagents 维度事实锚点 + .codex/config.toml 注册"）、其余/否。
-  - 自身引入的 code-reviewer 对 subagents 维度的影响已落地：.agents/skills/self-evolution/references/subagents.md line 35/44/56 把 code-reviewer 锚为第三个 .claude/agents（"dev skill 的挑刺引擎；ADR-0009"），并记其 tools 无 Write、双栈已对等注册。
+  - 自身引入的 code-reviewer 对 subagents 维度的影响已落地：.agents/skills/hc-self-evolution/references/subagents.md line 35/44/56 把 code-reviewer 锚为第三个 .claude/agents（"dev skill 的挑刺引擎；ADR-0009"），并记其 tools 无 Write、双栈已对等注册。
   - 删除干净：git status 显示 .agents/skills/{feature-delivery,bugfix}/SKILL.md 为 D；ls 两目录均不存在；skills-index --check ✓ 无漂移；.agents/skills/README.md 已去旧增 dev。
   - 需求包门禁保留：dev SKILL.md line 36/61（深度级「用户可见功能先立需求包 docs/features/，rule-0001：未就绪 MUST STOP」）；ADR-0009 决策 4 明确"需求包门禁 rule-0001 + eval 001 + templates/feature-package.md + docs/features/ 数据保留，只删 skill 壳"。rule-0001 原文 / eval 001 题库 / templates / docs/features 数据均未动（grep 确认）。
   - dev SKILL.md 演进段（line 66-67）按 rule-0007 写明改动时回顾本 skill 连同 code-reviewer 双栈。
@@ -49,7 +49,7 @@ evidence: |
   - skill 回顾（011）：见上，pass。
   - 删改漂移自查到位：第二轮挑刺用新建 code-reviewer dogfood，捞出 AGENTS.md 子代理清单漏 code-reviewer（且 self-optimize 早漏）、self-evolution/SKILL.md 仍把 bugfix 当缺口、references/docs.md 还提已删 bugfix，均已修平（grep 复核：docs.md 已无 bugfix/feature-delivery，SKILL.md line 12 列 dev 非 bugfix）。tasks/lessons.md line 18 三段式记此复发（rule-0011）。
   - 全仓 grep 抽验：残留 feature-delivery/bugfix 全部为 ① 历史 ADR 受影响栏（0001-0008，按 ADR-0009 决策 5 不改写历史）② 历史 plan/log（self-evolution-plan、optimization-log 2026-06-26 条）③ 任务类型种子（process-coverage 的"需求/实现/bugfix/重构/迁移/loop"盘点口径，bugfix 是任务类型非 skill）④ dev SKILL"改 bug 子模式（借自原 bugfix）"标注 ⑤ lessons 记录。无误导性活路由指向已删 skill；活引用（prd-elicitation/test-case/prd.md/prds README/test-cases README/PROJECT_ONBOARDING）已全部指向 dev。
-  - code-reviewer 双栈齐：.claude/agents/code-reviewer.md（含 frontmatter tools: Read,Glob,Grep,Bash）+ .codex/agents/code-reviewer.toml + .codex/config.toml line 25-27 [agents.code-reviewer] 注册，三者齐备。读写口径：子 agent 无 Write 工具、system prompt 明"只评不改"——"tools 只读"措辞略不精确（保留 Bash 以便实跑测试，与 eval/self-optimize 一致），属 warn 级 nit，不影响"不改业务代码"的设计意图。
+  - code-reviewer 双栈齐：.claude/agents/hc-code-reviewer.md（含 frontmatter tools: Read,Glob,Grep,Bash）+ .codex/agents/hc-code-reviewer.toml + .codex/config.toml line 25-27 [agents.code-reviewer] 注册，三者齐备。读写口径：子 agent 无 Write 工具、system prompt 明"只评不改"——"tools 只读"措辞略不精确（保留 Bash 以便实跑测试，与 eval/self-optimize 一致），属 warn 级 nit，不影响"不改业务代码"的设计意图。
 ```
 
 ---

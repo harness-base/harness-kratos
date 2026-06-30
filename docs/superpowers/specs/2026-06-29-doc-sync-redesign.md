@@ -38,7 +38,7 @@ related_docs:
 **必改（删 skill / 移 checklist 后失准，漏了 verify 会红或闭环断）：**
 - `scripts/turn-backstop.sh` + `scripts/turn-backstop.test.sh`：派 reviewer + 新清单路径 + 反馈通道；test #4 重写为新"接通闸"（断言引用新清单 + 派 reviewer + reviewer 双栈注册齐，任一断→红），**hermetic 静态接线测试、不真 spawn**；**必与删 skill 同 commit**。
 - `docs/harness/doc-sync-checklist.md`（新）+ `dir-index docs/harness` regen。
-- `.claude/agents/doc-sync-reviewer.md` + `.codex/agents/doc-sync-reviewer.toml` + `.codex/config.toml` 注册 + `dir-index .claude/agents` regen。
+- `.claude/agents/hc-doc-sync-reviewer.md` + `.codex/agents/hc-doc-sync-reviewer.toml` + `.codex/config.toml` 注册 + `dir-index .claude/agents` regen。
 - 根 `README.md:25`：技能集例子删 `doc-sync`。
 - `docs/harness/HOOKS.md:54`：机制描述改"派 reviewer + 反馈口语义 + Codex 局限"。
 - `docs/context/CURRENT_STATUS.md:37`：① 机制描述（doc-drift 改走 reviewer + 当轮反馈，a~e 仍 log）+ `dir-index docs/context` regen。

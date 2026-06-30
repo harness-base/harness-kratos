@@ -26,7 +26,7 @@ related_docs:
   - `features/` 保留机制但建成空账本，真需求随被管工程填。
   - 不建 `workflows/` 目录——流程改用 `.agents/skills/`（流程即技能）。
   - 不照搬 `cms-builder` 的 JS 工具链产物与业务目录（`apps/`、`packages/`、`.turbo/` 等）——那些属于被管工程，进 `projects/`。
-  - eval 默认走 **eval 子 agent**（`.claude/agents/eval.md` + `.codex/agents/eval.toml`，用会话模型、免 key，Claude Code / Codex 双运行时）；`run-eval.sh`（curl 调外部 LLM）为可选 CI/headless 路径。不用 Python、不接外部知识库服务。
+  - eval 默认走 **eval 子 agent**（`.claude/agents/hc-eval.md` + `.codex/agents/hc-eval.toml`，用会话模型、免 key，Claude Code / Codex 双运行时）；`run-eval.sh`（curl 调外部 LLM）为可选 CI/headless 路径。不用 Python、不接外部知识库服务。
   - 去掉 `knowledge/`（不接外部材料层）；去掉 `skills-lock.json`（产品运行时的件，非控制面）。
   - `docs-maintainer` skill 先不接（待接入）；`docs-audit` 脚本保留。
   - skill 随工程演进：错题本 + 大改时回顾（ADR 模板「受影响 skill」+ `rule-0007`）。

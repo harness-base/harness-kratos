@@ -51,19 +51,19 @@ make hooks   # git config core.hooksPath .githooks
 `stop-check.sh` 在收尾闸门之后调 `scripts/turn-backstop.sh`，**机械触发**的廉价兜底（脚本管 WHEN、Haiku 管 WHAT）：
 
 - **触发**（脚本顶部常量可调）：`K` 轮到点（默认 8）/ commit 边界（HEAD 变）/ 变更文件数**增量** ≥ 阈值（默认 10，是"涨多少"非绝对值）。状态存 `tasks/.turn-count`、`tasks/.last-backstop`（gitignore）。
-- 触发后 **headless `claude -p --model haiku`** 复查最近 transcript，捞"做了决策 / 学了偏好 / 有知识却没写进文件"的遗漏；其中"改了文件没同步文档"一类，**对照 `docs/harness/doc-sync-checklist.md` 的 `🔴手` 行**判断（单一来源，不自抄子集；机器能兜的 `✅机检` 行交给 `make verify`；同判据由 `doc-sync-reviewer` 子 agent 承接，ADR-0012）。
+- 触发后 **headless `claude -p --model haiku`** 复查最近 transcript，捞"做了决策 / 学了偏好 / 有知识却没写进文件"的遗漏；其中"改了文件没同步文档"一类，**对照 `docs/harness/doc-sync-checklist.md` 的 `🔴手` 行**判断（单一来源，不自抄子集；机器能兜的 `✅机检` 行交给 `make verify`；同判据由 `hc-doc-sync-reviewer` 子 agent 承接，ADR-0012）。
 - **发现写 `tasks/optimization-log.md`、每条带 `- [ ]` 状态（待处理）**；**送达**靠 `UserPromptSubmit` 钩子（`correction-nudge.sh`）下一轮注入"有 N 条待处理"——替代不被注入、没人看见的 exit-0 stderr。处理完该行改 `- [x]`（暂缓 `- [~]`）。turn-backstop 仍 best-effort、永不阻断收尾。
-- **Codex 局限**：doc-drift 自动检测靠 Claude Code 的 Stop / UserPromptSubmit 钩子，**Codex 无等价自动触发**（靠 `make verify` 机检半 + 手动派 `doc-sync-reviewer`）。
+- **Codex 局限**：doc-drift 自动检测靠 Claude Code 的 Stop / UserPromptSubmit 钩子，**Codex 无等价自动触发**（靠 `make verify` 机检半 + 手动派 `hc-doc-sync-reviewer`）。
 - **安全**：递归 guard（headless 调用带 `HARNESS_TRIAGE=1` + 从中性目录 `/tmp` 跑、不加载项目钩子）；本机无 `timeout`/`gtimeout`，用 perl `alarm` 包超时；budget 封顶；**best-effort——任何失败一律 exit 0，绝不阻断收尾**。安全性由 `scripts/turn-backstop.test.sh` 自测（不调 Haiku）。
 
-为什么不"每轮跑 eval"：纯讨论轮空转、烧 token / 拖慢。为什么触发机械而非 agent 判断：漏记的 agent 同样会忘记触发兜底——故触发必须独立于 agent。重判断（多维优化）走 `.claude/agents/self-optimize.md` 子 agent，按需 spawn。
+为什么不"每轮跑 eval"：纯讨论轮空转、烧 token / 拖慢。为什么触发机械而非 agent 判断：漏记的 agent 同样会忘记触发兜底——故触发必须独立于 agent。重判断（多维优化）走 `.claude/agents/hc-self-optimize.md` 子 agent，按需 spawn。
 
 ## 纠错提醒（UserPromptSubmit hook，rule-0011）
 
 `.claude/settings.json` 的 `UserPromptSubmit` hook 每轮调 `scripts/correction-nudge.sh`，把「自检：用户上一句是否在纠正你？是则当轮记 `tasks/lessons.md` 三段式」**注入 agent 当轮上下文**（UserPromptSubmit 的 stdout 在 exit 0 时注入）。
 
 - **判断交给 agent**：是不是纠正靠 agent 自己判（它上下文最全，比关键词 / 小模型都准），钩子只负责把提醒**可靠塞到眼前**——替掉原 `stop-check.sh` 里那行 exit-0 stderr 死提醒（不注入、没人看见）。
-- **顺带整理提醒（step 4）**：同一钩子还跑 `scripts/lessons-promote-check.sh` 数 `tasks/lessons.md` 里"没 `<!-- opt: -->` 标记"的 lesson，超阈值（默认 10）就**多注入一句**，提示整理——走 `self-evolution` 挑、`add-rule` 升、不值得标 `skip`、提醒过未决定标 `seen`（标记约定见 `tasks/lessons.md` 头部）。计数由 `scripts/lessons-promote-check.test.sh` 自测。
+- **顺带整理提醒（step 4）**：同一钩子还跑 `scripts/lessons-promote-check.sh` 数 `tasks/lessons.md` 里"没 `<!-- opt: -->` 标记"的 lesson，超阈值（默认 10）就**多注入一句**，提示整理——走 `hc-self-evolution` 挑、`hc-add-rule` 升、不值得标 `skip`、提醒过未决定标 `seen`（标记约定见 `tasks/lessons.md` 头部）。计数由 `scripts/lessons-promote-check.test.sh` 自测。
 - **best-effort**：消费 stdin、永远 exit 0，**绝不阻断 prompt**（不用 exit 2）。由 `scripts/correction-nudge.test.sh` 自测（进 `make verify`）。
 - **局限（诚实说）**：每轮注入同一句，仍有"被 tune out"的 wallpaper 风险——比死提醒强（真注入 + 贴着用户消息新鲜出现），但仍是软提醒；若实测仍漏记，再加检测让它**只在疑似纠正时**响（soft→hard）。
 - **codex 对等**：settings.json 钩子仅 Claude Code 吃；但规则本体 rule-0011 在根 `AGENTS.md`（Codex 原生读），软提醒 claude-only 可接受（gates-hooks.md：软 hook 只是早提醒、非对等机制）。

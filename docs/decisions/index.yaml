@@ -38,7 +38,7 @@ decisions:
     file: 0007-prd-workflow-redesign.md
   - id: ADR-0008
     title: 测试用例 skill——独立产出测试用例 + 软硬分层管覆盖（AC+FP）
-    status: accepted
+    status: superseded
     date: 2026-06-28
     file: 0008-test-case-skill.md
   - id: ADR-0009
@@ -61,3 +61,13 @@ decisions:
     status: accepted
     date: 2026-06-29
     file: 0012-doc-sync-redesign.md
+  - id: ADR-0013
+    title: 项目定名 harness-control，skill / 子 agent 统一前缀 hc-（存量全量改名，历史不改写）
+    status: accepted
+    date: 2026-06-30
+    file: 0013-project-naming-hc-prefix.md
+  - id: ADR-0014
+    title: hc-test 测试编排——测试总监调度专职 worker、干掉 test-case 并入；e2e 本期实现、api/脚本占位
+    status: accepted
+    date: 2026-06-30
+    file: 0014-hc-test-orchestration.md

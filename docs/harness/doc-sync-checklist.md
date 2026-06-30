@@ -13,7 +13,7 @@ related_docs:
 "改了 X → 须查 Y 是否跟改"的**唯一真相源**（数据）。原 `doc-sync` skill 降级后（ADR-0012），这张表独立成数据文件，由两处消费：
 
 - `scripts/turn-backstop.sh`（Stop 钩子）：触发时 grep 本表的 `🔴手` 行当判据，复查"动了文件但没同步文档"。
-- `doc-sync-reviewer` 子 agent：读本表 + 本轮 `git diff` 报漂移。
+- `hc-doc-sync-reviewer` 子 agent：读本表 + 本轮 `git diff` 报漂移。
 
 **`谁兜底` 列**：`✅机检` = `make verify` 已自动兜底（索引/shim/audit 漂了就红），不用人专门记；`🔴手` = 无机器兜底、只能人手同步——**这几行才是真漂移面、钩子/reviewer 只读这几行**。
 
@@ -34,4 +34,4 @@ related_docs:
 | 新建 / 改模板 `templates/*.md` | `templates/README.md`（`dir-index.sh` 生成，跑 `bash scripts/dir-index.sh templates`） | ✅机检 |
 | 改了 PRD 内容 / 新增 PRD | `docs/prds/index.yaml`；`prds-audit.sh` 守章节齐全 | ✅机检 |
 
-**维护**：新增一类资产 / 文档承诺 / hook，本表加对应行（否则该类漂移没人预防也没人检测）。本表是 `🔴手` 判据的唯一来源，turn-backstop 与 doc-sync-reviewer 都读这里，不另抄子集。
+**维护**：新增一类资产 / 文档承诺 / hook，本表加对应行（否则该类漂移没人预防也没人检测）。本表是 `🔴手` 判据的唯一来源，turn-backstop 与 hc-doc-sync-reviewer 都读这里，不另抄子集。

@@ -13,8 +13,8 @@
 
 ## 产物（diff --stat 关键项）
 - docs/decisions/0010-prd-orchestration.md（ADR，受影响 skill 栏已填）+ index.yaml 登记（ADR-0010）
-- .agents/skills/prd-elicitation/SKILL.md（version 3，编排总谱）
-- .agents/skills/prd-elicitation/references/orchestration-workflow.js（109 行，Workflow 编排模板）
+- .agents/skills/hc-prd/SKILL.md（version 3，编排总谱）
+- .agents/skills/hc-prd/references/orchestration-workflow.js（109 行，Workflow 编排模板）
 - 6 worker 双栈：.claude/agents/{prd-reviewer,requirements-gatherer,user-story-writer,prd-writer,
   feature-point-writer,prototype-builder}.md + .codex/agents/*.toml + .codex/config.toml 注册 + README 登记
 - doc-sync：docs/context/CURRENT_STATUS.md、docs/README.md

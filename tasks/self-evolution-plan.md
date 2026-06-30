@@ -6,7 +6,7 @@
 
 一个**规范检查层** skill：当要改 harness、或发现 harness 漏洞时，引导 agent 按 harness 结构**定位"哪一环出问题 / 该怎么改"**，逐维度审查、不靠记忆漏项。
 
-- 它是**检查层**，区别于**操作层** skill（`add-rule`/`prd-elicitation`/`feature-delivery` 等——它们是**被检查对象** + 发现缺口后的**修复工具**，不作为审查逻辑被复用）。
+- 它是**检查层**，区别于**操作层** skill（`hc-add-rule`/`hc-prd`/`feature-delivery` 等——它们是**被检查对象** + 发现缺口后的**修复工具**，不作为审查逻辑被复用）。
 - 落文档提醒（capture）是独立机制，不属本 skill。
 
 ## 何时用（两个触发）
@@ -30,7 +30,7 @@ harness 每个能力是一条**链路**；漏洞 = 某环断了。
 | # | 维度 | 规范（健康长什么样/不变量） | 怎么检索现状 | 检查问什么（含漏洞模式） | 修复工具 |
 |---|---|---|---|---|---|
 | 1 | **skills** | 会触发的流程都有 skill；description 触发准、不重叠不漏；进自动索引防漂移；arch 变了回顾 | `.agents/skills/README` + 各 SKILL.md；`skills-index --check` | 常见任务无 skill？description 误触发/漏触发？version/last_reviewed 过期？ | 写/改 SKILL.md + 重生成索引 |
-| 2 | **rules** | 就近入驻 AGENTS.md(带标记)、放最浅覆盖位；该用时进上下文；有考题或标注无需；catalog 自动生成防漂移、引用不悬空；severity 准 | `docs/rules/index.yaml`；grep 标记；`rules-index --check`；加载链路 | 热点无规则？定义了却加载不到(链路断)？catalog 漂移/坏指针？severity 被改？ | `add-rule` |
+| 2 | **rules** | 就近入驻 AGENTS.md(带标记)、放最浅覆盖位；该用时进上下文；有考题或标注无需；catalog 自动生成防漂移、引用不悬空；severity 准 | `docs/rules/index.yaml`；grep 标记；`rules-index --check`；加载链路 | 热点无规则？定义了却加载不到(链路断)？catalog 漂移/坏指针？severity 被改？ | `hc-add-rule` |
 | 3 | **文档** | 事实源单一；根 AGENTS.md 红线精简、全文就近；凡 AGENTS.md 必有 CLAUDE.md shim；context 反映真实状态 | `docs/README`；`find AGENTS/CLAUDE`；`docs-audit`；`CURRENT_STATUS` | 与现状漂移？shim 漏配？related_docs 悬空？知识没就近？ | 编文档 + docs-audit/shim |
 | 4 | **eval** | L2+/关键点收尾必评；题库独立按号引规则；blocker 规则有考题；免 key 子 agent 可用；考题↔规则不悬空 | `docs/eval/`(index/prompts/rubric/evaluator/task-reviews)；`verify-eval-materials` | 重要规则无考题？eval 流程/方式该改？考题牵强/过时？指针悬空？ | 加考题 + 登记 + 指针校验 |
 | 5 | **templates** | 每类标准产出(ADR/feature/PRD/plan/skill)有模板；字段反映当前规范；起草用模板不手搓 | `templates/` + 产出是否依模板 | 常产出却无模板？字段跟规范脱节(如 ADR 漏"受影响 skill"栏)？该有索引？ | 改/加模板 |
@@ -47,7 +47,7 @@ harness 每个能力是一条**链路**；漏洞 = 某环断了。
 ## 结构：一个总 skill + references
 
 ```
-.agents/skills/self-evolution/
+.agents/skills/hc-self-evolution/
   SKILL.md             总入口（轻、常读、可带参直达某维度）
   references/<维度>.md  审查手册（按需读，平时零占用）
 ```

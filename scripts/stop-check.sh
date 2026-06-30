@@ -34,7 +34,7 @@ if [ -n "$level" ] && [ "${level#L}" -ge 2 ] 2>/dev/null && finishing_now; then
   [ -n "$task" ] && found="$(ls -d "$REVIEWS_DIR/"*"-$task" 2>/dev/null | head -1)"
   if [ -z "$found" ]; then
     echo "⛔ 收尾拦截（rule-0005）：todo 声明 $level 且已补 Review（=收尾），但没找到 task「${task:-未声明}」的 eval 评审产出。" >&2
-    echo "   请先跑 eval 再收尾（交互：用 eval 子 agent，免 key；CI：make eval）；确属轻量就把 todo 的 level 降到 L1。" >&2
+    echo "   请先跑 eval 再收尾（交互：用 hc-eval 子 agent，免 key；CI：make eval）；确属轻量就把 todo 的 level 降到 L1。" >&2
     exit 2
   fi
 fi

@@ -5,7 +5,7 @@ owner: harness
 last_updated: 2026-06-29
 source_files: []
 related_docs:
-  - ../../../.agents/skills/prd-elicitation/SKILL.md
+  - ../../../.agents/skills/hc-prd/SKILL.md
   - ../../decisions/0007-prd-workflow-redesign.md
   - ../../decisions/0003-prd-elicitation-and-prototype.md
 ---
@@ -67,7 +67,7 @@ related_docs:
 
 ## 建什么
 
-- **重写** `.agents/skills/prd-elicitation/SKILL.md` 成编排总谱：workers 表（必选 / 可选 · 权重 + 触发判据）+ 时序 + 两 review 点 + 用户指令覆盖 / 跳过留痕 规矩。
+- **重写** `.agents/skills/hc-prd/SKILL.md` 成编排总谱：workers 表（必选 / 可选 · 权重 + 触发判据）+ 时序 + 两 review 点 + 用户指令覆盖 / 跳过留痕 规矩。
 - **新建 worker subagent 双栈**（`.claude/agents/<name>.md` + `.codex/agents/<name>.toml` + `.codex/config.toml` 注册）：需求采集员 / 用户故事AC员 / PRD本体员 / 功能点清单员 / 原型员 / **PRD 审稿员**（共 6 个）；外部调研**走 `deep-research` skill**（可用的 research skill，通用 subagent 调 Skill 工具跑），不另建 worker subagent。
 - **Workflow 编排模板**（主 agent 当总监）：`parallel` 并行产出、确认门穿插、review 用 loop、可选 worker 条件触发、每个 worker 调 `agent(prompt, {model, ...})` 配各自模型 / 提示词。
 - **收口**：写 ADR（编排式重构决策 + 受影响 skill 栏）；改 ADR-0007 / 0003 衔接（prd-elicitation 升级为编排式）；视情况调 `templates/prd.md` / `user-story.md` / `prds-audit`；`make verify` + 收尾 eval。

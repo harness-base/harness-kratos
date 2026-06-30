@@ -4,6 +4,7 @@
 
 - `adr.md` — ADR-XXXX <标题>
 - `doc.md` — <标题>
+- `e2e-test-case.md` — e2e 测试用例：<主题>
 - `eval-rubric.md` — eval <id> — <标题>（<关联 rule>）
 - `feature-package.md` — Feature 需求包：&lt;feature-id&gt; &lt;标题&gt;
 - `plan.md` — 实施计划：&lt;标题&gt;

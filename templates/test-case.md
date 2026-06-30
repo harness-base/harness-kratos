@@ -1,7 +1,7 @@
 # 测试用例：<主题>
 
 > 用例对需求（验收点 AC + 功能点 FP）的覆盖。本表只管"用例齐不齐、覆盖全不全"，**不管"过没过"**（执行结果另起一段机制）。
-> 产物落 `docs/test-cases/<id>/test-cases.md`，登记 `docs/test-cases/index.yaml`。流程见 `.agents/skills/test-case/SKILL.md`、决策见 `docs/decisions/0008-test-case-skill.md`。
+> 产物落 `docs/test-cases/<id>/test-cases.md`，登记 `docs/test-cases/index.yaml`。流程见 `docs/harness/testing-flow.md`、决策见 `docs/decisions/0014-hc-test-orchestration.md`。
 >
 > **格式契约（硬闸 `test-cases-audit` 按此解析，照写勿改）**：① 段标题**承重**——AC/FP 声明只在以「验收点」/「功能点」起始的 `## ` 段内识别、`covers:` 只在以「用例」/「测试用例」起始的 `## ` 段内识别；写到别处（含映射表 / 围栏代码块）一律**不算**。② AC/FP 声明**一行一个 id**，写成 `- AC-n：…`（id 紧跟 `- `、紧接冒号，可加粗）；多个 id 拆成多行，标注写到**冒号后**（`- AC-1：取代旧版 AC-9`，AC-9 是描述不算声明）；单行多 id（`- AC-1, AC-2：`）、id 前加文字（`- 场景: AC-2`）、括注（`- AC-1（见 AC-9）`）都会被判红。③ `covers:` 须**写单行**（`- covers: AC-1, FP-1`），勿折行（covers 行内任意分隔的 id 都会被收）。解析严格 + fail-closed：模糊一律红，不静默放行。
 

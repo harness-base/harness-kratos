@@ -4,9 +4,9 @@ status: accepted
 date: 2026-06-28
 last_updated: 2026-06-28
 source_files:
-  - ../../.agents/skills/dev/SKILL.md
-  - ../../.claude/agents/code-reviewer.md
-  - ../../.codex/agents/code-reviewer.toml
+  - ../../.agents/skills/hc-dev/SKILL.md
+  - ../../.claude/agents/hc-code-reviewer.md
+  - ../../.codex/agents/hc-code-reviewer.toml
 related_docs:
   - 0003-prd-elicitation-and-prototype.md
   - 0007-prd-workflow-redesign.md

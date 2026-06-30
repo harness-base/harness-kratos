@@ -4,7 +4,7 @@ status: accepted
 date: 2026-06-27
 last_updated: 2026-06-27
 source_files:
-  - ../../.agents/skills/prd-elicitation/SKILL.md
+  - ../../.agents/skills/hc-prd/SKILL.md
   - ../../templates/prd.md
 related_docs:
   - 0003-prd-elicitation-and-prototype.md

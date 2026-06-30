@@ -45,13 +45,13 @@ make hooks         # 安装 git hooks
 
 ## eval
 
-质量不靠 agent 自评：L2+ 任务和关键决策点由 `docs/eval/` 的评委按 rubric 打分，产物写进 `docs/eval/task-reviews/`。eval 题库**独立维护**（`docs/eval/prompts/` + `index.yaml`），按编号引用规则。默认用 **eval 子 agent**（`.claude/agents/eval.md`，免 API key）；CI / headless 可选 `make eval`。触发口径见 `docs/eval/README.md`。
+质量不靠 agent 自评：L2+ 任务和关键决策点由 `docs/eval/` 的评委按 rubric 打分，产物写进 `docs/eval/task-reviews/`。eval 题库**独立维护**（`docs/eval/prompts/` + `index.yaml`），按编号引用规则。默认用 **hc-eval 子 agent**（`.claude/agents/hc-eval.md`，免 API key）；CI / headless 可选 `make eval`。触发口径见 `docs/eval/README.md`。
 
 ## 工作方式
 
 - 复杂、可并行、或重上下文的任务，**默认拆给子代理（subagent）**做——并行更快，也让主 agent 上下文保持干净。
 - 琐碎改动直接做，别为它 spawn 子代理（纯开销）。
-- 已有子代理：见自动索引 `.claude/agents/README.md`（如 eval 收尾评分、code-reviewer 给 dev 挑刺）。
+- 已有子代理：见自动索引 `.claude/agents/README.md`（如 hc-eval 收尾评分、hc-code-reviewer 给 hc-dev 挑刺）。
 
 ## 沟通方式
 

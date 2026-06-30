@@ -1,6 +1,6 @@
 # 用户故事：<prd-id> <标题>
 
-> 由 `prd-elicitation` 第 2 步产出，落 `docs/prds/<id>/user-stories.md`。
+> 由 `hc-prd` 第 2 步产出，落 `docs/prds/<id>/user-stories.md`。
 > 这是"需求"的**事实视角**——后续 PRD / 原型 / 评审都回这里对齐；**先于 PRD 产出**、经用户审核确认（approved 才进 PRD）。
 
 ## 背景一句话

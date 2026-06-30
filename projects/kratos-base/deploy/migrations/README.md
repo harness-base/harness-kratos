@@ -9,7 +9,7 @@ to atlas generation.
 
 ## Generating migrations
 
-Atlas requires a running Docker daemon for the dev database:
+Atlas requires a running Docker daemon for the hc-dev database:
 
 ```sh
 make -C projects/kratos-base migrate

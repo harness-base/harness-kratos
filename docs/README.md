@@ -33,7 +33,7 @@ related_docs:
 | `eval/` | 评分体系：考题、rubric、评委、评审产出 |
 | `harness/` | 验证路由、CI、hooks 说明、工程接入指南、文档同步对照表（`doc-sync-checklist.md`） |
 | `features/` | 需求 / 工作包（随被管工程填；已挂 kratos-base 的需求包） |
-| `prds/` | 需求产出账本（`prd-elicitation` 产物：用户故事 + PRD + 可选原型） |
+| `prds/` | 需求产出账本（`hc-prd` 产物：用户故事 + PRD + 可选原型） |
 | `test-cases/` | 测试用例账本（`test-case` 产物：用例 + AC/FP 覆盖；`test-cases-audit` 硬闸校覆盖闭合） |
 | `superpowers/` | brainstorming / writing-plans 的设计稿（`specs/`）与实现计划（`plans/`） |
 

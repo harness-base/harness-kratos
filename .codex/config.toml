@@ -14,42 +14,50 @@ hooks = true
 max_threads = 4
 max_depth = 1
 
-[agents.eval]
+[agents.hc-eval]
 description = "任务收尾/关键决策点的独立评委：读 evaluator+rubric+考题+候选，按 rubric 打分并写 task-review。免 API key（用会话模型）。"
-config_file = "agents/eval.toml"
+config_file = "agents/hc-eval.toml"
 
-[agents.self-optimize]
-description = "self-evolution 规范检查层的深审执行器：按维度 reference 深审、链路诊断定位断环、写 optimization-log。免 API key（用会话模型）。"
-config_file = "agents/self-optimize.toml"
+[agents.hc-self-optimize]
+description = "hc-self-evolution 规范检查层的深审执行器：按维度 reference 深审、链路诊断定位断环、写 optimization-log。免 API key（用会话模型）。"
+config_file = "agents/hc-self-optimize.toml"
 
-[agents.code-reviewer]
-description = "独立 code reviewer（挑刺）：读变更，对抗式找 correctness bug / 技术债 / 缺测试 / 安全问题，回结构化清单。dev skill 的 review 步派它。免 API key（用会话模型）。"
-config_file = "agents/code-reviewer.toml"
+[agents.hc-code-reviewer]
+description = "独立 code reviewer（挑刺）：读变更，对抗式找 correctness bug / 技术债 / 缺测试 / 安全问题，回结构化清单。hc-dev skill 的 review 步派它。免 API key（用会话模型）。"
+config_file = "agents/hc-code-reviewer.toml"
 
-[agents.prd-reviewer]
-description = "独立 PRD 审稿员（挑刺）：对抗式审产出需求产物——轻审地基/重审整套，rubric=eval 013/rule-0010。prd-elicitation 的 review 步派它。免 API key（用会话模型）。"
-config_file = "agents/prd-reviewer.toml"
+[agents.hc-prd-reviewer]
+description = "独立 PRD 审稿员（挑刺）：对抗式审产出需求产物——轻审地基/重审整套，rubric=eval 013/rule-0010。hc-prd 的 review 步派它。免 API key（用会话模型）。"
+config_file = "agents/hc-prd-reviewer.toml"
 
-[agents.requirements-gatherer]
-description = "需求采集员（prd-elicitation worker）：把用户口述/提交信息理成结构化需求摘要。免 API key。"
-config_file = "agents/requirements-gatherer.toml"
+[agents.hc-requirements-gatherer]
+description = "需求采集员（hc-prd worker）：把用户口述/提交信息理成结构化需求摘要。免 API key。"
+config_file = "agents/hc-requirements-gatherer.toml"
 
-[agents.user-story-writer]
-description = "用户故事+AC 员（prd-elicitation worker）：写 user-stories.md(US-NN+可观测 AC)。免 API key。"
-config_file = "agents/user-story-writer.toml"
+[agents.hc-user-story-writer]
+description = "用户故事+AC 员（hc-prd worker）：写 user-stories.md(US-NN+可观测 AC)。免 API key。"
+config_file = "agents/hc-user-story-writer.toml"
 
-[agents.prd-writer]
-description = "PRD 本体员（prd-elicitation worker）：按已确认故事写 prd.md。免 API key。"
-config_file = "agents/prd-writer.toml"
+[agents.hc-prd-writer]
+description = "PRD 本体员（hc-prd worker）：按已确认故事写 prd.md。免 API key。"
+config_file = "agents/hc-prd-writer.toml"
 
-[agents.feature-point-writer]
-description = "功能点清单员（prd-elicitation worker）：写功能点 + US↔FP↔正文 映射。免 API key。"
-config_file = "agents/feature-point-writer.toml"
+[agents.hc-feature-point-writer]
+description = "功能点清单员（hc-prd worker）：写功能点 + US↔FP↔正文 映射。免 API key。"
+config_file = "agents/hc-feature-point-writer.toml"
 
-[agents.prototype-builder]
-description = "原型员（prd-elicitation 可选 worker）：产出可点 HTML 原型。免 API key。"
-config_file = "agents/prototype-builder.toml"
+[agents.hc-prototype-builder]
+description = "原型员（hc-prd 可选 worker）：产出可点 HTML 原型。免 API key。"
+config_file = "agents/hc-prototype-builder.toml"
 
-[agents.doc-sync-reviewer]
+[agents.hc-doc-sync-reviewer]
 description = "文档漂移检查员：读 git diff + doc-sync-checklist 的 🔴手 行 → 报关联文档没跟改的漂移，只读不改。免 API key。"
-config_file = "agents/doc-sync-reviewer.toml"
+config_file = "agents/hc-doc-sync-reviewer.toml"
+
+[agents.hc-e2e-qa]
+description = "e2e 用例员（hc-test worker）：按 AC>FP>US>PRD 从 docs/prds/<id> 读需求，为完整业务闭环写 UI/点击级 e2e 用例（每交互点×成功/失败/边界、等价类/边界值），套 templates/e2e-test-case.md 落 docs/test-cases/<id>/，只写不跑。免 API key。"
+config_file = "agents/hc-e2e-qa.toml"
+
+[agents.hc-e2e-reviewer]
+description = "e2e 用例审稿员（hc-test worker，挑刺）：对抗式审 e2e 用例——主观覆盖率 / 引用源符合+理解偏差 / 质量，rubric = eval 015 / rule-0014 / rule-0009，只评不改。免 API key。"
+config_file = "agents/hc-e2e-reviewer.toml"

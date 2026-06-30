@@ -7,3 +7,4 @@
 - `PROJECT_ONBOARDING.md` — 工程接入指南
 - `VERIFICATION_ROUTING.md` — 验证路由
 - `doc-sync-checklist.md` — 文档同步对照表（doc-sync checklist）
+- `testing-flow.md` — 测试流程总纲（testing flow）

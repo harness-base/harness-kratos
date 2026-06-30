@@ -5,8 +5,8 @@ owner: harness
 last_updated: 2026-05-29
 source_files:
   - ../../scripts/run-eval.sh
-  - ../../.claude/agents/eval.md
-  - ../../.codex/agents/eval.toml
+  - ../../.claude/agents/hc-eval.md
+  - ../../.codex/agents/hc-eval.toml
 related_docs:
   - rubric.md
   - evaluator.md
@@ -23,7 +23,7 @@ related_docs:
 
 ## 怎么跑
 
-**默认（免 key，推荐）**：让 **eval 子 agent** 跑——它用当前会话的模型打分，无需任何 API key / curl。**两个运行时都配好了**：Claude Code 用 `.claude/agents/eval.md`，Codex 用 `.codex/agents/eval.toml`（在 `.codex/config.toml` 注册）。主 agent 通过子 agent 机制调它，传：任务档位、candidate、要套用的 prompts。
+**默认（免 key，推荐）**：让 **hc-eval 子 agent** 跑——它用当前会话的模型打分，无需任何 API key / curl。**两个运行时都配好了**：Claude Code 用 `.claude/agents/hc-eval.md`，Codex 用 `.codex/agents/hc-eval.toml`（在 `.codex/config.toml` 注册）。主 agent 通过子 agent 机制调它，传：任务档位、candidate、要套用的 prompts。
 
 **可选（CI / headless，需 key）**：
 

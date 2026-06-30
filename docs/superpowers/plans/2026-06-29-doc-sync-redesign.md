@@ -32,8 +32,8 @@
 - 跑 `skills-index.sh` + `dir-index.sh docs/harness` 重生成索引。
 
 **T2 — `doc-sync-reviewer` 子 agent（双栈，haiku）**
-- `.claude/agents/doc-sync-reviewer.md`：`tools: Read, Grep, Bash`；读 diff + 清单 🔴手 行 → 报漂移、不改。
-- `.codex/agents/doc-sync-reviewer.toml` + `.codex/config.toml` 注册；跑 `dir-index.sh .claude/agents`。
+- `.claude/agents/hc-doc-sync-reviewer.md`：`tools: Read, Grep, Bash`；读 diff + 清单 🔴手 行 → 报漂移、不改。
+- `.codex/agents/hc-doc-sync-reviewer.toml` + `.codex/config.toml` 注册；跑 `dir-index.sh .claude/agents`。
 
 **T3 — 改钩子（log + 反馈 + 状态）**
 - 先实测反馈通道（`exit 2` vs 下一轮注入），选能真送达的，写进 ADR。
@@ -60,7 +60,7 @@
 |---|---|---|---|
 | 删 `.agents/skills/doc-sync/` | `skills-index --check` | 跑 `skills-index.sh` | ✅脚本自动重写 |
 | 新建 `docs/harness/doc-sync-checklist.md` | `dir-index docs/harness --check` | 跑 `dir-index.sh docs/harness` | ✅脚本自动重写 |
-| 新建 `.claude/agents/doc-sync-reviewer.md` | `dir-index .claude/agents --check` | 跑 `dir-index.sh .claude/agents` | ✅脚本自动重写 |
+| 新建 `.claude/agents/hc-doc-sync-reviewer.md` | `dir-index .claude/agents --check` | 跑 `dir-index.sh .claude/agents` | ✅脚本自动重写 |
 | 删 `doc-sync/SKILL.md`（test 引用它） | `turn-backstop.test.sh` | 改 test | ✋我手改 |
 | 删 `doc-sync/SKILL.md`（spec frontmatter 引用它） | `docs-audit` | 改 spec frontmatter | ✋我手改 |
 | 新建 `ADR-0012` 文件 | `index-audit`（索引↔文件不符） | `index.yaml` 登记 | ✋我手改 |

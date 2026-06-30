@@ -1,10 +1,10 @@
 ---
 title: ADR-0008 测试用例 skill——独立产出测试用例 + 软硬分层管覆盖（AC+FP）
-status: accepted
+status: superseded
 date: 2026-06-28
 last_updated: 2026-06-28
 source_files:
-  - ../../.agents/skills/test-case/SKILL.md
+  - ../../.agents/skills/hc-test/SKILL.md
   - ../../templates/test-case.md
   - ../../scripts/test-cases-audit.sh
 related_docs:

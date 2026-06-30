@@ -10,7 +10,7 @@
 |---|---|---|
 | `make verify` | `verify-control-plane.sh` | 控制面总自检：结构 + 文档自检 + hook policy 自测 + 自进化兜底自测 + eval 资产 + 各类索引漂移检查。**日常一键体检走这个。** |
 | `make docs-audit` | `docs-audit.sh` | 校验各 `.md` frontmatter 里 `source_files` / `related_docs` 指向的目标是否存在。 |
-| `make eval` | `run-eval.sh` | eval 的**可选** CI/headless 路径：拼 evaluator + rubric + 考题 + 候选 → 调外部 LLM API → 写 task-review。需要 `EVAL_API_BASE` / `EVAL_API_KEY`。交互时默认走 eval 子 agent（`.claude/agents/eval.md`，免 key）。 |
+| `make eval` | `run-eval.sh` | eval 的**可选** CI/headless 路径：拼 evaluator + rubric + 考题 + 候选 → 调外部 LLM API → 写 task-review。需要 `EVAL_API_BASE` / `EVAL_API_KEY`。交互时默认走 hc-eval 子 agent（`.claude/agents/hc-eval.md`，免 key）。 |
 | `make verify-eval` | `verify-eval-materials.sh` | 检查 eval 资产结构：考题文件、`index.yaml` 登记一致。 |
 | `make hooks` | `install-hooks.sh` | 安装 git hooks（`core.hooksPath` 指向 `.githooks/`）。 |
 

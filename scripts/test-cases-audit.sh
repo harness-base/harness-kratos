@@ -3,6 +3,8 @@
 # 校验：① 每条 AC、每个 FP 都被 ≥1 条用例 covers 覆盖（无遗漏）
 #       ② 用例 covers 引用的 AC/FP 都已声明（无悬空）
 #       ③ 目录 ↔ index.yaml 登记一致（正反双向）
+#       ④ e2e 用例（含「## 交互点 × 类型 覆盖矩阵」段）每格须填 TC-NN 或「无·理由:…」
+#          （空 / 占位 `<…>` / `…` = 红，逃生口防误伤；**仅含矩阵段的文件查**，api/旧用例无矩阵段→跳过）
 # covers 是覆盖关系的唯一真相源（不另存映射表）。空账本（test-cases: []）时平凡通过。
 # 解析（严格 + fail-closed，宁可误红不可静默假绿）：
 #   - sed 's/：/:/g' 归一全角冒号；剥围栏（CommonMark：记开栏字符 ```/~~~，仅"同字符且裸行"才闭合，治嵌套/伪闭合）。
@@ -39,6 +41,7 @@ emit(){ # $1=file
       if ($0 ~ /^##[[:space:]]/) {                          # level-2 标题切段（前缀锚定，对称）
         if ($0 ~ /^##[[:space:]]+验收点/ || $0 ~ /^##[[:space:]]+功能点/) sect="DECL"
         else if ($0 ~ /^##[[:space:]]+(测试)?用例/) sect="CASES"
+        else if ($0 ~ /^##[[:space:]]+交互点/) sect="MATRIX"
         else sect="OTHER"
         next
       }
@@ -50,6 +53,16 @@ emit(){ # $1=file
       } else if (sect=="CASES" && $0 ~ /^[[:space:]]*-?[[:space:]]*\**covers\**:/) {
         rest=$0; sub(/^.*covers[*_]*:[[:space:]]*/, "", rest)
         while (match(rest, /(AC|FP)-[0-9]+/)) { print "C " substr(rest,RSTART,RLENGTH); rest=substr(rest,RSTART+RLENGTH) }
+      } else if (sect=="MATRIX" && $0 ~ /^[[:space:]]*\|/) {            # 覆盖矩阵表行
+        if ($0 ~ /^[[:space:]]*\|[[:space:]:|-]+$/ && $0 ~ /-/) next    # 分隔行 |---|---|
+        split($0, mc, "|"); ix=mc[2]; gsub(/^[[:space:]]+|[[:space:]]+$/, "", ix)
+        if (ix ~ /交互点/) next                                         # 表头行（列名）
+        split("成功 失败 边界", cn, " ")
+        for (k=1; k<=3; k++) { v=mc[k+2]; gsub(/^[[:space:]]+|[[:space:]]+$/, "", v)
+          if (! ( ((v ~ /TC-[0-9]/) || (v ~ /无·理由/)) && (v !~ /[<>]/) && (v !~ /…/) && (v != "") ))
+            print "X " ix "|" cn[k] }                                   # 该格空/占位(< > …)/无理由 → 报
+        # 注：`…` 必须当连续多字节串匹配（/…/），不能放进字符类 [<>…]——byte-awk 会把它拆成单字节，
+        #     与中文（如"态"=E6 80 81 含字节 80）误撞，造成合法中文理由被误红。
       }
     }
     END { if (fence != "") print "F" }
@@ -76,6 +89,14 @@ for d in "$TC_DIR"/*/; do
   printf '%s\n' "$out" | grep -q '^M' && { echo "  ✗ $name：声明段有 list 行含 AC/FP id 却非 \`- AC-n：…\` 单 id 形（多 id 拆行、标注移到冒号后；拒绝静默漏算）"; fail=1; }
   # 护栏 c：围栏未闭合
   printf '%s\n' "$out" | grep -q '^F' && { echo "  ✗ $name：检测到未闭合代码围栏（\`\`\` / ~~~），解析不可靠"; fail=1; }
+  # 护栏 ④：覆盖矩阵每格须填（仅含「## 交互点 …覆盖矩阵」段的文件有 X token；无矩阵段→跳过，文件级不误伤）
+  mx="$(printf '%s\n' "$out" | sed -n 's/^X //p')"
+  if [ -n "$mx" ]; then
+    while IFS='|' read -r mix mcol; do
+      [ -z "$mcol" ] && continue
+      echo "  ✗ $name：覆盖矩阵 行「${mix:-空}」的「$mcol」格空着/占位、又没写「无·理由:」——每格须填 TC-NN 或写明无的理由（rule-0014 逃生口防误伤）"; fail=1
+    done <<< "$mx"
+  fi
 
   # ① 每个声明的 AC/FP 都要被覆盖
   while IFS= read -r id; do

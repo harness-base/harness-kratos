@@ -1,4 +1,4 @@
-# 测试用例账本。由 test-case skill 产出的测试用例集在此登记。
+# 测试用例账本。由 hc-test（hc-e2e-qa 等 worker）产出的测试用例集在此登记。
 # 与实现 / 执行体系松耦合：本账本只管"用例对需求（AC+FP）的覆盖"，不碰"过没过"（执行结果另起）。
 # 每条：id（=目录名）/ dir（目录名，test-cases-audit.sh 按此键校验 目录↔账本 一致）/ title / status（draft|reviewed）/ source（需求来源，可空，衔接后填）
 version: 1

@@ -5,7 +5,7 @@
 ## 候选产物（当前工作树，未提交）
 
 - 删 `.agents/skills/doc-sync/SKILL.md`；新建 `docs/harness/doc-sync-checklist.md`（数据，9 行 `🔴手` + 6 行 `✅机检`）。
-- `.claude/agents/doc-sync-reviewer.md`（model: haiku，tools: Read/Grep/Bash，无 Write）+ `.codex/agents/doc-sync-reviewer.toml`（model_reasoning_effort=low）+ `.codex/config.toml` 注册。
+- `.claude/agents/hc-doc-sync-reviewer.md`（model: haiku，tools: Read/Grep/Bash，无 Write）+ `.codex/agents/hc-doc-sync-reviewer.toml`（model_reasoning_effort=low）+ `.codex/config.toml` 注册。
 - `scripts/turn-backstop.sh`：读表路径改新文件 + 发现写 `- [ ]` 状态。
 - `scripts/correction-nudge.sh`：加"`- [ ]` 待处理 → 注入反馈"；`correction-nudge.test.sh` 加 case 6/7（守护测试）；`turn-backstop.test.sh` case 4 接通闸改指新文件。
 - rewire：根 README、`docs/harness/HOOKS.md`、`docs/context/CURRENT_STATUS.md`、`docs/README.md`、`docs/harness/README.md`、`.agents/skills/README.md`、`.claude/agents/README.md`、self-evolution 5 处 references（gates-hooks/docs/subagents/skills/lessons-memory）。

@@ -2,13 +2,15 @@
 
 > 由 `scripts/dir-index.sh` 自动生成、禁手改。默认不加载；自检 / 自进化时当地图查。
 
-- `code-reviewer.md` — code-reviewer
-- `doc-sync-reviewer.md` — doc-sync-reviewer
-- `eval.md` — eval
-- `feature-point-writer.md` — feature-point-writer
-- `prd-reviewer.md` — prd-reviewer
-- `prd-writer.md` — prd-writer
-- `prototype-builder.md` — prototype-builder
-- `requirements-gatherer.md` — requirements-gatherer
-- `self-optimize.md` — self-optimize
-- `user-story-writer.md` — user-story-writer
+- `hc-code-reviewer.md` — hc-code-reviewer
+- `hc-doc-sync-reviewer.md` — hc-doc-sync-reviewer
+- `hc-e2e-qa.md` — hc-e2e-qa
+- `hc-e2e-reviewer.md` — hc-e2e-reviewer
+- `hc-eval.md` — hc-eval
+- `hc-feature-point-writer.md` — hc-feature-point-writer
+- `hc-prd-reviewer.md` — hc-prd-reviewer
+- `hc-prd-writer.md` — hc-prd-writer
+- `hc-prototype-builder.md` — hc-prototype-builder
+- `hc-requirements-gatherer.md` — hc-requirements-gatherer
+- `hc-self-optimize.md` — hc-self-optimize
+- `hc-user-story-writer.md` — hc-user-story-writer
