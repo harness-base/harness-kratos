@@ -1,4 +1,4 @@
-# Agent Harness（harness-kratos）
+# Agent Harness（harness-control）
 
 一套通用、内容轻的 **agent 控制面（harness）**：用「最小内核 + 可挂载模块」治理 AI agent 在被管工程上做开发——把"怎么干活、谁来把关"沉淀成可执行的规则、技能、评分与机检，让 agent 的产出**可控、可验证、可追溯**。**不绑定语言 / 框架**；当前已挂载一个真实被管工程 `kratos-base`（Go / Kratos 微服务地基）。
 

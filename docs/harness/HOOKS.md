@@ -54,7 +54,8 @@ make hooks   # git config core.hooksPath .githooks
 - 触发后 **headless `claude -p --model haiku`** 复查最近 transcript，捞"做了决策 / 学了偏好 / 有知识却没写进文件"的遗漏；其中"改了文件没同步文档"一类，**对照 `docs/harness/doc-sync-checklist.md` 的 `🔴手` 行**判断（单一来源，不自抄子集；机器能兜的 `✅机检` 行交给 `make verify`；同判据由 `hc-doc-sync-reviewer` 子 agent 承接，ADR-0012）。
 - **发现写 `tasks/optimization-log.md`、每条带 `- [ ]` 状态（待处理）**；**送达**靠 `UserPromptSubmit` 钩子（`correction-nudge.sh`）下一轮注入"有 N 条待处理"——替代不被注入、没人看见的 exit-0 stderr。处理完该行改 `- [x]`（暂缓 `- [~]`）。turn-backstop 仍 best-effort、永不阻断收尾。
 - **Codex 局限**：doc-drift 自动检测靠 Claude Code 的 Stop / UserPromptSubmit 钩子，**Codex 无等价自动触发**（靠 `make verify` 机检半 + 手动派 `hc-doc-sync-reviewer`）。
-- **安全**：递归 guard（headless 调用带 `HARNESS_TRIAGE=1` + 从中性目录 `/tmp` 跑、不加载项目钩子）；本机无 `timeout`/`gtimeout`，用 perl `alarm` 包超时；budget 封顶；**best-effort——任何失败一律 exit 0，绝不阻断收尾**。安全性由 `scripts/turn-backstop.test.sh` 自测（不调 Haiku）。
+- **诊断留痕**：每次跑写 `tasks/.turn-backstop.log`（gitignore；超 800 行自裁到末 400）——记 触发 / 跳过原因、headless 调用的 `exit` 码 + 输出前 160 字（claude 的 stderr 如 `Prompt is too long` / 认证 / 超时也接进这里）、写没写进 optimization-log。**专治本机制的"静默失效"**：原来每步 `2>/dev/null || true` 把失败全吞、`① capture` 长期 0 产出却无迹可循；现在能从该日志定位死在哪一环。`BACKSTOP_DLOG` 可改路径（自测据此隔离）。
+- **安全**：递归 guard（headless 调用带 `HARNESS_TRIAGE=1` + 从中性目录 `/tmp` 跑、不加载项目钩子）；本机无 `timeout`/`gtimeout`，用 perl `alarm` 包超时；budget 封顶；**best-effort——任何失败一律 exit 0，绝不阻断收尾**。安全性 + 诊断留痕由 `scripts/turn-backstop.test.sh` 自测（不调 Haiku）。
 
 为什么不"每轮跑 eval"：纯讨论轮空转、烧 token / 拖慢。为什么触发机械而非 agent 判断：漏记的 agent 同样会忘记触发兜底——故触发必须独立于 agent。重判断（多维优化）走 `.claude/agents/hc-self-optimize.md` 子 agent，按需 spawn。
 

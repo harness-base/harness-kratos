@@ -6,4 +6,5 @@
 workspace/*.local.*
 tasks/.turn-count
 tasks/.last-backstop
+tasks/.turn-backstop.log
 **/.DS_Store

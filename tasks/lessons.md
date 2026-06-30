@@ -20,6 +20,16 @@
 - Prevention：派 hc-eval 时，评审目录后缀**必须 == todo `task:` 的 slug**（一字不差）；最好从 todo 的 `task:` 直接取 slug 拼目录名，别另起一个更"具体"的名。
 - Earlier signal：定 todo `task:` slug 与给 eval 的目录名时，并排核一遍是否完全一致；stop-check 用的是精确 `*-$task`、不是子串。
 
+## 2026-06-30：从 n=1 一次观测就断言"根因=X、每次必现"，被 eval 的 n=4 纠偏
+- Mistake：turn-backstop 诊断第一次实跑撞 `Exceeded USD budget (0.03)`，我就对用户断言"0.03 太低、**每次都撞顶**、0 产出"。hc-eval 复跑 n=4：0.03 **三次 exit=0**、只有 0.005 必撞——真相是"0.03 偏紧、**遇长响应才** Exceeded"，不是"每次"。方向（提预算 + 装日志）对，但把单点观测说成了确定规律。
+- Prevention：下"这就是根因 / 每次都 X"这种确定结论前，**多跑几次 / 多条件复现（n≥3）**，尤其结论依赖可变量（响应长度、时延）时；单次只能说"至少这次因为 X"，不能说"每次"。
+- Earlier signal：写"每次 / 总是 / 根因就是"时问一句"我跑了几次？"——n=1 就别用确定语气。
+
+## 2026-06-30：best-effort 机制全程 2>/dev/null 吞错 → 总失败（预算卡死）伪装成静默 0 产出，长期没人知
+- Mistake：turn-backstop（① capture）每步 `2>/dev/null || true`；headless claude 因 `--max-budget-usd 0.03` 太低、每次 `Exceeded USD budget` 报错退出、0 产出——但报错被吞，看着在跑、其实从没产出过一条，长期无人察觉。给它装诊断日志后**一次实跑即现**根因。
+- Prevention：best-effort / 永不阻断 对"不打断主流程"是对的，但**吞掉 stderr 会让你瞎**——分不清"没事可做"还是"根本没跑通"。这类机制必须配**诊断日志**：被吞的 stderr + exit 码 + 输出都留痕（独立文件、gitignore），否则"总失败"会伪装成"正常静默"。预算 / 超时这类外部约束要给足头寸。
+- Earlier signal：在一个"本该产出点什么"的步骤上写 `2>/dev/null` / `|| true` 时，当场问"它真失败了我看得见吗"——看不见就配 log。
+
 ## 2026-06-30：删 skill 后声称"引用全修无悬空"，却把"保留的文件"排除出扫描 → 漏 2 处 <!-- opt: seen -->
 - Mistake：删 test-case skill 后扫残留引用时，把 `templates/test-case`、`docs/test-cases` 这些"我决定保留的路径"用 `grep -v` 排掉，于是漏看 `templates/test-case.md:4` 正文里指向已删 SKILL 的悬空引用 + index.yaml 注释，还对外声称"9 处全修、无悬空"。hc-eval 亲扫照出（warn 级，已补）。
 - Prevention：① 删 X 后扫残留，排除的应是"合法仍指 X 的历史/路径"，**不是"我恰好保留的文件"**——保留文件 ≠ 它内容不引已删物，得扫它内容；② 没穷尽扫描前别下"无悬空 / 全修"的完成断言（rule-0003）。最稳：删完直接全仓 grep 被删物的名 / 路径、逐条看，少用预先 `grep -v` 排除。

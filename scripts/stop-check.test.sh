@@ -11,8 +11,9 @@ no(){ echo "  ✗ $1"; fail=$((fail+1)); }
 
 tmp="$(mktemp -d)"; rev="$tmp/reviews"; mkdir -p "$rev"
 # 跑一次 stop-check 返回 exit code；隔离真状态，并压死 turn-backstop 触发（阈值拉爆，不调 Haiku）
+# BACKSTOP_DLOG 也指向 tmp：stop-check.sh 会调 turn-backstop.sh，不隔离诊断日志会污染真 tasks/.turn-backstop.log
 run(){ printf '{}' | STOP_TODO="$1" STOP_REVIEWS_DIR="$rev" \
-  BACKSTOP_CNT="$tmp/c" BACKSTOP_BASE="$tmp/b" BACKSTOP_LOG="$tmp/l" \
+  BACKSTOP_CNT="$tmp/c" BACKSTOP_BASE="$tmp/b" BACKSTOP_LOG="$tmp/l" BACKSTOP_DLOG="$tmp/dl" \
   BACKSTOP_TURNS=999999 BACKSTOP_CHANGED=999999 \
   bash scripts/stop-check.sh >/dev/null 2>&1; echo $?; }
 
