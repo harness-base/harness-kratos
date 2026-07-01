@@ -1,5 +1,11 @@
 # 被管工程验证路由：每个工程怎么验证写在这。
 # 控制面不放业务测试本体；详见 docs/harness/VERIFICATION_ROUTING.md。
+#
+# 接入点占位「三态」（ADR-0017，scripts/verification-audit.sh 机检）：每个接入点值必须是——
+#   · 真命令（已接实）
+#   · "PENDING: <为啥现在空 / 补的条件>"（待接实：make verify ⚠ 提醒；同时项目 AGENTS.md 留待补记录）
+#   · "N/A: <理由>"（这项目不需要这个接入点）
+#   静默空 / 无理由 / 裸 TODO / <占位> = ✗ 红。补 sandbox 用 create-sandbox skill。
 version: 1
 projects:
   - name: kratos-base
@@ -12,12 +18,12 @@ projects:
     #   AC-CR2(etcd/nacos): 注册中心运行期宕→discovery失败→恢复后自动重注册+discovery续上
     sandbox: "make -C projects/kratos-base sandbox-up"    # E2E 所需 sandbox 环境
 
-# 示例（接入工程后填）：
+# 示例（新项目接入后，hc-onboard 按「三态」填；真内容后补，见 ADR-0017）：
 # projects:
 #   - name: backend-service
 #     path: projects/backend-service
-#     verify: "make -C projects/backend-service verify"   # 最小收口检查
-#     unit:   "make -C projects/backend-service test"
-#     api:    "..."
-#     e2e:    "..."
-#     sandbox: "..."                                       # E2E 需要的环境
+#     verify:  "make -C projects/backend-service verify"      # 已接实：真命令
+#     unit:    "make -C projects/backend-service test"        # 已接实
+#     api:     "N/A: 无对外 api 层"                            # 显式不需要
+#     e2e:     "PENDING: 首个需求上线后补"                     # 待接实（make verify ⚠ 提醒）
+#     sandbox: "PENDING: 要跑 e2e 时用 create-sandbox 接实"    # 待接实

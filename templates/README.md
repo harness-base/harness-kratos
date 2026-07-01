@@ -12,5 +12,6 @@
 - `feature-package.md` — Feature 需求包：&lt;feature-id&gt; &lt;标题&gt;
 - `plan.md` — 实施计划：&lt;标题&gt;
 - `prd.md` — PRD：<prd-id> <标题>
+- `project-agents.md` — <项目名>（被管工程入口规则）
 - `test-case.md` — 测试用例：<主题>
 - `user-story.md` — 用户故事：<prd-id> <标题>

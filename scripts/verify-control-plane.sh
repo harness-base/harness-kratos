@@ -37,6 +37,9 @@ bash scripts/test-cases-audit.test.sh || fail=1
 echo "== 研发方案账本自检自测 =="
 bash scripts/designs-audit.test.sh || fail=1
 
+echo "== 接入点占位自检自测 =="
+bash scripts/verification-audit.test.sh || fail=1
+
 echo "== eval 资产 =="
 bash scripts/verify-eval-materials.sh || fail=1
 
@@ -95,6 +98,9 @@ bash scripts/designs-audit.sh || fail=1
 
 echo "== 测试用例覆盖自检 =="
 bash scripts/test-cases-audit.sh || fail=1
+
+echo "== 接入点占位自检 =="
+bash scripts/verification-audit.sh || fail=1
 
 echo "== references 路径残留 =="
 hits=$(grep -rln 'harness-empty\|-Users-zhouhaiyin-project-harness-empty' .agents/skills 2>/dev/null)

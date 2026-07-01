@@ -10,6 +10,7 @@
 - `hc-e2e-reviewer.md` — hc-e2e-reviewer
 - `hc-eval.md` — hc-eval
 - `hc-feature-point-writer.md` — hc-feature-point-writer
+- `hc-onboard-reviewer.md` — hc-onboard-reviewer
 - `hc-prd-reviewer.md` — hc-prd-reviewer
 - `hc-prd-writer.md` — hc-prd-writer
 - `hc-prototype-builder.md` — hc-prototype-builder

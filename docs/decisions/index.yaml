@@ -81,3 +81,8 @@ decisions:
     status: accepted
     date: 2026-07-01
     file: 0016-hc-test-api-testcase-line.md
+  - id: ADR-0017
+    title: hc-onboard 工程接入 skill（新项目分支）——引导式搭骨架、接线不接假内容、占位不许静默
+    status: accepted
+    date: 2026-07-01
+    file: 0017-hc-onboard-project-onboarding.md

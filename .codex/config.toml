@@ -73,3 +73,7 @@ config_file = "agents/hc-api-qa.toml"
 [agents.hc-api-reviewer]
 description = "api 用例审稿员（hc-test worker，挑刺）：对抗式审 api 用例——覆盖率 / 源符合+对账(回契约原文逐字段·错误码) / 质量三块，另加无接口来源硬产用例的门槛复核(违 rule-0008 判 blocker)，rubric = eval 015 / rule-0014 / rule-0009 / rule-0008，只评不改。免 API key。"
 config_file = "agents/hc-api-reviewer.toml"
+
+[agents.hc-onboard-reviewer]
+description = "新项目接入骨架审稿员（hc-onboard 评审步，挑刺）：六块审搭出来的工程骨架——骨架最小没越界(没替 hc-dev 搭代码结构) / AGENTS.md 红线合理+CLAUDE.md shim / 选型 ADR 有据 / verification.yaml 接入点三态(真命令·PENDING·N/A、无静默空、PENDING 有待补记录) / 忠于用户确认的选择 / 通用项目隔离反向越界，rubric = rule-0008 + rule-0009，只评不改。免 API key。"
+config_file = "agents/hc-onboard-reviewer.toml"

@@ -1,9 +1,17 @@
 # 当前任务
 
 > 只记手头这一件事；干完清空、旧的 roll 进 `archive/`。保持轻。
-> 元：level: L3 ｜ task: hc-test-api-line
+> 元：level: L3 ｜ task: hc-onboard
 
-## 当前：hc-tech-design 研发方案/设计阶段 skill（hc-prd → hc-tech-design → api 用例 的关键一环）
+## 当前：hc-onboard 新项目接入 skill（ADR-0017）
+- [x] 设计敲定（多轮对话）：引导式接入 skill（≈hc-tech-design）；新项目分支先做、老项目占位；7 步（收信息/搭最小骨架/记选型 ADR/接执行口/对抗评审/make verify/交棒）；铁律=全程用户确认不替定；**只搭壳不越界**（代码结构归 hc-dev/hc-tech-design）；接入点占位**三态**（真命令/PENDING:理由/N/A:理由，静默空=红，看得见+绕不过去）；create-sandbox 拆下一轮、verify/ci 当内部步骤。
+- [x] build（workflow 并行 3 块 disjoint：skill + reviewer 双栈 + templates/project-agents.md）+ 我串行：ADR-0017、占位机检 `verification-audit`（进 make verify）、config 注册、verification.yaml/VERIFICATION_ROUTING 三态、PROJECT_ONBOARDING 瘦身 + 修 docs-maintainer→hc-doc-sync、CURRENT_STATUS 清、索引 regen。
+- [x] **对抗评审 2 栈 + 修**：① 正确性栈实跑挖出**机检假绿漏洞**（黑名单判红、被 `" "`/`"..."`/小写 todo/`# 注释`/裸 PENDING/待定 骗过）→ 改 **fail-closed** + 补变异自测；② 设计栈揪 major「PROJECT_ONBOARDING 只贴 banner 没真瘦身（rule-0012 复刻）」→ 真瘦身成口子速查（0 流程步）+ minor 清 CURRENT_STATUS docs-maintainer。
+- [x] **多工程兼容（用户 2026-07-01 追加）**：projects/ 可多工程共存——skill 查重名 + ⑥ 隔离硬规则（只 append 自己那条、不碰别的工程）、reviewer 双栈核不撞名/不碰他人、机检加多工程逐工程测试。`verification-audit.test` **17/0**、make verify + docs-audit(48) 全绿。
+- [x] 收尾 eval：**green**（考题 010/011/014/rule-0015 全 pass；评委独立造 fixture 亲验 fail-closed 堵住各种绕过 + 多工程逐工程核成立；`docs/eval/task-reviews/20260701T070010Z-hc-onboard/`）。评委另挖 **F-1**（单引号空值 `'  '` 绕过 fail-closed）→ 已修（clean 剥单引号 `\047` + 自测 18/0；坑：注释里单引号闭合了 awk，已记 lessons）。
+- [ ] 提交（待授权；本批新一摊、与 PR #10 那两 commit 不相干）
+
+## 已闭（本会话交付、下次 archive）：hc-tech-design 研发方案/设计阶段 skill（hc-prd → hc-tech-design → api 用例 的关键一环）
 - [x] 设计敲定：交互式设计 skill（≈hc-dev 做→挑刺，非 hc-prd 编排）；硬原则=参考项目代码/资产·不确定查+问·决策点用户拍·**全明确才落可执行方案(零 TBD)**·用户审核门·对抗评审·**模板通用不掺项目内容**
 - [x] 模板定稿：design.md(9 段)+ api-contract.md(单独，端点索引+每端点 请求/响应/Mock/错误码/关联)；异常 & 安全&风险 拆两段；删项目专属"多租户"
 - [x] 建：`templates/design.md` + `templates/api-contract.md` + `hc-tech-design` skill + `hc-tech-design-reviewer` 双栈（workflow 并行建+复核；并行踩踏致复核矛盾→查磁盘理清，真问题只 2：补 config 注册 + 删空壳 README + 2 minor）
@@ -28,7 +36,7 @@
 - [x] **build 完成**：workflow 并行建 3 块 disjoint（`hc-api-qa`/`hc-api-reviewer` 双栈 + `templates/api-test-case.md`）+ 我串行扩机检（`test-cases-audit` 认 EP/EX，自测 34/0）+ 接线（config 注册 / testing-flow 小节+场景表 / ADR-0016 / 补 0014 前向指针 / 索引 regen）。`make verify` + `docs-audit`(47) 全绿。
 - [x] **对抗评审 2 栈（干净、不被并行污染）**：① 正确性/格式契约——亲手造 `- EX-1：EP-1 · …` fixture 实跑，**无 blocker/major**（2 minor 文案，护栏已修）；② 设计忠实——揪出 **blocker：`hc-test/SKILL.md` 漏改、api 仍标占位**（我接线漏了总监入口 + rule-0012 复刻表漂移），**已修**（占位→实现 + de-复刻状态表指向 testing-flow + §④ 泛化 e2e/api）；lessons 已记。
 - [x] 收尾 eval：**green**（考题 010/011/015/rule-0012/rule-0015 全 pass；评委独立复跑 make verify / docs-audit(47) / 机检 34/0 + 手造 fixture 验 EP/EX parser 真生效；`docs/eval/task-reviews/20260701T021419Z-hc-test-api-line/`）
-- [ ] 提交（待用户授权；PR #10 改名批未合，需协调：合 #10 再 rebase 开新 PR，或并进 #10）
+- [x] 提交：commit `d466522` → **并进 PR #10**（用户选②合并；PR #10 现 2 commit=改名批 c5dc462 + api 线 d466522，CI verify 双绿、MERGEABLE，BLOCKED 仅缺 review 批准，待你合）
 - **首次实战检验点（eval warn，非阻断）**：首次产真 api 用例集（`docs/test-cases/<id>/`）时让 `hc-api-reviewer` 回契约原文对账一遍——验「声明段↔契约原文」语义防线在真契约上抓不抓得住漏誊接口/错误码（机检覆盖不到的层）。
 
 ## Review（api 用例线 build）

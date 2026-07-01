@@ -30,8 +30,7 @@ related_docs:
 | `.codex/` | done(部分) | 子 agent 与 `.claude/agents/` **一一双栈对齐**（各有 `.toml` + `config.toml` 注册，行为一致）+ config；其余按需 |
 | `docs/features/` | done | F-0001~0006（kratos-base 6 个需求包） |
 | `workspace/verification.yaml` | done | kratos-base 路由已填全（verify/unit/e2e/sandbox + 20 AC 弹性矩阵），含示例模板 |
-| `projects/` | done | 挂载点，已挂 kratos-base（详见被管工程表） |
-| `docs-maintainer` skill | planned | 待接入（写文档 / 管文档） |
+| `projects/` | done | 挂载点，已挂 kratos-base（详见被管工程表）；接新工程走 `hc-onboard` skill（ADR-0017） |
 | `docs/prds/` | done | 需求产出账本（hc-prd skill 产物 + prds-audit）；architecture 暂未建（drift 区已弃，见 ADR-0006） |
 | `docs/designs/` | done | 研发方案产出账本（hc-tech-design skill 产物（ADR-0015）：design.md + 可选 api-contract + `designs-audit` 硬闸校登记一致 / design.md 在 / 零 TBD，进 make verify；判断层归 hc-tech-design-reviewer）；空账本待实战 |
 | `docs/test-cases/` | done | 测试用例账本（hc-test skill 产物（ADR-0014） + `test-cases-audit` 硬闸校 AC/FP 覆盖闭合，ADR-0008）；空账本待实战 |
