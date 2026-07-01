@@ -34,7 +34,7 @@ related_docs:
 | `harness/` | 验证路由、CI、hooks 说明、工程接入指南、文档同步对照表（`doc-sync-checklist.md`） |
 | `features/` | 需求 / 工作包（随被管工程填；已挂 kratos-base 的需求包） |
 | `prds/` | 需求产出账本（`hc-prd` 产物：用户故事 + PRD + 可选原型） |
-| `designs/` | 研发方案产出账本（`hc-design` 产物：design.md + 可选 api-contract；`designs-audit` 硬闸校登记一致 / design.md 在 / 零 TBD） |
+| `designs/` | 研发方案产出账本（`hc-tech-design` 产物：design.md + 可选 api-contract；`designs-audit` 硬闸校登记一致 / design.md 在 / 零 TBD） |
 | `test-cases/` | 测试用例账本（`test-case` 产物：用例 + AC/FP 覆盖；`test-cases-audit` 硬闸校覆盖闭合） |
 | `superpowers/` | brainstorming / writing-plans 的设计稿（`specs/`）与实现计划（`plans/`） |
 

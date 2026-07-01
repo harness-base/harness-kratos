@@ -119,3 +119,10 @@
 ## 2026-06-30T08:44:34Z `落文档`（触发：K=8轮到点）
 - [ ] [ADR索引遗漏] `docs/decisions/*.md` 修改了对抗评审教训（三者不可互替、并行复核污染），但 `docs/decisions/index.yaml` 未见登记。
 - [ ] [skill同步遗漏] 新增的"make verify + eval 不可替代对抗挑刺"和"并行复核污染"教训应同步到 `superpowers:verification-before-completion` 等相关 skill，但未见修改。
+
+## 2026-06-30T09:09:38Z `落文档`（触发： commit边界）
+- [ ] [左 scripts/designs-audit.sh 新建] — 没看到 `scripts/README.md` 被更新
+- [ ] [左 hc-design/hc-design-reviewer skill 新建] — 没看到 `AGENTS.md` 的规则标记被加
+- [ ] [左 hc-design skill 新建] — 没看到 `.codex/agents/*.toml` 对等被同步
+- [ ] [左 harness 模块 hc-design 新增] — 没看到 `docs/context/CURRENT_STATUS.md` 控制面表被更新  
+- [ ] [左 turn-backstop 修改] — `HOOKS.md` 虽说"记一笔"但没看到实际 Edit/Write 操作（诊断日志 + gitignore 也没见记）

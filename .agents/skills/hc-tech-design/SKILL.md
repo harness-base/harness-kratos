@@ -1,20 +1,20 @@
 ---
-name: hc-design
-description: 交互式产出研发方案 / 技术设计（而非需求、而非实现）：主 agent 当设计者，读项目现状 → 提方案 → 不确定就查/问 → 决策点让用户拍 → 全明确 + 用户审核才落稿 → 派 hc-design-reviewer 对抗评审到过。产出 项目专属 的 研发方案；有对外接口才附 接口契约（被 api 用例消费），纯内部无接口标 N/A。它填 hc-prd(需求) 与 hc-dev(实现) 之间的设计空档：hc-prd → hc-design →（api 用例 / hc-dev）。用户说「出研发方案 / 技术设计 / 设计接口 / 接口契约 / 怎么实现这块 / 把需求落成方案」时用。
-version: 2
+name: hc-tech-design
+description: 交互式产出研发方案 / 技术设计（而非需求、而非实现）：主 agent 当设计者，读项目现状 → 提方案 → 不确定就查/问 → 决策点让用户拍 → 全明确 + 用户审核才落稿 → 派 hc-tech-design-reviewer 对抗评审到过。产出 项目专属 的 研发方案；有对外接口才附 接口契约（被 api 用例消费），纯内部无接口标 N/A。它填 hc-prd(需求) 与 hc-dev(实现) 之间的设计空档：hc-prd → hc-tech-design →（api 用例 / hc-dev）。用户说「出研发方案 / 技术设计 / 设计接口 / 接口契约 / 怎么实现这块 / 把需求落成方案」时用。
+version: 3
 last_reviewed: 2026-06-30
 ---
 
-# 交互式产出研发方案（hc-design）
+# 交互式产出研发方案（hc-tech-design）
 
-本 skill 管"**把需求落成可执行的技术设计（有对外接口再附接口契约）**"——填 `hc-prd`（产需求）与 `hc-dev`（写代码）之间的设计空档。**链条：`hc-prd` → `hc-design` →（api 用例 / `hc-dev`）**；它产出的接口契约（若有）被 api 用例消费。
+本 skill 管"**把需求落成可执行的技术设计（有对外接口再附接口契约）**"——填 `hc-prd`（产需求）与 `hc-dev`（写代码）之间的设计空档。**链条：`hc-prd` → `hc-tech-design` →（api 用例 / `hc-dev`）**；它产出的接口契约（若有）被 api 用例消费。
 
 **形态 = 交互式设计**（主 agent 当**设计者**），同 `hc-dev` 的「做 → 派 reviewer 挑刺 → 回改 loop」；**不是** `hc-prd` 那种总监 + 并行 worker——设计是**一条连贯的推演对话、不可拆并行**。依据 ADR-0009 同源（写代码统一入口的姊妹件）。
 
 ## ① 何时用 / 何时不用
 - **用**：手上有需求（PRD / 原型 / 用户故事，或用户当场口述），要把它**落成技术设计**（有对外接口再附接口契约）；选型 / 接口怎么切 / 数据怎么存 这类**方向性 / 不可逆 / 影响大 / 有明显取舍**的设计决策需要拍板（低风险、有唯一合理解的细节由设计者自决，不逐个打断用户，见 ④ / ⑧）。
 - **不用**：**产出**需求走 `hc-prd`（那是上游）；**直接写代码** / 改 bug / 重构走 `hc-dev`（那是下游）；产**测试用例**走 `hc-test`；纯控制面 / 文档 / 脚本改动。
-- 一句话边界：`hc-design` 只**设计**，不写实现代码、不产需求、不写测试用例。
+- 一句话边界：`hc-tech-design` 只**设计**，不写实现代码、不产需求、不写测试用例。
 
 ## ② 输入（需求来源不限 + 必读项目现状）
 - **需求来源不限**：之前的 PRD（`docs/prds/<id>/`）、原型图、用户故事，**或用户当场用别的方式说**，都能当需求来源。缺需求来源就**查**（仓内找）或**问**用户，**不假设**（rule-0008）。
@@ -37,7 +37,7 @@ last_reviewed: 2026-06-30
 ## ④ 产出门槛（全明确才落 + 用户审核门）
 - **全明确才落可执行方案**：③ 的查 / 问 / 决策点把不确定**消解干净**，**全明确 + 用户审核通过，才落方案**。
 - **方案定稿必须可执行、零 TBD / 待确认**：定稿里**不留**"待确认 / TBD / 看情况"段——还有没拍的，回 ③ 继续查 / 问，别带着窟窿落稿。
-- **落稿前 producer 自检（"全明确"正面清单）**：逐条过——① **有接口必有数据模型**（design.md ③ 数据模型对得上 ④ 接口）；② **有写操作必有 ⑧ 业务码**；③ **字段表无空格、无 TODO**；④ **⑥ 每条决策有备选 + 取舍**。任一不满足即未全明确，回 ③ 补。**含糊措辞**「合理处理 / 视情况 / 按需 / 暂定 / 待联调 / 后续优化 / TODO / 待补 / 留待实现」与残留 **TBD 同级、算未消解**，不许带进定稿。（此为设计者落稿前自查；判断层由 hc-design-reviewer ⑤ 的正面清单复核，见 ⑥。）
+- **落稿前 producer 自检（"全明确"正面清单）**：逐条过——① **有接口必有数据模型**（design.md ③ 数据模型对得上 ④ 接口）；② **有写操作必有 ⑧ 业务码**；③ **字段表无空格、无 TODO**；④ **⑥ 每条决策有备选 + 取舍**。任一不满足即未全明确，回 ③ 补。**含糊措辞**「合理处理 / 视情况 / 按需 / 暂定 / 待联调 / 后续优化 / TODO / 待补 / 留待实现」与残留 **TBD 同级、算未消解**，不许带进定稿。（此为设计者落稿前自查；判断层由 hc-tech-design-reviewer ⑤ 的正面清单复核，见 ⑥。）
 - **用户审核门**：方案落稿要**用户点头**才算定稿（同 `hc-prd` 的确认门精神）。
 
 ## ⑤ 产物（项目专属，落被管工程产物区）
@@ -47,20 +47,18 @@ last_reviewed: 2026-06-30
   - **错误响应列哪些（约定 / 未约定口径）**：只列**约定内**的错误——业务码、校验码（400 / 422）、鉴权类（401 / 403，属约定错误、授权语义归 design.md ⑨ 安全&风险）、约定的服务态（如 503 `DB_UNAVAILABLE`，工程当契约级、有 resilience 硬断言才列）；**未约定的未预期故障（裸 500 / panic）不进契约**。**别按状态码段一刀切、别说"不列 5xx"**。
 - frontmatter：`id` / `status: draft｜reviewed` / `source`（需求来源链接或说明）/ `related_docs`。
 
-## ⑥ 对抗评审（派 hc-design-reviewer 到过）
-方案定稿后 / 评审环节，**派 `hc-design-reviewer` 子 agent 对抗挑刺**，**回改到过**（同 `hc-dev` 对抗 review 循环到零）：
+## ⑥ 对抗评审（派 hc-tech-design-reviewer 到过）
+方案定稿后 / 评审环节，**派 `hc-tech-design-reviewer` 子 agent 对抗挑刺**，**回改到过**（同 `hc-dev` 对抗 review 循环到零）：
 - reviewer **只评不改**（无 Write），出结构化清单（位置 / 严重度 / 问题 / 证据 / 怎么补）；
 - 主 agent（设计者）据清单回改 → 复审 → **到零缺陷**。
-- 怎么派：**Claude Code** 用 workflow / Task（`agent(..., {agentType:'hc-design-reviewer'})` 循环，会话模型）；**Codex** 派同名双栈 reviewer。hc-design 是**单 reviewer 线性 loop（设计 → 审 → 回改）、无独立 `references/` 编排模板**——同 `hc-dev` / `hc-test` e2e。
+- 怎么派：**Claude Code** 用 workflow / Task（`agent(..., {agentType:'hc-tech-design-reviewer'})` 循环，会话模型）；**Codex** 派同名双栈 reviewer。hc-tech-design 是**单 reviewer 线性 loop（设计 → 审 → 回改）、无独立 `references/` 编排模板**——同 `hc-dev` / `hc-test` e2e。
 
-**两层防线（机器查结构、reviewer 查判断、不重复）**：**结构层**（目录↔index 登记一致、`design.md` 在、字面残留 TBD / 待确认 / 待定 / 待补 / FIXME / TODO / 留待实现）由 `scripts/designs-audit.sh` **机检**（已进 `make verify`）；**判断层**（可执行 / 契约逐字段 / 决策有据 / 安全对账 / 忠于源 / 含糊措辞）由 **hc-design-reviewer**——和 `hc-e2e-reviewer` ↔ `test-cases-audit` 一个分工。
+**两层防线（机器查结构、reviewer 查判断、不重复）**：**结构层**（目录↔index 登记一致、`design.md` 在、字面残留 TBD / 待确认 / 待定 / 待补 / FIXME / TODO / 留待实现）由 `scripts/designs-audit.sh` **机检**（已进 `make verify`）；**判断层**（可执行 / 契约逐字段 / 决策有据 / 安全对账 / 忠于源 / 含糊措辞）由 **hc-tech-design-reviewer**——和 `hc-e2e-reviewer` ↔ `test-cases-audit` 一个分工。
 
-**reviewer 审什么**（判断层；约束本体在 reviewer 子 agent 上下文，这里给总览，七块）：① 基于现状、不悬空（引用的模块 / 表 / 接口真在 `projects/<工程>/` 存在，rule-0008）② 决策有据、该升级的升级（design.md ⑥ 段决策有备选 + 取舍；**方向性 / 不可逆 / 影响大 / 有取舍**的没替用户静默拍，低风险细节自决也得留痕）③ 接口契约逐字段可执行（`api-contract.md` 字段表全、给 Mock；**错误码闭合用约定 / 未约定口径**——约定内的业务码 / 校验码 / 鉴权类[401/403] / 约定服务态[如 503]要列且与 design.md ⑧ 对得上，未约定的裸 500 / panic 不进契约；纯内部无接口设计契约标 N/A 不算缺，rule-0009）④ 异常与安全闭合（②异常流程↔⑧异常码分工、安全不预设项目没有的模型）⑤ 全明确正面清单（有接口必有数据模型 / 有写操作必有 ⑧ 业务码 / 字段表无空格无 TODO / ⑥ 每条决策有备选 + 取舍；**含糊措辞「合理处理 / 视情况 / 按需 / 暂定 / 待联调 / 后续优化 / TODO / 待补 / 留待实现」与 TBD 同级、算未消解**；实现者能直接动手）⑥ 完整性（对照 9 段抓实质缺段）⑦ 忠于需求源（回 frontmatter `source` 原文对照、防读歪 / 镀金）。明细见 `.claude/agents/hc-design-reviewer.md`。
+**reviewer 审什么**（判断层；约束本体在 reviewer 子 agent 上下文，这里给总览，七块）：① 基于现状、不悬空（引用的模块 / 表 / 接口真在 `projects/<工程>/` 存在，rule-0008）② 决策有据、该升级的升级（design.md ⑥ 段决策有备选 + 取舍；**方向性 / 不可逆 / 影响大 / 有取舍**的没替用户静默拍，低风险细节自决也得留痕）③ 接口契约逐字段可执行（`api-contract.md` 字段表全、给 Mock；**错误码闭合用约定 / 未约定口径**——约定内的业务码 / 校验码 / 鉴权类[401/403] / 约定服务态[如 503]要列且与 design.md ⑧ 对得上，未约定的裸 500 / panic 不进契约；纯内部无接口设计契约标 N/A 不算缺，rule-0009）④ 异常与安全闭合（②异常流程↔⑧异常码分工、安全不预设项目没有的模型）⑤ 全明确正面清单（有接口必有数据模型 / 有写操作必有 ⑧ 业务码 / 字段表无空格无 TODO / ⑥ 每条决策有备选 + 取舍；**含糊措辞「合理处理 / 视情况 / 按需 / 暂定 / 待联调 / 后续优化 / TODO / 待补 / 留待实现」与 TBD 同级、算未消解**；实现者能直接动手）⑥ 完整性（对照 9 段抓实质缺段）⑦ 忠于需求源（回 frontmatter `source` 原文对照、防读歪 / 镀金）。明细见 `.claude/agents/hc-tech-design-reviewer.md`。
 
-## ⑦ 通用 / 项目隔离（控制面命根）
-- **skill 与两个模板是通用控制面、不掺任何具体项目内容**：不预设多租户 / `tenant_id` / 某域名词 / 某域业务规则。模板示例用**中性占位**（如 `GET /v1/items`）。
-- **产出的方案是项目专属**：落被管工程产物区 `docs/designs/<id>/`，里头才有具体项目的领域内容。
-- 改 skill / 模板时守住这条边界：通用的归 skill+模板，具体的归产物。
+## ⑦ 通用 / 项目隔离
+- 受全局规则 **rule-0015**（控制面 ↔ 项目内容隔离）管，不在此重述：skill 与两个模板通用、不掺项目内容（详见根 `AGENTS.md` rule-0015）；**本 skill 产出的方案才项目专属**，落被管工程产物区 `docs/designs/<id>/`。
 
 ## ⑧ 硬规则
 - **输入不限 + 基于现状**：需求来源不限，但必读 `projects/<工程>/` 真实代码 / 资产，**不凭空设计**。
@@ -70,12 +68,12 @@ last_reviewed: 2026-06-30
 - **全明确 + 用户审核才落稿；定稿零 TBD / 待确认**（产出门槛）；**含糊措辞「合理处理 / 视情况 / 按需 / 暂定 / 待联调 / 后续优化 / TODO / 待补 / 留待实现」与 TBD 同级、算未消解**，落稿前按 ④ producer 正面清单自查。
 - **接口契约可选**：**有对外接口才产 `api-contract.md`**；纯内部重构 / 数据迁移类、无对外接口的设计标 N/A、不强凑。
 - **错误响应约定 / 未约定口径**：契约只列约定内错误（业务码 / 校验码 / 401·403 鉴权 / 约定服务态如 503），**未约定的裸 500 / panic 不进契约；别按状态码段一刀切**。
-- **对抗评审到过**：派 `hc-design-reviewer` 回改到零缺陷。
-- **通用 / 项目隔离**：skill+模板通用、不掺项目；方案项目专属落 `docs/designs/<id>/`。
+- **对抗评审到过**：派 `hc-tech-design-reviewer` 回改到零缺陷。
+- **通用 / 项目隔离**：守 rule-0015（控制面不掺项目内容）；方案项目专属落 `docs/designs/<id>/`。
 - 用户可见的需求 / 行为 / 验收目标变化属 `hc-prd` 上游，不在本 skill 重立需求（rule-0001 的需求包仍由动业务码的 `hc-dev` 兜）。
 
 ## ⑨ 演进（rule-0007）
-设计流程 / 产物结构 / 评审机制 / 模板字段变化时回顾本 skill（连同 `.claude/agents/hc-design-reviewer.md`、`.codex/agents/hc-design-reviewer.toml`、`templates/design.md`、`templates/api-contract.md`）；改完同步 `version` / `last_reviewed`，跑 `bash scripts/skills-index.sh`（模板动了再跑 `bash scripts/dir-index.sh templates`）。
+设计流程 / 产物结构 / 评审机制 / 模板字段变化时回顾本 skill（连同 `.claude/agents/hc-tech-design-reviewer.md`、`.codex/agents/hc-tech-design-reviewer.toml`、`templates/design.md`、`templates/api-contract.md`）；改完同步 `version` / `last_reviewed`，跑 `bash scripts/skills-index.sh`（模板动了再跑 `bash scripts/dir-index.sh templates`）。
 
 ---
 

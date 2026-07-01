@@ -1,16 +1,19 @@
 # 当前任务
 
 > 只记手头这一件事；干完清空、旧的 roll 进 `archive/`。保持轻。
-> 元：level: L3 ｜ task: hc-design
+> 元：level: L3 ｜ task: hc-tech-design
 
-## 当前：hc-design 研发方案/设计阶段 skill（hc-prd → hc-design → api 用例 的关键一环）
+## 当前：hc-tech-design 研发方案/设计阶段 skill（hc-prd → hc-tech-design → api 用例 的关键一环）
 - [x] 设计敲定：交互式设计 skill（≈hc-dev 做→挑刺，非 hc-prd 编排）；硬原则=参考项目代码/资产·不确定查+问·决策点用户拍·**全明确才落可执行方案(零 TBD)**·用户审核门·对抗评审·**模板通用不掺项目内容**
 - [x] 模板定稿：design.md(9 段)+ api-contract.md(单独，端点索引+每端点 请求/响应/Mock/错误码/关联)；异常 & 安全&风险 拆两段；删项目专属"多租户"
-- [x] 建：`templates/design.md` + `templates/api-contract.md` + `hc-design` skill + `hc-design-reviewer` 双栈（workflow 并行建+复核；并行踩踏致复核矛盾→查磁盘理清，真问题只 2：补 config 注册 + 删空壳 README + 2 minor）
-- [x] 接流程 + 留档：testing-flow api 线指向 hc-design 为契约源、`docs/designs/` 账本、ADR-0015 登记、索引已 regen 无漂移
-- [x] 收尾：`make verify`✓ + `docs-audit`✓(46) + **hc-eval green**（考题 010/011 pass；`docs/eval/task-reviews/20260630T072602Z-hc-design/`）
+- [x] 建：`templates/design.md` + `templates/api-contract.md` + `hc-tech-design` skill + `hc-tech-design-reviewer` 双栈（workflow 并行建+复核；并行踩踏致复核矛盾→查磁盘理清，真问题只 2：补 config 注册 + 删空壳 README + 2 minor）
+- [x] 接流程 + 留档：testing-flow api 线指向 hc-tech-design 为契约源、`docs/designs/` 账本、ADR-0015 登记、索引已 regen 无漂移
+- [x] 收尾：`make verify`✓ + `docs-audit`✓(46) + **hc-eval green**（考题 010/011 pass；`docs/eval/task-reviews/20260630T072602Z-hc-design/` 时间戳存档名保留）
 - [x] **对抗评审 3 轮**（用户逼出的硬环节，eval/verify 都漏的）：R1 揪 blocker(模板偷设 REST、对 kratos gRPC 不通用)+7 major 并修 → R2 口径自洽(reviewer 判据回灌 skill/模板/文档登记 audit) → R3 收敛、修 R2 自相矛盾(逐行→并集、机检词表 4→7 统一、config 不列500→约定/未约定)；建 `scripts/designs-audit.sh` 机检(两层防线)
-- [ ] 提交（待授权）
+- [x] 提交：commit `edaf216` → **PR [#9](https://github.com/harness-base/harness-control/pull/9)**（1 commit、CLEAN、不加 Co-Authored-By，待你合）
+- [x] **尾活①（用户挑出）**：「控制面↔项目隔离」是全局命根，原写死进 hc-tech-design §⑦ → 升成 **rule-0015**（走 hc-add-rule，根 AGENTS.md，sev warn），§⑦ + ⑧硬规则那行改成指针；其余复刻处归类（reviewer/模板=规则在执行、ADR=历史记录，留）
+- [x] **尾活②（用户改名）**：`hc-design` 像设计师用的 → 全仓 rename **`hc-tech-design`**（reviewer 跟改 `hc-tech-design-reviewer`、ADR-0015 文件、双栈、config、testing-flow、designs 账本、templates、索引 regen）；PR #9 未合、改名=上线前修，干净换；历史归档（lessons/optimization-log/eval 时间戳存档）按 narrative 名保留不动
+- [ ] 提交尾活①②进 PR #9（待用户授权 commit/push）
 - **follow-up（记 ADR-0015，本批不做）**：reviewer 无对外接口 N/A 回 source 核、补分页/限流硬动作、api-contract 写端点幂等槽位、③多表写法
 
 ## 已闭·待提交滚动：给 turn-backstop 装诊断日志 + 修「① capture 0 产出」静默失效（PR #8）

@@ -93,7 +93,7 @@ related_docs:
 
 ## api 用例线（占位·api worker 待建）
 
-- **接口契约来源**：由 `hc-design` 产出（`docs/designs/<id>/api-contract.md`，ADR-0015）——这就是本线的「研发方案 + 接口契约」前置，现已可产出；api 用例 worker（`hc-api-qa` / `hc-api-reviewer`）随后建。
+- **接口契约来源**：由 `hc-tech-design` 产出（`docs/designs/<id>/api-contract.md`，ADR-0015）——这就是本线的「研发方案 + 接口契约」前置，现已可产出；api 用例 worker（`hc-api-qa` / `hc-api-reviewer`）随后建。
 - 对齐接口契约：正常请求的**参数 / 响应 / 字段类型 / 边界值 / 等价类**；异常**覆盖契约里列的约定内错误**——业务码 / 校验 400·422 / 鉴权 401·403 / 约定服务态（如 503 DB_UNAVAILABLE，契约列了就要覆盖）；**未约定的未预期故障**（裸 500 / panic）不在契约、不为它编用例。**按"约定 / 未约定"分，不按状态码段一刀切**。
 - 接口契约本身含正常 + 异常约定，用例与契约对齐。
 

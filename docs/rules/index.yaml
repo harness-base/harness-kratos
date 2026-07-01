@@ -317,3 +317,8 @@ rules:
     location: AGENTS.md
     severity: blocker
     eval: ["015"]
+  - id: rule-0015
+    brief: "控制面与项目内容隔离（命根）"
+    location: AGENTS.md
+    severity: warn
+    eval: []

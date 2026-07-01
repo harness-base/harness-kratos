@@ -2,9 +2,9 @@
 # 研发方案账本自检：docs/designs/<dir>/ 与 docs/designs/index.yaml 登记双向一致 +
 #   每个 design 目录有 design.md（必需）+ 定稿零 TBD 机检（design.md / api-contract.md）。
 # 防"加了设计忘登记 / 缺主文档 / 留 TBD 占位就当定稿"。空账本（designs: []）时平凡通过。
-# 零 TBD 机检 = hc-design 产出门槛（定稿必须可执行、零 TBD/待确认，rule-0008 / ADR-0015）的机检兜底；
+# 零 TBD 机检 = hc-tech-design 产出门槛（定稿必须可执行、零 TBD/待确认，rule-0008 / ADR-0015）的机检兜底；
 #   只扫 design 目录内文件，不碰 templates/（模板里的占位 <…> 与 README 的说明文字不在校验范围）。
-# 质量（方案是否真合理 / 接口字段是否对齐）由 hc-design-reviewer 对抗评审 + eval 判，不在本机器校验内。
+# 质量（方案是否真合理 / 接口字段是否对齐）由 hc-tech-design-reviewer 对抗评审 + eval 判，不在本机器校验内。
 # 格式无关：不依赖具体接口形态（REST / gRPC / 消息皆可）；只校验登记一致 + 文件在 + 无 TBD 占位词。
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

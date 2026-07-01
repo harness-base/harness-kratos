@@ -20,6 +20,16 @@
 - Prevention：派 hc-eval 时，评审目录后缀**必须 == todo `task:` 的 slug**（一字不差）；最好从 todo 的 `task:` 直接取 slug 拼目录名，别另起一个更"具体"的名。
 - Earlier signal：定 todo `task:` slug 与给 eval 的目录名时，并排核一遍是否完全一致；stop-check 用的是精确 `*-$task`、不是子串。
 
+## 2026-06-30：把用户"研发方案英文怎么翻"的简单提问，误读成"要不要用中文名"，跑去查 skill 名字符集
+- Mistake：用户问"hc-design 名字像设计师用的，研发方案是这么翻译吗"→"研发方案不行吗"，真意是**"研发方案的英文是什么"**（想要个准确英文词当 slug）。我误读成"想用中文 slug 研发方案"，连两轮去提中文 slug、查 `skills-index` 正则、翻官方 skill name 字符集约束——整条岔路白跑，被用户打断纠正"我的意思是，研发方案翻译成英文是什么"。
+- Prevention：用户提问短而可多解时，先用一句话回述我的理解再答，别基于某个假设意图直接展开一整条调查支线。"X 不行吗 / X 是这么 Y 吗"常是**在问 X 本身**，不是让我论证 X 的可行性。
+- Earlier signal：发现自己为一个**一句话能答的问题**启动了查文件 / 查规范的多步调查——停，先确认问的是不是那个。
+
+## 2026-06-30：把"控制面↔项目隔离"这条全局原则（用户纠正过的）焊进 hc-design skill §⑦，而非升成规则
+- Mistake：用户早先纠正"harness 要和具体项目内容隔离"（多租户那次）。我没把它当**全局规则**升进 AGENTS.md，反而在建 hc-design 时写成 skill 的 §⑦「通用/项目隔离（控制面命根）」一段——它是适用于**所有** skill/模板/规则/子 agent 的全局不变量，焊进一个 skill 既重复、又只覆盖这一个、还读着像 hc-design 专属。用户："这种东西为什么写在 skills 里？这不是我纠正你的吗？"
+- Prevention：用户纠正的若是**跨多个产物都成立的原则/不变量**（隔离、节奏、验证口径…），先问"这是全局规则吗"——是就走 `hc-add-rule` 升进 AGENTS.md、各处只引编号，**别焊进当下在建的那个 artifact 正文**。在某 skill/模板里写"控制面命根 / 全局原则 / 所有 X 都要"这种话 = 信号：它该是规则、不该在这。
+- Earlier signal：往 skill/模板正文写"这是控制面命根 / 全局原则 / 所有 X 都……"——停，全局的归 AGENTS.md 规则，artifact 只引用编号。
+
 ## 2026-06-30：green 的 eval + 全过的 make verify，被干净的对抗挑刺挖出 blocker——三者不可互替
 - Mistake：hc-design build 我跑了 `make verify`(绿) + hc-eval(green) 就准备提交，以为质量够了。用户问"对抗评审了吗"逼我补一次干净的对抗挑刺——当场挖出 1 blocker（模板假设 REST、对 kratos gRPC 不通用）+ 7 major，前者一个都没逮到。
 - Prevention：**make verify 查结构、eval 按 rubric 打分、对抗挑刺找设计/逻辑坑——三件事不可互替**。重产物（skill/设计/接口）收尾前三样都要，缺对抗挑刺 = 没真审。对抗评审对文档/skill 是**迭代收敛**的（每轮挖更深），按 blocker→major→minor 推进，别一轮就当完。
